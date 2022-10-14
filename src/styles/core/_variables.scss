@@ -1,0 +1,181 @@
+@use 'sass:math';
+
+/** Mixins & Functions */
+
+@mixin mq($mq-key) {
+  @media (min-width: map-get($mq, $mq-key)) {
+    @content;
+  }
+}
+
+@function color($color-key) {
+  @if map-has-key($colors, $color-key) {
+    @return map-get($colors, $color-key);
+  } @else {
+    @error "Property #{$color-key} does not exist in colors settings";
+  }
+}
+
+@function border-radius($radius-key) {
+  @if map-has-key($radius, $radius-key) {
+    @return map-get($radius, $radius-key);
+  } @else {
+    @error "Property #{$radius-key} does not exist in radius settings";
+  }
+}
+
+@function box-shadow($shadow-key) {
+  @if map-has-key($shadows, $shadow-key) {
+    @return map-get($shadows, $shadow-key);
+  } @else {
+    @error "Property #{$shadow-key} does not exist in shadows settings";
+  }
+}
+
+@function rem($size) {
+  @return math.div($size, 16px) * 1rem;
+}
+
+/** Media Queries */
+
+$mq: (
+  'sm-mobile': 320px,
+  'lg-mobile': 480px,
+  'tablet': 768px,
+  'laptop': 1024px,
+  'desktop': 1366px,
+  'infinity': 1440px
+);
+
+/** Guide Colors */
+
+$transparent: transparent;
+
+$neutral-hight-pure: #fff;
+$neutral-hight-pure-light: #f8f9fd;
+$neutral-hight-pure-medium: #e0e2e9;
+$neutral-hight-pure-dark: #c9cbd4;
+
+$neutral-low-pure: #06040c;
+$neutral-low-pure-light: #9da0ab;
+$neutral-low-pure-medium: #60636e;
+$neutral-low-pure-dark: #2d2a34;
+
+$brand-primary-pure: #4c338a;
+$brand-primary-pure-light: #dcd5e9;
+$brand-primary-pure-medium: #4c338a;
+$brand-primary-pure-dark: #020046;
+
+$brand-secondary-pure: #3aa098;
+$brand-secondary-pure-light: #b3dad6;
+$brand-secondary-pure-medium: #277e77;
+$brand-secondary-pure-dark: #003c33;
+
+$brand-tertiary-pure: #d81d6a;
+$brand-tertiary-pure-light: #efa5c3;
+$brand-tertiary-pure-medium: #b60d53;
+$brand-tertiary-pure-dark: #590000;
+
+$brand-quaternary-pure: #fabb1e;
+$brand-quaternary-pure-light: #ffe5a0;
+$brand-quaternary-pure-medium: #c79006;
+$brand-quaternary-pure-dark: #662500;
+
+$brand-quintenary-pure: #e85d1f;
+$brand-quintenary-pure-light: #ffbd9c;
+$brand-quintenary-pure-medium: #c6470e;
+$brand-quintenary-pure-dark: #800000;
+
+$brand-sextenary-pure: #4f88c7;
+$brand-sextenary-pure-light: #b9d0e9;
+$brand-sextenary-pure-medium: #3a6da5;
+$brand-sextenary-pure-dark: #002362;
+
+$feedback-danger-pure: #f03738;
+$feedback-danger-pure-light: #ffbfbf;
+$feedback-danger-pure-medium: #8a0a0a;
+$feedback-danger-pure-dark: #460000;
+
+$feedback-warning-pure: #ffb800;
+$feedback-warning-pure-light: #ffebb7;
+$feedback-warning-pure-medium: #d69b00;
+$feedback-warning-pure-dark: #856000;
+
+$feedback-success-pure: #42d38b;
+$feedback-success-pure-light: #caffe5;
+$feedback-success-pure-medium: #1e8f57;
+$feedback-success-pure-dark: #084b2a;
+
+$colors: (
+  'neutral-hight-pure': $neutral-hight-pure,
+  'neutral-hight-pure-light': $neutral-hight-pure-light,
+  'neutral-hight-pure-medium': $neutral-hight-pure-medium,
+  'neutral-hight-pure-dark': $neutral-hight-pure-dark,
+  'neutral-low-pure': $neutral-low-pure,
+  'neutral-low-pure-light': $neutral-low-pure-light,
+  'neutral-low-pure-medium': $neutral-low-pure-medium,
+  'neutral-low-pure-dark': $neutral-low-pure-dark,
+  'brand-primary-pure': $brand-primary-pure,
+  'brand-primary-pure-light': $brand-primary-pure-light,
+  'brand-primary-pure-medium': $brand-primary-pure-medium,
+  'brand-primary-pure-dark': $brand-primary-pure-dark,
+  'brand-secondary-pure': $brand-secondary-pure,
+  'brand-secondary-pure-light': $brand-secondary-pure-light,
+  'brand-secondary-pure-medium': $brand-secondary-pure-medium,
+  'brand-secondary-pure-dark': $brand-secondary-pure-dark,
+  'brand-tertiary-pure': $brand-tertiary-pure,
+  'brand-tertiary-pure-light': $brand-tertiary-pure-light,
+  'brand-tertiary-pure-medium': $brand-tertiary-pure-medium,
+  'brand-tertiary-pure-dark': $brand-tertiary-pure-dark,
+  'brand-quaternary-pure': $brand-quaternary-pure,
+  'brand-quaternary-pure-light': $brand-quaternary-pure-light,
+  'brand-quaternary-pure-medium': $brand-quaternary-pure-medium,
+  'brand-quaternary-pure-dark': $brand-quaternary-pure-dark,
+  'brand-quintenary-pure': $brand-quintenary-pure,
+  'brand-quintenary-pure-light': $brand-quintenary-pure-light,
+  'brand-quintenary-pure-medium': $brand-quintenary-pure-medium,
+  'brand-quintenary-pure-dark': $brand-quintenary-pure-dark,
+  'brand-sextenary-pure': $brand-sextenary-pure,
+  'brand-sextenary-pure-light': $brand-sextenary-pure-light,
+  'brand-sextenary-pure-medium': $brand-sextenary-pure-medium,
+  'brand-sextenary-pure-dark': $brand-sextenary-pure-dark,
+  'feedback-danger-pure': $feedback-danger-pure,
+  'feedback-danger-pure-light': $feedback-danger-pure-light,
+  'feedback-danger-pure-medium': $feedback-danger-pure-medium,
+  'feedback-danger-pure-dark': $feedback-danger-pure-dark,
+  'feedback-warning-pure': $feedback-warning-pure,
+  'feedback-warning-pure-light': $feedback-warning-pure-light,
+  'feedback-warning-pure-medium': $feedback-warning-pure-medium,
+  'feedback-warning-pure-dark': $feedback-warning-pure-dark,
+  'feedback-success-pure': $feedback-success-pure,
+  'feedback-success-pure-light': $feedback-success-pure-light,
+  'feedback-success-pure-medium': $feedback-success-pure-medium,
+  'feedback-success-pure-dark': $feedback-success-pure-dark
+);
+
+/** Shadows */
+
+$shadows: (
+  'gray100': 4px 4px 25px rgba(0, 0, 0, 0.1),
+  'gray200': 0 0 5px rgba(0, 0, 0, 0.2),
+  'gray250': 0 4px 4px rgba(0, 0, 0, 0.25)
+);
+
+/** Borders Radius */
+
+$radius: (
+  'none': 0,
+  'sm': rem(2px),
+  'base': rem(4px),
+  'md': rem(6px),
+  'lg': rem(8px),
+  'xl': rem(12px),
+  '2xl': rem(16px),
+  '3xl': rem(24px),
+  'full': 9999px
+);
+
+/** Default Variables */
+
+$base-font-size: 100%;
+$base-font: 'Roboto', sans-serif;
