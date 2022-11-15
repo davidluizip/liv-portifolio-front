@@ -17,21 +17,23 @@ export class GlobalErrorHandler implements ErrorHandler {
     let message: string;
     let stackTrace: string;
 
-    if (error instanceof HttpErrorResponse) {
-      message = errorService.getServerMessage(error);
-      stackTrace = errorService.getServerStack(error);
-    } else if (this._isLivErrorResponse(error)) {
-      message = errorService.getServerMessage(error);
-      stackTrace = errorService.getServerStack(error);
-    } else {
-      message = errorService.getClientMessage(error);
-      stackTrace = errorService.getClientStack(error);
-    }
+    console.error(error);
+
+    // if (error instanceof HttpErrorResponse) {
+    //   message = errorService.getServerMessage(error);
+    //   stackTrace = errorService.getServerStack(error);
+    // } else if (this._isLivErrorResponse(error)) {
+    //   message = errorService.getServerMessage(error);
+    //   stackTrace = errorService.getServerStack(error);
+    // } else {
+    //   message = errorService.getClientMessage(error);
+    //   stackTrace = errorService.getClientStack(error);
+    // }
 
     this.zone.run(() => {
       toastService.error(message);
-      loggerService.logError(message, stackTrace);
-      loggerService.sendErrorToServer(message);
+      // loggerService.logError(message, stackTrace);
+      // loggerService.sendErrorToServer(message);
     });
   }
 
