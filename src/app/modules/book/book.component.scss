@@ -167,10 +167,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.cover-back {
-  background: #ff7c39 !important;
+  background: var(--brandColor) !important;
 }
 
 .main-cover {
@@ -220,8 +217,6 @@
   flex-direction: column;
   overflow: hidden;
   padding: 0 !important;
-
-  background: #ff7c39 !important;
 
   header {
     display: flex;
@@ -282,7 +277,7 @@
         width: 165px;
         height: 165px;
         border-radius: 50%;
-        background-color: #fdbb30;
+        background-color: var(--constrastColor);
         filter: opacity(0.6);
       }
 
@@ -349,7 +344,7 @@
       width: 154px;
       height: 48px;
 
-      background: color('neutral-hight-pure-light');
+      background: var(--constrastColor);
       border-radius: 48px;
 
       .caret-icon-wrapper {
@@ -357,7 +352,7 @@
         align-items: center;
         justify-content: center;
 
-        background-color: #ff7c39;
+        background-color: var(--brandColor);
         border-radius: 50%;
         width: 32px;
         height: 32px;
@@ -366,6 +361,6 @@
   }
 
   &--backside {
-    background: #ff7c39 !important;
+    background: var(--brandColor) !important;
   }
 }

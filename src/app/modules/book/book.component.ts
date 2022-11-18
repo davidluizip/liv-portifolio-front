@@ -7,7 +7,9 @@ import {
   OnInit,
   Renderer2,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { filter, from, fromEvent, map, mergeMap, Subject } from 'rxjs';
+import { grades } from './grades';
 
 @Component({
   selector: 'liv-book',
@@ -26,20 +28,35 @@ export class BookComponent implements OnInit, OnDestroy, AfterViewInit {
     'Oitava Pagina',
   ];
 
+  gradeBook = grades['1-ano'];
+
   private _switchingPage = false;
   private _switchingPageTimeout: NodeJS.Timeout;
   private _destroy$ = new Subject<boolean>();
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private route: ActivatedRoute
   ) {}
 
   get totalPages() {
     return this.pages.length;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.route.queryParams
+      .pipe(
+        filter(
+          params =>
+            params['grade'] &&
+            Object.keys(grades).some(key => key === params['grade'])
+        )
+      )
+      .subscribe(params => {
+        this.gradeBook = grades[params['grade']];
+      });
+  }
 
   ngOnDestroy(): void {
     clearTimeout(this._switchingPageTimeout);

@@ -1,5 +1,9 @@
 <div class="book-container">
-  <div class="book">
+  <div
+    class="book"
+    [style.--brandColor]="gradeBook.colors.brand"
+    [style.--constrastColor]="gradeBook.colors.tertiary"
+  >
     <div id="main-front-cover" class="main-cover"></div>
     <div id="pages" class="pages">
       <div class="page cover-front">
@@ -9,7 +13,7 @@
               width="163"
               height="138"
               viewBox="0 0 163 138"
-              fill="#4E2F92"
+              [attr.fill]="gradeBook.colors.primary"
               xmlns="http://www.w3.org/2000/svg"
             >
               <path
@@ -31,23 +35,25 @@
 
         <div class="cover-front__content">
           <picture class="doll-image">
-            <img src="assets/images/geraldo.png" alt="" />
+            <img [src]="gradeBook.mascot.src" [alt]="gradeBook.mascot.alt" />
           </picture>
 
-          <h1 class="cover-front__content__classTitle">Turma A</h1>
+          <h1 class="cover-front__content__classTitle">
+            {{ gradeBook.content.className }}
+          </h1>
         </div>
 
         <footer>
           <div class="footer-content">
-            <strong>2º ano</strong>
-            <h3>Escola Eleva Barra</h3>
-            <span>Professora Sônia Maria</span>
+            <strong>{{ gradeBook.content.gradeName }}</strong>
+            <h3>{{ gradeBook.content.schoolName }}</h3>
+            <span>Professor(a) {{ gradeBook.content.teacherName }}</span>
           </div>
           <svg
             width="256"
             height="174"
             viewBox="0 0 256 174"
-            fill="#F7D2E1"
+            [attr.fill]="gradeBook.colors.secondary"
             xmlns="http://www.w3.org/2000/svg"
           >
             <path
@@ -83,7 +89,7 @@
         </footer>
       </div>
       <div class="page cover-back">
-        <h1>The end.</h1>
+        <h1>Fim!</h1>
       </div>
       <div id="main-back-cover" class="main-cover"></div>
     </div>
