@@ -1,8 +1,8 @@
 export const grades = {
   ['1-ano']: {
     mascot: {
-      src: 'assets/images/geraldo.png',
-      alt: 'Imagem do mascote Geraldo',
+      src: 'assets/images/mascots/1-ano.png',
+      alt: 'Imagem do mascote do 1º ano',
     },
     content: {
       className: 'Turma A',
@@ -19,8 +19,8 @@ export const grades = {
   },
   ['2-ano']: {
     mascot: {
-      src: 'assets/images/geraldo.png',
-      alt: 'Imagem do mascote Geraldo',
+      src: 'assets/images/mascots/2-ano.png',
+      alt: 'Imagem do mascote do 2º ano',
     },
     content: {
       className: 'Turma A',
@@ -37,8 +37,8 @@ export const grades = {
   },
   ['3-ano']: {
     mascot: {
-      src: 'assets/images/geraldo.png',
-      alt: 'Imagem do mascote Geraldo',
+      src: 'assets/images/mascots/3-ano.png',
+      alt: 'Imagem do mascote do 3º ano',
     },
     content: {
       className: 'Turma A',
@@ -55,8 +55,8 @@ export const grades = {
   },
   ['3-anos']: {
     mascot: {
-      src: 'assets/images/geraldo.png',
-      alt: 'Imagem do mascote Geraldo',
+      src: 'assets/images/mascots/3-anos.png',
+      alt: 'Imagem do mascote do 3 anos',
     },
     content: {
       className: 'Turma A',
@@ -73,8 +73,8 @@ export const grades = {
   },
   ['4-anos']: {
     mascot: {
-      src: 'assets/images/geraldo.png',
-      alt: 'Imagem do mascote Geraldo',
+      src: 'assets/images/mascots/4-anos.png',
+      alt: 'Imagem do mascote do 4 anos',
     },
     content: {
       className: 'Turma A',
@@ -91,8 +91,8 @@ export const grades = {
   },
   ['5-anos']: {
     mascot: {
-      src: 'assets/images/geraldo.png',
-      alt: 'Imagem do mascote Geraldo',
+      src: 'assets/images/mascots/5-anos.png',
+      alt: 'Imagem do mascote do 5 anos',
     },
     content: {
       className: 'Turma A',
