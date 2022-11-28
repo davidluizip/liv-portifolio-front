@@ -38,7 +38,7 @@
     }
 
     p {
-      @include paragraph();
+      @include paragraph(500);
       margin-block: rem(4px) 0;
     }
 

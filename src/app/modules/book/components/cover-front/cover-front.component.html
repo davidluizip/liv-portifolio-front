@@ -1,0 +1,73 @@
+<div class="cover-front-container">
+  <header class="cover-front-header">
+    <div class="cover-front-logo">
+      <svg
+        width="163"
+        height="138"
+        viewBox="0 0 163 138"
+        [attr.fill]="book.colors.primary"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M-83.5113 39.0205L-37.63 55.5049L-61.533 87.0179L-4.78783 75.3247L-4.02729 128.823L37.1609 90.3961L78.0775 137.178L83.8017 77.989L141.481 98.7123L113.111 39.669L162.709 -1.5689L96.5091 -25.3535L108.475 -77.1959L53.6958 -64.7962L23.2955 -97.5918L-2.59677 -42.0037L-48.4782 -58.4881L-43.3324 7.52223L-83.5113 39.0205Z"
+        />
+      </svg>
+
+      <img src="assets/images/logo-liv.png" alt="" />
+    </div>
+
+    <svg-icon
+      src="assets/icons/pencil.svg"
+      [svgStyle]="{
+        'width.px': 28,
+        'height.px': 28
+      }"
+    ></svg-icon>
+  </header>
+
+  <div class="cover-front-content">
+    <picture class="liv-mascot-image">
+      <img [src]="book.mascot.src" [alt]="book.mascot.alt" />
+    </picture>
+
+    <h1 class="cover-front-content__title">
+      {{ book.content.className }}
+    </h1>
+  </div>
+
+  <footer class="cover-front-footer">
+    <div class="cover-front-footer__content">
+      <strong>{{ book.content.gradeName }}</strong>
+      <h3>{{ book.content.schoolName }}</h3>
+      <span>Professor(a) {{ book.content.teacherName }}</span>
+    </div>
+    <svg
+      width="256"
+      height="174"
+      viewBox="0 0 256 174"
+      [attr.fill]="book.colors.secondary"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M379.848 255.819C384.881 240.896 361.709 187.552 347.819 181.248C358.039 174.796 365.777 165.618 370.56 155.168C377.949 139.065 351.43 78.58 337.953 73.3295C324.475 68.0789 309.176 67.7041 294.826 73.2269C297.914 59.8495 296.35 46.328 291.029 34.562C284.412 19.8083 271.965 7.81604 255.545 2.29191C240.769 -2.69475 212.117 4.38643 212.117 4.38643C212.117 4.38643 187.709 20.9678 181.363 35.0395C174.081 23.2443 136.735 6.6276 129.337 6.77124C120.674 6.96016 79.5188 31.9917 74.1973 45.595C68.9102 59.2095 68.4842 74.6438 73.8468 89.0635C59.4054 85.717 8.45447 113.705 3.28592 129.042C0.763826 136.52 -0.207548 144.123 0.1429 151.508C1.20585 173.743 35.3263 203.577 35.3263 203.577C35.3263 203.577 14.8569 222.366 10.422 234.996C5.20669 249.897 27.2918 302.044 37.3848 307.794C52.5014 316.374 71.1223 318.18 88.273 311.622C87.4168 315.398 89.8154 318.525 97.097 334.376C104.379 350.227 127.87 363.276 127.87 363.276C127.87 363.276 152.39 373.853 164.554 369.567C179.804 364.186 194.677 365.484 201.691 349.833C209.775 362.885 265.369 378.737 279.384 371.689C291.895 365.412 306.942 343.625 306.942 343.625C306.942 343.625 324.146 297.749 331.371 296.631C353.068 293.32 372.259 278.208 379.779 255.796"
+      />
+    </svg>
+    <button
+      class="cover-front-footer__seePortfolioButton"
+      type="button"
+      (click)="seePortfolio.emit()"
+    >
+      Ver portfolio
+      <span class="caret-icon-wrapper">
+        <svg-icon
+          src="assets/icons/caret-right.svg"
+          [svgStyle]="{
+            fill: '#fff',
+            'width.px': 16,
+            'height.px': 16
+          }"
+        ></svg-icon>
+      </span>
+    </button>
+  </footer>
+</div>

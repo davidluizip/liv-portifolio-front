@@ -31,7 +31,7 @@ export class BookComponent implements OnInit, OnDestroy, AfterViewInit {
     'Oitava Pagina',
   ];
 
-  gradeBook = grades['1-ano'];
+  book = grades['1-ano'];
 
   private _switchingPage = false;
   private _switchingPageTimeout: NodeJS.Timeout;
@@ -39,10 +39,7 @@ export class BookComponent implements OnInit, OnDestroy, AfterViewInit {
 
   media = new FormControl(null);
   currentPage = 0;
-
-  isEnabledEditing = false;
-
-  textareaValue = 'Escreva aqui um breve texto sobre a sua turma.';
+  pagesElement: HTMLDivElement[];
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -50,16 +47,8 @@ export class BookComponent implements OnInit, OnDestroy, AfterViewInit {
     private route: ActivatedRoute
   ) {}
 
-  pagesElement: HTMLDivElement[];
-
   get totalPages() {
     return this.pages.length;
-  }
-
-  get textareaPlaceholder() {
-    return this.isEnabledEditing
-      ? `Profressor, escreva aqui um uma descrição da turma.\n\nSugestão: Quantidade de alunos, características da tumas (são animados, curiosos, divertidos...).`
-      : '';
   }
 
   ngOnInit(): void {
@@ -71,9 +60,7 @@ export class BookComponent implements OnInit, OnDestroy, AfterViewInit {
             Object.keys(grades).some(key => key === params['grade'])
         )
       )
-      .subscribe(params => {
-        this.gradeBook = grades[params['grade']];
-      });
+      .subscribe(params => (this.book = grades[params['grade']]));
   }
 
   ngOnDestroy(): void {
@@ -99,12 +86,26 @@ export class BookComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
+  handleCloseBook() {
+    if (this.currentPage === 0) return;
+
+    const flippedPages = this.document.getElementsByClassName('flipped');
+    Array.from(flippedPages).forEach(page => page.classList.remove('flipped'));
+
+    const frontCover = this.document.getElementById('main-front-cover');
+    frontCover.classList.remove('main-cover--active');
+
+    this.currentPage = 0;
+  }
+
   handlePreviousPage() {
+    if (this._switchingPage || this.currentPage === 0) return;
+
+    this._switchingPage = true;
+
     const flippedPages = this.pagesElement.filter(page =>
       page.classList.contains('flipped')
     );
-
-    if (this._switchingPage || flippedPages.length === 0) return;
 
     const lastFlippedPageIndex = flippedPages.length - 1;
     const lastFlippedPage = flippedPages[lastFlippedPageIndex];
@@ -128,7 +129,7 @@ export class BookComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this._switchingPageTimeout = setTimeout(
       () => (this._switchingPage = false),
-      250
+      450
     );
   }
 
@@ -138,6 +139,8 @@ export class BookComponent implements OnInit, OnDestroy, AfterViewInit {
       this.pagesElement[this.currentPage + 1].classList.contains('cover-back')
     )
       return;
+
+    this._switchingPage = true;
 
     let nextPageToFlip = this.pagesElement[0];
 
@@ -167,7 +170,7 @@ export class BookComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this._switchingPageTimeout = setTimeout(
       () => (this._switchingPage = false),
-      250
+      450
     );
   }
 }

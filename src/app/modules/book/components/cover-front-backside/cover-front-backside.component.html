@@ -1,0 +1,41 @@
+<div class="cover-front-backside-container">
+  <header class="cover-front-backside-header">
+    <div class="cover-front-backside-header__topbar">
+      <span class="cover-front-backside-header__titleBadge"> Turma </span>
+      <button
+        class="cover-front-backside-header__editButton"
+        [ngClass]="{
+          'cover-front-backside-header__editButton--save': isEnabledEditing
+        }"
+        (click)="isEnabledEditing = !isEnabledEditing"
+      >
+        {{ isEnabledEditing ? 'salvar' : 'editar' }}
+      </button>
+    </div>
+
+    <div class="cover-front-backside-header__bottombar">
+      <strong>Turma A</strong>
+      <div class="cover-front-backside-header__bottombar__divider"></div>
+      <span>Professora Jessica</span>
+    </div>
+  </header>
+
+  <section class="profile-avatar">
+    <liv-upload-media-input></liv-upload-media-input>
+  </section>
+
+  <section class="class-description">
+    <div class="class-description__topbar" *ngIf="isEnabledEditing">
+      <strong>Descrição da turma</strong>
+      <svg-icon
+        src="assets/icons/pencil.svg"
+        svgClass="class-description__pencilIcon"
+      ></svg-icon>
+    </div>
+    <textarea
+      [value]="textareaValue"
+      [placeholder]="textareaPlaceholder"
+      [readonly]="!isEnabledEditing"
+    ></textarea>
+  </section>
+</div>

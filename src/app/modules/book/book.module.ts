@@ -5,9 +5,11 @@ import { BookRoutingModule } from './book-routing.module';
 import { BookComponent } from './book.component';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { CoverFrontBacksideComponent } from './components/cover-front-backside/cover-front-backside.component';
+import { CoverFrontComponent } from './components/cover-front/cover-front.component';
 
 @NgModule({
-  declarations: [BookComponent],
+  declarations: [BookComponent, CoverFrontBacksideComponent, CoverFrontComponent],
   imports: [
     CommonModule,
     BookRoutingModule,
