@@ -1,0 +1,36 @@
+<div class="upload-file-content">
+  <section class="upload-file" *ngIf="!file; else showAvatar">
+    <div
+      class="dropzone"
+      livDragDropFileUpload
+      (click)="fileField.click()"
+      (fileDropped)="upload($event)"
+    >
+      <div class="dropzone__info">
+        <svg-icon src="assets/icons/gallery.svg"></svg-icon>
+        <p>Arraste e solte seus arquivos aqui.</p>
+        <span>Formatos suspanortados: JPEG, PNG e GIF</span>
+      </div>
+    </div>
+    <input
+      type="file"
+      name="picture"
+      accept="image/png,image/jpeg,image/gif"
+      #fileField
+      hidden
+      (change)="upload($event.target['files'])"
+    />
+  </section>
+
+  <ng-template #showAvatar>
+    <div class="picture-content">
+      <button class="picture-content__trashButton" (click)="removePicture()">
+        <svg-icon
+          src="assets/icons/trash.svg"
+          svgClass="picture-content__trashButton__icon"
+        ></svg-icon>
+      </button>
+      <img [src]="base64" alt="" />
+    </div>
+  </ng-template>
+</div>

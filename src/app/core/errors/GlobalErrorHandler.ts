@@ -31,7 +31,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     // }
 
     this.zone.run(() => {
-      toastService.error(message);
+      // toastService.error(message);
       // loggerService.logError(message, stackTrace);
       // loggerService.sendErrorToServer(message);
     });

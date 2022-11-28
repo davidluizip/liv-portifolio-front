@@ -6,6 +6,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 3rem;
   padding: 2em 0;
 }
 
@@ -15,7 +16,10 @@
 }
 
 .page {
-  padding: 1.5em;
+  &:not(.cover-front) {
+    padding: 1.5em;
+  }
+
   display: flex;
   flex-direction: column;
   position: relative;
@@ -72,7 +76,6 @@
   transition: transform 1.4s;
   backface-visibility: hidden;
   transform-style: preserve-3d;
-  cursor: pointer;
   user-select: none;
   background-color: #f0f0f0;
 }
@@ -165,8 +168,6 @@
 .cover-back {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   background: var(--brandColor) !important;
 }
 
@@ -216,9 +217,8 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  padding: 0 !important;
 
-  header {
+  .main-header {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -362,5 +362,158 @@
 
   &--backside {
     background: var(--brandColor) !important;
+    padding: 1.5rem;
+  }
+}
+
+.switch-pages-action-button {
+  background-color: color(neutral-hight-pure-light);
+  border-radius: border-radius('full');
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  width: rem(48px);
+  height: rem(48px);
+  padding: rem(8px);
+  line-height: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: 0.2s ease;
+
+  &__previous {
+    opacity: 0;
+    pointer-events: none;
+    &--active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  &:hover {
+    background-color: color(neutral-hight-pure-medium);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.cover-front-backside-header {
+  margin-bottom: rem(24px);
+
+  &__titleBadge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid color('neutral-low-pure');
+    border-radius: border-radius('2xl');
+
+    width: rem(94px);
+    height: rem(32px);
+    font-size: 1em;
+
+    color: color('neutral-low-pure');
+  }
+
+  &__editButton {
+    border-radius: border-radius('base');
+    border: 1px solid color('neutral-low-pure');
+    padding: rem(10px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include buttonSmall(600);
+    color: color('neutral-low-pure');
+    transition: 0.2s ease;
+
+    &:hover {
+      background-color: color('neutral-low-pure');
+      color: color('neutral-hight-pure');
+    }
+
+    &--save {
+      background-color: color('neutral-low-pure');
+      color: color('neutral-hight-pure');
+
+      &:hover {
+        background-color: transparent;
+        color: color('neutral-low-pure');
+      }
+    }
+  }
+
+  &__topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: rem(12px);
+  }
+
+  &__bottombar {
+    margin-top: rem(32px);
+    display: flex;
+    flex-direction: column;
+
+    &__divider {
+      display: inline-block;
+      width: 100%;
+      height: 1px;
+      margin-block: rem(8px);
+      background-color: color('neutral-low-pure');
+    }
+
+    strong {
+      @include paragraph(900);
+      color: color('neutral-low-pure');
+    }
+
+    span {
+      @include paragraph(500);
+      color: color('neutral-low-pure');
+    }
+  }
+}
+
+.class-description {
+  margin-top: rem(28px);
+
+  &__topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: rem(12px);
+
+    strong {
+      font-weight: 500;
+    }
+  }
+
+  &__pencilIcon {
+    width: 16px;
+    height: 16px;
+  }
+
+  textarea {
+    resize: none;
+    font-size: 0.875rem;
+    width: 100%;
+    background-color: color('neutral-hight-pure-light');
+    height: rem(150px);
+    color: color('neutral-low-pure-medium');
+    border-radius: border-radius('md');
+
+    &:not(:read-only) {
+      border: 1px solid color('neutral-hight-pure-medium');
+      padding: rem(8px);
+    }
+
+    &:read-only {
+      cursor: default;
+      box-shadow: none;
+      border: 0;
+      background-color: transparent;
+      color: color('neutral-low-pure');
+    }
   }
 }

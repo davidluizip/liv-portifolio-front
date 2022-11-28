@@ -6,7 +6,6 @@
 
 html,
 body {
-  font-family: $base-font;
   position: relative;
   min-height: 100%;
   margin: 0;
@@ -27,6 +26,12 @@ body {
   -webkit-font-smoothing: antialiased;
   -webkit-overflow-scrolling: touch;
   -webkit-text-size-adjust: none;
+}
+
+:focus {
+  outline: 0;
+  box-shadow: 0 0 0 2px color('brand-primary-pure');
+  transition: 0.1s ease;
 }
 
 h1,
@@ -56,10 +61,11 @@ figure {
   margin: 0;
 }
 
+body,
 input,
 textarea,
-select {
-  outline: none;
+button {
+  font: 400 1rem 'Roboto', sans-serif;
 }
 
 button {

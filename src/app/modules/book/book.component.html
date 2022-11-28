@@ -1,4 +1,14 @@
 <div class="book-container">
+  <button
+    class="switch-pages-action-button switch-pages-action-button__previous"
+    (click)="handlePreviousPage()"
+    [ngClass]="{
+      'switch-pages-action-button__previous--active': currentPage > 0
+    }"
+  >
+    <svg-icon src="assets/icons/arrow-left.svg"></svg-icon>
+  </button>
+
   <div
     class="book"
     [style.--brandColor]="gradeBook.colors.brand"
@@ -7,7 +17,7 @@
     <div id="main-front-cover" class="main-cover"></div>
     <div id="pages" class="pages">
       <div class="page cover-front">
-        <header>
+        <header class="main-header">
           <div class="logo">
             <svg
               width="163"
@@ -25,7 +35,7 @@
           </div>
 
           <svg-icon
-            src="assets/images/pencil.svg"
+            src="assets/icons/pencil.svg"
             [svgStyle]="{
               'width.px': 28,
               'height.px': 28
@@ -60,11 +70,11 @@
               d="M379.848 255.819C384.881 240.896 361.709 187.552 347.819 181.248C358.039 174.796 365.777 165.618 370.56 155.168C377.949 139.065 351.43 78.58 337.953 73.3295C324.475 68.0789 309.176 67.7041 294.826 73.2269C297.914 59.8495 296.35 46.328 291.029 34.562C284.412 19.8083 271.965 7.81604 255.545 2.29191C240.769 -2.69475 212.117 4.38643 212.117 4.38643C212.117 4.38643 187.709 20.9678 181.363 35.0395C174.081 23.2443 136.735 6.6276 129.337 6.77124C120.674 6.96016 79.5188 31.9917 74.1973 45.595C68.9102 59.2095 68.4842 74.6438 73.8468 89.0635C59.4054 85.717 8.45447 113.705 3.28592 129.042C0.763826 136.52 -0.207548 144.123 0.1429 151.508C1.20585 173.743 35.3263 203.577 35.3263 203.577C35.3263 203.577 14.8569 222.366 10.422 234.996C5.20669 249.897 27.2918 302.044 37.3848 307.794C52.5014 316.374 71.1223 318.18 88.273 311.622C87.4168 315.398 89.8154 318.525 97.097 334.376C104.379 350.227 127.87 363.276 127.87 363.276C127.87 363.276 152.39 373.853 164.554 369.567C179.804 364.186 194.677 365.484 201.691 349.833C209.775 362.885 265.369 378.737 279.384 371.689C291.895 365.412 306.942 343.625 306.942 343.625C306.942 343.625 324.146 297.749 331.371 296.631C353.068 293.32 372.259 278.208 379.779 255.796"
             />
           </svg>
-          <button type="button">
+          <button type="button" (click)="handleNextPage()">
             Ver portfolio
             <span class="caret-icon-wrapper">
               <svg-icon
-                src="assets/images/caret-right.svg"
+                src="assets/icons/caret-right.svg"
                 [svgStyle]="{
                   fill: '#fff',
                   'width.px': 16,
@@ -76,7 +86,46 @@
         </footer>
       </div>
       <div class="page cover-front cover-front--backside">
-        <h1>Sumário</h1>
+        <header class="cover-front-backside-header">
+          <div class="cover-front-backside-header__topbar">
+            <span class="cover-front-backside-header__titleBadge"> Turma </span>
+            <button
+              class="cover-front-backside-header__editButton"
+              [ngClass]="{
+                'cover-front-backside-header__editButton--save':
+                  isEnabledEditing
+              }"
+              (click)="isEnabledEditing = !isEnabledEditing"
+            >
+              {{ isEnabledEditing ? 'salvar' : 'editar' }}
+            </button>
+          </div>
+
+          <div class="cover-front-backside-header__bottombar">
+            <strong>Turma A</strong>
+            <div class="cover-front-backside-header__bottombar__divider"></div>
+            <span>Professora Jessica</span>
+          </div>
+        </header>
+
+        <section class="profile-avatar">
+          <liv-upload-media-input></liv-upload-media-input>
+        </section>
+
+        <section class="class-description">
+          <div class="class-description__topbar" *ngIf="isEnabledEditing">
+            <strong>Descrição da turma</strong>
+            <svg-icon
+              src="assets/icons/pencil.svg"
+              svgClass="class-description__pencilIcon"
+            ></svg-icon>
+          </div>
+          <textarea
+            [value]="textareaValue"
+            [placeholder]="textareaPlaceholder"
+            [readonly]="!isEnabledEditing"
+          ></textarea>
+        </section>
       </div>
       <div class="page" *ngFor="let page of pages; let i = index">
         <article class="page__content">
@@ -94,4 +143,8 @@
       <div id="main-back-cover" class="main-cover"></div>
     </div>
   </div>
+
+  <button class="switch-pages-action-button" (click)="handleNextPage()">
+    <svg-icon src="assets/icons/arrow-right.svg"></svg-icon>
+  </button>
 </div>
