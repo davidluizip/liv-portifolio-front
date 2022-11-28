@@ -15,8 +15,7 @@
   "private": true,
   "engines": {
     "node": ">=16.15.x",
-    "npm": ">=8.12.x",
-    "yarn": "please-use-npm"
+    "npm": ">=8.12.x"
   },
   "dependencies": {
     "@angular/animations": "~13.3.0",
