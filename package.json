@@ -3,6 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "start": "node server.js",
+    "postinstall": "ng build --aot --prod",
     "start:dev": "ng serve -c=development",
     "start:homolog": "ng serve -c=homologation-jit",
     "start:prod": "ng serve -c=production",
@@ -30,6 +32,7 @@
     "angular-svg-icon": "^13.0.0",
     "crypto-js": "^4.1.1",
     "dayjs": "^1.11.5",
+    "express": "^4.18.2",
     "rxjs": "~7.5.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
