@@ -2,7 +2,7 @@
   <button
     class="switch-pages-action-button switch-pages-action-button__previous"
     [ngClass]="{
-      'switch-pages-action-button__previous--active': currentPage > 0
+      'switch-pages-action-button__previous--active': showPreviousButton
     }"
     (click)="handlePreviousPage()"
   >
@@ -12,7 +12,7 @@
   <div
     class="book"
     [style.--brandColor]="book.colors.brand"
-    [style.--constrastColor]="book.colors.tertiary"
+    [style.--brandLightColor]="book.colors.brandLight"
   >
     <div id="main-front-cover" class="main-cover"></div>
     <div id="pages" class="pages">
@@ -27,8 +27,16 @@
       </div>
       <div class="page" *ngFor="let page of pages; let i = index">
         <article class="page__content">
-          {{ page }}
+          <ng-container *ngIf="i !== 0 && i !== 2; else customPages">
+            {{ page }}
+          </ng-container>
+
+          <ng-template #customPages>
+            <liv-introduction *ngIf="i === 0" [book]="book"></liv-introduction>
+            <liv-register *ngIf="i === 2"></liv-register>
+          </ng-template>
         </article>
+
         <footer class="page__footer">
           <span class="page__footer__pageNum"
             >{{ i + 1 }} / {{ totalPages }}</span
@@ -45,13 +53,18 @@
   <aside class="book-action-right-buttons">
     <button
       class="book-container__closeBookButton"
-      [ngClass]="{ 'book-container__closeBookButton--active': currentPage > 0 }"
+      [ngClass]="{ 'book-container__closeBookButton--active': showCloseButton }"
       (click)="handleCloseBook()"
     >
       <svg-icon src="assets/icons/close.svg"></svg-icon>
     </button>
 
-    <button class="switch-pages-action-button" (click)="handleNextPage()">
+    <button
+      class="switch-pages-action-button"
+      [ngClass]="{ 'switch-pages-action-button__next--active': showNextButton }"
+      (click)="handleNextPage()"
+      *ngIf="showNextButton"
+    >
       <svg-icon src="assets/icons/arrow-right.svg"></svg-icon>
     </button>
   </aside>

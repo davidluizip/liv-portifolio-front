@@ -10,47 +10,18 @@
   margin-bottom: rem(24px);
 
   &__titleBadge {
+    width: fit-content;
+
     display: flex;
     align-items: center;
     justify-content: center;
+    padding: rem(6px) rem(16px);
 
     border: 1px solid color('neutral-low-pure');
     border-radius: border-radius('2xl');
 
-    width: rem(94px);
-    height: rem(32px);
     font-size: 1em;
-
     color: color('neutral-low-pure');
-  }
-
-  &__editButton {
-    border-radius: border-radius('base');
-    border: 1px solid color('neutral-low-pure');
-    padding: rem(10px);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    @include buttonSmall(600);
-    color: color('neutral-low-pure');
-    transition: 0.2s ease;
-
-    &:hover {
-      background-color: color('neutral-low-pure');
-      color: color('neutral-hight-pure');
-    }
-
-    &--save {
-      background-color: color('neutral-low-pure');
-      color: color('neutral-hight-pure');
-
-      &:hover {
-        background-color: transparent;
-        color: color('neutral-low-pure');
-      }
-    }
   }
 
   &__topbar {
@@ -93,15 +64,53 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: rem(12px);
+    height: rem(27px);
 
     strong {
       font-weight: 500;
     }
   }
 
-  &__pencilIcon {
-    width: 16px;
-    height: 16px;
+  &__editButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: rem(4px) rem(8px);
+    line-height: 0;
+    border-radius: border-radius('base');
+
+    &__pencilIcon {
+      width: 16px;
+      height: 16px;
+    }
+
+    &:hover {
+      .class-description__editButton__pencilIcon {
+        filter: opacity(0.7);
+        transition: 0.2s ease;
+      }
+    }
+  }
+
+  &__saveButton {
+    border-radius: border-radius('base');
+    border: 1px solid color('neutral-low-pure');
+    padding: rem(4px) rem(8px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include buttonSmall(500);
+    line-height: normal;
+    color: color('neutral-low-pure');
+    transition: 0.2s ease;
+
+    &:hover {
+      background-color: color('neutral-low-pure');
+      color: color('neutral-hight-pure');
+    }
   }
 
   textarea {

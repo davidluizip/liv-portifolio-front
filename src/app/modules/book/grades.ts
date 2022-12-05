@@ -12,6 +12,7 @@ export const grades = {
     },
     colors: {
       brand: '#4F89C8',
+      brandLight: '#B9D0E9',
       primary: '#4E2F92',
       secondary: '#FF7C39',
       tertiary: '#FFDECD',
@@ -30,6 +31,7 @@ export const grades = {
     },
     colors: {
       brand: '#FF7C39',
+      brandLight: '##B8ACD3',
       primary: '#4E2F92',
       secondary: '#F7D2E1',
       tertiary: '#F6F4F9',
@@ -48,7 +50,8 @@ export const grades = {
     },
     colors: {
       brand: '#4E2F92',
-      primary: '#FFBE12',
+      brandLight: '#FFBE12',
+      primary: '#B8ACD3',
       secondary: '#40A299',
       tertiary: '#F6F4F9',
     },
@@ -66,6 +69,7 @@ export const grades = {
     },
     colors: {
       brand: '#72A1D3',
+      brandLight: '#B9D0E9',
       primary: '#B8ACD3',
       secondary: '#FFBE12',
       tertiary: '#FFDECD',
@@ -84,6 +88,7 @@ export const grades = {
     },
     colors: {
       brand: '#FFBE12',
+      brandLight: '#FFD871',
       primary: '#EFA5C3',
       secondary: '#FF7C39',
       tertiary: '#FFDECD',
@@ -102,6 +107,7 @@ export const grades = {
     },
     colors: {
       brand: '#B8ACD3',
+      brandLight: '#B8ACD3',
       primary: '#FFD871',
       secondary: '#E04A88',
       tertiary: '#FFDECD',

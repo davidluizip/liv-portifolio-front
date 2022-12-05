@@ -125,6 +125,7 @@
   background: rgba(0, 0, 0, 0);
   transition: background 0.7s;
   z-index: 2;
+  pointer-events: none;
 }
 
 .book .page:nth-child(odd) {
@@ -254,7 +255,7 @@
   overflow: hidden;
 
   &--backside {
-    background: var(--brandColor) !important;
+    background: var(--brandLightColor) !important;
     padding: 1.5rem;
   }
 }
@@ -267,7 +268,8 @@
 .switch-pages-action-button {
   @extend %action-round-button;
 
-  &__previous {
+  &__previous,
+  &__next {
     opacity: 0;
     pointer-events: none;
     &--active {
