@@ -44,7 +44,7 @@ $mq: (
   'tablet': 768px,
   'laptop': 1024px,
   'desktop': 1366px,
-  'infinity': 1440px
+  'infinity': 1440px,
 );
 
 /** Guide Colors */
@@ -87,7 +87,7 @@ $brand-quintenary-pure-medium: #c6470e;
 $brand-quintenary-pure-dark: #800000;
 
 $brand-sextenary-pure: #4f88c7;
-$brand-sextenary-pure-light: #b9d0e9;
+$brand-sextenary-pure-light: #d4e8ff;
 $brand-sextenary-pure-medium: #3a6da5;
 $brand-sextenary-pure-dark: #002362;
 
@@ -150,7 +150,7 @@ $colors: (
   'feedback-success-pure': $feedback-success-pure,
   'feedback-success-pure-light': $feedback-success-pure-light,
   'feedback-success-pure-medium': $feedback-success-pure-medium,
-  'feedback-success-pure-dark': $feedback-success-pure-dark
+  'feedback-success-pure-dark': $feedback-success-pure-dark,
 );
 
 /** Shadows */
@@ -158,7 +158,7 @@ $colors: (
 $shadows: (
   'gray100': 4px 4px 25px rgba(0, 0, 0, 0.1),
   'gray200': 0 0 5px rgba(0, 0, 0, 0.2),
-  'gray250': 0 4px 4px rgba(0, 0, 0, 0.25)
+  'gray250': 0 4px 4px rgba(0, 0, 0, 0.25),
 );
 
 /** Borders Radius */
@@ -172,7 +172,7 @@ $radius: (
   'xl': rem(12px),
   '2xl': rem(16px),
   '3xl': rem(24px),
-  'full': 9999px
+  'full': 9999px,
 );
 
 /** Default Variables */
