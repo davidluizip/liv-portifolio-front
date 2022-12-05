@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "node server.js",
-    "postinstall": "ng build --aot --prod",
+    "postinstall": "ng build -c=production",
     "start:dev": "ng serve -c=development",
     "start:homolog": "ng serve -c=homologation-jit",
     "start:prod": "ng serve -c=production",
