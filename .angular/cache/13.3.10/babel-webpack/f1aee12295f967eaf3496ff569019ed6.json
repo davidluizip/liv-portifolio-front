@@ -1,0 +1,1 @@
+{"ast":null,"code":"export const environment = {\n  production: true,\n  cypher_secret: '3595670729e25c22710796962d3cc7c8'\n};","map":null,"metadata":{},"sourceType":"module"}
