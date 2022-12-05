@@ -5,7 +5,7 @@
         width="163"
         height="138"
         viewBox="0 0 163 138"
-        [attr.fill]="book.colors.primary"
+        [attr.fill]="book?.colors.primary"
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
@@ -27,25 +27,25 @@
 
   <div class="cover-front-content">
     <picture class="liv-mascot-image">
-      <img [src]="book.mascot.src" [alt]="book.mascot.alt" />
+      <img [src]="book?.mascot.src" [alt]="book?.mascot.alt" />
     </picture>
 
     <h1 class="cover-front-content__title">
-      {{ book.content.className }}
+      {{ book?.content.className }}
     </h1>
   </div>
 
   <footer class="cover-front-footer">
     <div class="cover-front-footer__content">
-      <strong>{{ book.content.gradeName }}</strong>
-      <h3>{{ book.content.schoolName }}</h3>
-      <span>Professor(a) {{ book.content.teacherName }}</span>
+      <strong>{{ book?.content.gradeName }}</strong>
+      <h3>{{ book?.content.schoolName }}</h3>
+      <span>Professor(a) {{ book?.content.teacherName }}</span>
     </div>
     <svg
       width="256"
       height="174"
       viewBox="0 0 256 174"
-      [attr.fill]="book.colors.secondary"
+      [attr.fill]="book?.colors.secondary"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
@@ -54,6 +54,9 @@
     </svg>
     <button
       class="cover-front-footer__seePortfolioButton"
+      [ngStyle]="{
+        background: book?.colors.tertiary
+      }"
       type="button"
       (click)="seePortfolio.emit()"
     >

@@ -6,13 +6,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./cover-front-backside.component.scss'],
 })
 export class CoverFrontBacksideComponent implements OnInit {
-  isEnabledEditing = false;
+  isEnabledEdit = false;
   textareaValue = 'Escreva aqui um breve texto sobre a sua turma.';
 
   constructor() {}
 
   get textareaPlaceholder() {
-    return this.isEnabledEditing
+    return this.isEnabledEdit
       ? `Profressor, escreva aqui um uma descrição da turma.\n\nSugestão: Quantidade de alunos, características da tumas (são animados, curiosos, divertidos...).`
       : '';
   }

@@ -51,6 +51,18 @@ export class BookComponent implements OnInit, OnDestroy, AfterViewInit {
     return this.pages.length;
   }
 
+  get showPreviousButton() {
+    return this.currentPage > 0;
+  }
+
+  get showNextButton() {
+    return this.currentPage >= 0 && this.currentPage <= this.pages.length;
+  }
+
+  get showCloseButton() {
+    return this.currentPage > 0;
+  }
+
   ngOnInit(): void {
     this.route.queryParams
       .pipe(
