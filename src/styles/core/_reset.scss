@@ -30,7 +30,7 @@ body {
 
 :focus {
   outline: 0;
-  box-shadow: 0 0 0 2px color(neutral-hight-pure-dark);
+  box-shadow: 0 0 0 2px color('brand-primary-pure');
   transition: 0.1s ease;
 }
 

@@ -11,7 +11,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { httpInterceptorProviders } from './core/interceptors';
 import { registerLocaleData } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 registerLocaleData(localeBr, 'pt-BR');
 
@@ -25,7 +24,6 @@ registerLocaleData(localeBr, 'pt-BR');
       reverseOrder: true,
     }),
     AngularSvgIconModule.forRoot(),
-    NgbModule,
   ],
   providers: [
     httpInterceptorProviders,

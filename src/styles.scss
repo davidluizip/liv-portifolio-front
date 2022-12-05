@@ -1,5 +1,6 @@
 /* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
+// @import '~bootstrap/scss/bootstrap';
+// @import '~@ng-select/ng-select/themes/default.theme.css';
 
 @import './styles/index';
 
@@ -34,7 +35,7 @@ small {
 
 [disabled] {
   opacity: 0.6;
-  cursor: not-allowed;
+  cursor: default;
 }
 
 .overlay-panel {
@@ -54,13 +55,12 @@ small {
   }
 }
 
-.register-select-modal {
-  max-width: rem(530px);
+.import-log-error-modal {
+  max-width: 768px;
+}
 
-  .modal-content {
-    border: 0;
-    border-radius: border-radius('2xl');
-  }
+.copy-link-modal {
+  max-width: 480px;
 }
 
 .no-scroll {
