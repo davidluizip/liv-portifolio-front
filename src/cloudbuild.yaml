@@ -1,0 +1,27 @@
+steps:# 
+steps:
+- name: "gcr.io/cloud-builders/docker"
+args: ["build", "-t", "gcr.io/$PROJECT_ID/liv-portifolio", "."]
+# push the container image to Container Registry
+- name: "gcr.io/cloud-builders/docker"
+args: ["push", "gcr.io/$PROJECT_ID/liv-portifolio"]
+# Deploy container image to Cloud Run
+- name: "gcr.io/cloud-builders/gcloud"
+args:
+[
+"beta",
+"run",
+"deploy",
+"--allow-unauthenticated",
+"$PROJECT_ID",
+"--image",
+"gcr.io/$PROJECT_ID/liv-portifolio",
+"--region",
+"us-central1",
+"--platform",
+"managed",
+"--memory",
+"128Mi"
+]
+images:
+- "gcr.io/$PROJECT_ID/liv-portifolio"
