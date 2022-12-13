@@ -1,0 +1,106 @@
+@import 'variables';
+@import 'typography';
+
+.lesson-track-header {
+  margin-bottom: rem(16px);
+}
+
+.lesson-track-tag {
+  color: color(neutral-hight-pure);
+  display: inline-flex;
+  align-items: center;
+  margin-top: rem(24px);
+
+  & > strong {
+    display: block;
+    background: var(--colorBrand);
+    padding-inline: rem(8px);
+    padding-block: rem(8px);
+    font-weight: 700;
+    border-top-left-radius: border-radius(lg);
+    border-bottom-left-radius: border-radius(lg);
+  }
+
+  & > span {
+    border-top-right-radius: border-radius(lg);
+    border-bottom-right-radius: border-radius(lg);
+    display: block;
+    padding-inline: rem(4px) rem(8px);
+    padding-block: rem(8px);
+    background: var(--colorBrand);
+    filter: opacity(0.75);
+  }
+}
+
+.lesson-track-hero {
+  &__title {
+    @include headline-h3(400);
+    color: var(--colorBrand);
+  }
+
+  &__description {
+    @include paragraph(400);
+    margin-block: rem(16px) rem(32px);
+  }
+}
+
+.purpose-card {
+  background: var(--colorBrandLight);
+  border-radius: border-radius(lg);
+  border: 1px solid var(--colorBrand);
+  padding: rem(24px) rem(16px);
+
+  &__tag {
+    position: relative;
+    width: fit-content;
+    padding-right: rem(8px);
+    display: flex;
+    align-items: center;
+    height: rem(26px);
+
+    border-radius: border-radius('2xl');
+    background: color(neutral-hight-pure);
+
+    &__iconContent {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: var(--colorBrand);
+      position: absolute;
+      border-radius: border-radius(full);
+      left: 0;
+      top: 0;
+      width: rem(26px);
+      height: rem(26px);
+      margin-right: rem(8px);
+
+      svg-icon svg {
+        width: rem(16px);
+        height: rem(16px);
+        fill: color(neutral-hight-pure);
+      }
+    }
+
+    & > span {
+      margin-left: rem(34px);
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+
+  &__article {
+    &__title {
+      display: block;
+      font-weight: 700;
+      color: var(--colorBrand);
+      margin-block: rem(16px);
+    }
+
+    &__description {
+      max-height: rem(220px);
+      overflow-y: auto;
+      margin-bottom: 0;
+    }
+  }
+}

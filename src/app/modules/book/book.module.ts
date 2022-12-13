@@ -13,6 +13,8 @@ import { RegisterSelectModalComponent } from './pages/register/components/regist
 import { StudentSpeechRecordModalComponent } from './pages/register/components/student-speech-record-modal/student-speech-record-modal.component';
 import { RegisterBaseHeaderModalComponent } from './pages/register/components/register-base-header-modal/register-base-header-modal.component';
 import { IntroductionComponent } from './components/introduction/introduction.component';
+import { LessonTrackComponent } from './pages/lesson-track/lesson-track.component';
+import { TitleBadgeComponent } from './components/title-badge/title-badge.component';
 
 @NgModule({
   declarations: [
@@ -24,6 +26,8 @@ import { IntroductionComponent } from './components/introduction/introduction.co
     RegisterSelectModalComponent,
     StudentSpeechRecordModalComponent,
     RegisterBaseHeaderModalComponent,
+    LessonTrackComponent,
+    TitleBadgeComponent,
   ],
   imports: [
     ReactiveFormsModule,

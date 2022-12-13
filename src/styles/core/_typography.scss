@@ -41,7 +41,7 @@
   color: color('neutral-low-pure-dark');
 
   @include mq('laptop') {
-    font-size: rem(21px);
+    font-size: rem(20px);
   }
 
   @include mq('desktop') {

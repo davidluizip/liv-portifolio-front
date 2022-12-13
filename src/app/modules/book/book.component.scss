@@ -1,6 +1,9 @@
 @import 'variables';
 @import 'typography';
 
+$book-height: #{rem(626px)};
+$book-width: #{rem(1108px)};
+
 %action-round-button {
   background-color: color(neutral-hight-pure-light);
   border-radius: border-radius('full');
@@ -27,8 +30,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 3rem;
-  padding: 2em 0;
+  gap: rem(48px);
+  padding: rem(48px) 0 rem(24px);
 
   &__closeBookButton {
     @extend %action-round-button;
@@ -58,8 +61,8 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  width: calc(882px / 2);
-  height: 704px;
+  width: calc($book-width / 2);
+  height: $book-height;
 
   &__content {
     flex: 1;
@@ -93,8 +96,8 @@
 }
 
 .book .pages {
-  width: calc(828px + 16px);
-  height: calc(704px + 16px);
+  width: calc($book-width + 16px);
+  height: calc($book-height + 16px);
   position: relative;
   transform-style: preserve-3d;
   backface-visibility: hidden;
@@ -105,8 +108,8 @@
   margin: 0;
   position: absolute;
   top: 8px;
-  width: calc(828px / 2);
-  height: 704px;
+  width: calc($book-width / 2);
+  height: $book-height;
   transform-origin: 0 0;
   transition: transform 1.4s;
   backface-visibility: hidden;
@@ -211,8 +214,8 @@
   clear: none;
   margin: 0;
   position: absolute;
-  width: calc((828px / 2) + 12px);
-  height: calc(704px + 16px);
+  width: calc(($book-width / 2) + 12px);
+  height: calc($book-height + 16px);
   top: 0;
   background: #526070;
   z-index: -1;
@@ -262,7 +265,7 @@
 
 .book-action-right-buttons {
   display: grid;
-  grid-template-rows: repeat(2, calc(720px / 2));
+  grid-template-rows: repeat(2, calc($book-height / 2));
 }
 
 .switch-pages-action-button {

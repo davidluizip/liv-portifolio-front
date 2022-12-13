@@ -25,7 +25,10 @@
     ></svg-icon>
   </header>
 
-  <div class="cover-front-content">
+  <div
+    class="cover-front-content"
+    [style.--colorBrandLight]="book.colors.brandLight"
+  >
     <picture class="liv-mascot-image">
       <img [src]="book?.mascot.src" [alt]="book?.mascot.alt" />
     </picture>

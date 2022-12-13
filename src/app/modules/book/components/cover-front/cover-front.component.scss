@@ -18,9 +18,9 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-inline: 24px 32px;
+  padding-inline: rem(24px) rem(32px);
   width: 100%;
-  height: 70px;
+  height: rem(70px);
   position: relative;
 
   &::after {
@@ -48,8 +48,8 @@
     position: absolute;
     top: 12%;
     left: 18%;
-    width: 30px;
-    height: 32px;
+    width: rem(30px);
+    height: rem(32px);
     object-fit: cover;
   }
 }
@@ -65,15 +65,15 @@
   .liv-mascot-image {
     position: relative;
     margin-block: rem(32px) rem(48px);
-    margin-inline: 24px 0;
+    margin-inline: rem(24px) 0;
 
     &::before {
       content: '';
       display: block;
-      width: 165px;
-      height: 165px;
+      width: rem(165px);
+      height: rem(165px);
       border-radius: 50%;
-      background-color: var(--constrastColor);
+      background-color: var(--colorBrandLight);
       filter: opacity(0.6);
     }
 
@@ -99,14 +99,14 @@
   position: relative;
 
   &__content {
-    padding: 32px 24px;
+    padding: rem(32px) rem(24px) rem(24px);
     strong {
       @include headline-h3(600);
       color: color('neutral-low-pure-dark');
     }
 
     h3 {
-      margin-block: 4px 8px;
+      margin-block: rem(4px) rem(8px);
       @include headline-h3(500);
       text-decoration: underline;
       text-decoration-thickness: 1px;
@@ -130,19 +130,19 @@
 
   &__seePortfolioButton {
     position: absolute;
-    right: 24px;
-    bottom: 24px;
+    right: rem(24px);
+    bottom: rem(24px);
 
     @include buttonSmall(500);
-    line-height: 32px;
+    line-height: rem(32px);
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    width: 154px;
-    height: 48px;
+    gap: rem(12px);
+    width: rem(154px);
+    height: rem(48px);
 
-    border-radius: 48px;
+    border-radius: rem(48px);
   }
 
   .caret-icon-wrapper {
@@ -151,8 +151,8 @@
     justify-content: center;
 
     background-color: var(--brandColor);
-    border-radius: 50%;
-    width: 32px;
-    height: 32px;
+    border-radius: border-radius(full);
+    width: rem(32px);
+    height: rem(32px);
   }
 }

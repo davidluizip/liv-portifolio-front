@@ -27,12 +27,13 @@
       </div>
       <div class="page" *ngFor="let page of pages; let i = index">
         <article class="page__content">
-          <ng-container *ngIf="i !== 0 && i !== 2; else customPages">
+          <ng-container *ngIf="i > 2; else customPages">
             {{ page }}
           </ng-container>
 
           <ng-template #customPages>
             <liv-introduction *ngIf="i === 0" [book]="book"></liv-introduction>
+            <liv-lesson-track *ngIf="i === 1" [book]="book"></liv-lesson-track>
             <liv-register *ngIf="i === 2"></liv-register>
           </ng-template>
         </article>

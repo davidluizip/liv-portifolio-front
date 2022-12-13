@@ -3,21 +3,6 @@
 
 .intro-page-header {
   margin-bottom: rem(32px);
-
-  &__titleBadge {
-    width: fit-content;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: rem(6px) rem(16px);
-
-    border: 1px solid color('neutral-low-pure');
-    border-radius: border-radius('2xl');
-
-    font-size: 1em;
-    color: color('neutral-low-pure');
-  }
 }
 
 .intro-main-hero {
