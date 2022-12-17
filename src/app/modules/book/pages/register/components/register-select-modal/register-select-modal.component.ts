@@ -87,35 +87,48 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
         }))
       )
       .subscribe(async ({ type, file, id }) => {
-        const base64 = (await this.fileService.base64Encode(file)) as string;
+        console.log(file, type);
 
         switch (type) {
           case 'image':
-            this.registerService.setFieldValue(id, {
-              type: 'image',
-              value: {
-                src: base64,
-                alt: '',
-              },
-            });
+            {
+              const base64 = (await this.fileService.base64Encode(
+                file
+              )) as string;
+              this.registerService.setFieldValue(id, {
+                type: 'image',
+                value: {
+                  src: base64,
+                  alt: '',
+                },
+              });
+            }
             break;
           case 'video':
-            this.registerService.setFieldValue(id, {
-              type: 'video',
-              value: {
-                src: '',
-                type: 'video/mp4',
-              },
-            });
+            {
+              const url = URL.createObjectURL(file);
+              this.registerService.setFieldValue(id, {
+                type: 'video',
+                value: {
+                  src: url,
+                  type: file.type,
+                },
+              });
+            }
+
             break;
           case 'audio':
-            this.registerService.setFieldValue(id, {
-              type: 'audio',
-              value: {
-                src: '',
-                type: 'audio/mp3',
-              },
-            });
+            {
+              const url = URL.createObjectURL(file);
+              this.registerService.setFieldValue(id, {
+                type: 'audio',
+                value: {
+                  src: url,
+                  type: file.type,
+                },
+              });
+            }
+
             break;
           default:
             return;

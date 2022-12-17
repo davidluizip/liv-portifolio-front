@@ -13,8 +13,10 @@ import { RegisterSelectModalComponent } from './pages/register/components/regist
 import { StudentSpeechRecordModalComponent } from './pages/register/components/student-speech-record-modal/student-speech-record-modal.component';
 import { RegisterBaseHeaderModalComponent } from './pages/register/components/register-base-header-modal/register-base-header-modal.component';
 import { IntroductionComponent } from './components/introduction/introduction.component';
-import { LessonTrackComponent } from './pages/lesson-track/lesson-track.component';
 import { TitleBadgeComponent } from './components/title-badge/title-badge.component';
+import { LessonTrackRegisterComponent } from './pages/lesson-track-register/lesson-track-register.component';
+import { LessonTrackComponent } from './pages/lesson-track/lesson-track.component';
+import { AudioPlayerComponent } from './pages/register/components/audio-player/audio-player.component';
 
 @NgModule({
   declarations: [
@@ -26,8 +28,10 @@ import { TitleBadgeComponent } from './components/title-badge/title-badge.compon
     RegisterSelectModalComponent,
     StudentSpeechRecordModalComponent,
     RegisterBaseHeaderModalComponent,
+    LessonTrackRegisterComponent,
     LessonTrackComponent,
     TitleBadgeComponent,
+    AudioPlayerComponent,
   ],
   imports: [
     ReactiveFormsModule,

@@ -1,0 +1,86 @@
+@use 'sass:math';
+@import 'variables';
+
+.audio-player-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.play-button {
+  width: rem(42px);
+  height: rem(42px);
+  border-radius: 50%;
+  color: transparent;
+  background: color(neutral-hight-pure);
+  border: 1px solid transparent;
+  transition: 0.2s;
+
+  &:hover {
+    border-color: color(brand-sextenary-pure-medium);
+  }
+
+  svg-icon svg {
+    fill: color(brand-sextenary-pure);
+  }
+}
+
+@keyframes bounce {
+  10% {
+    transform: scaleY(0.3); /* start by scaling to 30% */
+  }
+
+  30% {
+    transform: scaleY(1); /* scale up to 100% */
+  }
+
+  60% {
+    transform: scaleY(0.5); /* scale down to 50% */
+  }
+
+  80% {
+    transform: scaleY(0.75); /* scale up to 75% */
+  }
+
+  100% {
+    transform: scaleY(0.6); /* scale down to 60% */
+  }
+}
+
+.bass-icon {
+  margin-top: rem(16px);
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  width: rem(108px);
+  height: rem(46px);
+
+  span {
+    content: '';
+    width: rem(4px);
+    height: 100%;
+    background-color: color(neutral-low-pure);
+    border-radius: border-radius(full);
+    opacity: 0;
+    pointer-events: none;
+    animation: bounce 2.2s ease infinite alternate forwards;
+    transition: all 0.2s ease-in-out 0.1s;
+
+    @for $i from 2 through 10 {
+      &:nth-of-type(#{$i}) {
+        $time: calc(((random(8) - $i) + ($i / 10)));
+        $absTime: abs($time);
+        $finalTime: calc($absTime * -1);
+        animation-delay: #{$finalTime}s;
+      }
+    }
+  }
+
+  &--active {
+    span {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+}

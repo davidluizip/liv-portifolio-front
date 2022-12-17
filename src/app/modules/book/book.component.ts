@@ -37,6 +37,8 @@ export class BookComponent implements OnInit, OnDestroy, AfterViewInit {
   private _switchingPageTimeout: NodeJS.Timeout;
   private _destroy$ = new Subject<boolean>();
 
+  footerBackground: string;
+
   media = new FormControl(null);
   currentPage = 0;
   pagesElement: HTMLDivElement[];

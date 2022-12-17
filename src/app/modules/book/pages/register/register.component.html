@@ -2,21 +2,21 @@
   <main class="registrer-wrapper">
     <div
       class="register-card"
-      *ngFor="let field of registerFields$ | async"
-      role="button"
+      *ngFor="let field of registerFields$ | async; let i = index"
       (click)="handleOpenRegisterTypeModal(field.id)"
+      role="button"
       [ngClass]="{
         'register-card--empty': !field.data
       }"
     >
       <ng-container *ngIf="field.data; else emptyCard">
         <ng-container [ngSwitch]="field.data.type">
-          <img
-            *ngSwitchCase="'image'"
-            class="register-card__image"
-            [src]="field.data.value.src"
-            [alt]="field.data.value.alt || ''"
-          />
+          <div class="register-card__image" *ngSwitchCase="'image'">
+            <img
+              [src]="field.data.value.src"
+              [alt]="field.data.value.alt || ''"
+            />
+          </div>
 
           <div class="register-card__text" *ngSwitchCase="'text'">
             <svg-icon src="assets/icons/quotation-marks.svg"></svg-icon>
@@ -24,17 +24,13 @@
             <strong>{{ field.data.value.name }}</strong>
           </div>
 
-          <div class="register-card__text" *ngSwitchCase="'audio'">
-            <audio controls>
-              <source
-                [src]="field.data.value.src"
-                [type]="field.data.value.type"
-              />
-              Your browser does not support the audio element.
-            </audio>
+          <div class="register-card__audio" *ngSwitchCase="'audio'">
+            <liv-audio-player
+              [src]="field.data.value.src | safeTransform : 'RESOURCE'"
+            ></liv-audio-player>
           </div>
 
-          <div class="register-card__text" *ngSwitchCase="'video'">
+          <div class="register-card__video" *ngSwitchCase="'video'">
             <video width="320" height="240" controls>
               <source
                 [src]="field.data.value.src"
