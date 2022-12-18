@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, filter, map, shareReplay } from 'rxjs';
 import { Model } from 'src/app/core/models/liv-response-protocol.model';
-import { TeacherModel } from 'src/app/core/models/teacher.model';
+import { TeacherModel } from '../models/teacher.model';
 
 export interface Colors {
   brand: string;
@@ -14,13 +14,6 @@ export interface Colors {
 interface Mascot {
   src: string;
   alt?: string;
-}
-
-interface Content {
-  className: string;
-  gradeName: string;
-  schoolName: string;
-  teacherName: string;
 }
 
 export interface BookState {

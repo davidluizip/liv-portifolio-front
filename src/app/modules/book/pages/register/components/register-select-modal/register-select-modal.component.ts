@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { filter, fromEvent, map, Subject, takeUntil } from 'rxjs';
-import { DOMEvent } from 'src/app/shared/types/dom-event';
+import { DOMEvent } from 'src/app/shared/interfaces/dom-event';
 import { FileService } from 'src/app/shared/utils/services/file/file.service';
 import { RegisterService } from '../../../../services/register.service';
 import { StudentSpeechRecordModalComponent } from '../student-speech-record-modal/student-speech-record-modal.component';

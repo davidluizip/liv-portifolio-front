@@ -1,22 +1,12 @@
+import { Formats } from 'src/app/core/models/media-formats.model';
+
 export interface PhotoModel {
   name: string;
   alternativeText: string;
   caption: string;
   width: number;
   height: number;
-  formats: {
-    thumbnail: {
-      ext: string;
-      url: string;
-      hash: string;
-      mime: string;
-      name: string;
-      path: string;
-      size: number;
-      width: number;
-      height: number;
-    };
-  };
+  formats: Formats;
   hash: string;
   ext: string;
   mime: string;

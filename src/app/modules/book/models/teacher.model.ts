@@ -1,4 +1,4 @@
-import { Model } from './liv-response-protocol.model';
+import { Model } from 'src/app/core/models/liv-response-protocol.model';
 import { PhotoModel } from './photo.model';
 import { SeriesModel } from './series.model';
 
