@@ -4,7 +4,7 @@ import {
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
-  HttpResponse,
+  HttpResponse
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
@@ -13,7 +13,7 @@ import { shouldRetry } from 'src/app/shared/rxjs/custom-operators';
 import {
   LivErrorResponse,
   LivResponseProtocol,
-  LivSuccessResponse,
+  LivSuccessResponse
 } from '../models/liv-response-protocol.model';
 import { ToastService } from '../services/toast.service';
 
@@ -36,7 +36,7 @@ export class ResponseProtocolInterceptor implements HttpInterceptor {
         shouldRetry({
           maxRetryAttempts: 2,
           scalingDuration: 3000,
-          excludedStatusCodes: [404, 403, 401, 400],
+          excludedStatusCodes: [404, 403, 401, 400]
         })
       ),
       catchError((err: HttpErrorResponse) => this.handleError(err))
@@ -58,30 +58,30 @@ export class ResponseProtocolInterceptor implements HttpInterceptor {
       return event.body;
     }
 
-    if (response.status) {
-      if (response.status === 401) {
+    if (response.error.status) {
+      if (response.error.status === 401) {
         throw new HttpErrorResponse({
-          status: response.status,
+          status: response.error.status,
           error: response.error,
-          url: event.url!,
+          url: event.url!
         });
       }
       if (response?.error) {
         throw new HttpErrorResponse({
           status: event.status,
           error: response.error,
-          url: event.url!,
+          url: event.url!
         });
       }
       return {
-        status: event.status,
-        data: response.data ?? response,
-      };
+        status: response.error.status,
+        data: response.data ?? response
+      } as any;
     } else {
       throw new HttpErrorResponse({
         status: event.status,
         error: event.body,
-        url: event.url!,
+        url: event.url!
       });
     }
   }
@@ -107,10 +107,10 @@ export class ResponseProtocolInterceptor implements HttpInterceptor {
         status: response.status,
         error: {
           message: response.error,
-          stack: {
-            url: response.url,
-          },
-        },
+          details: {
+            url: response.url
+          }
+        }
       } as LivErrorResponse;
     });
   }

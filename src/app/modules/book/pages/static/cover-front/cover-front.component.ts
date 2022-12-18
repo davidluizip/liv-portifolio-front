@@ -1,14 +1,15 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable, tap } from 'rxjs';
+import { CoverFrontService } from '../../../services/api/cover-front.service';
 import {
   BookState,
-  PageControllerService,
+  PageControllerService
 } from '../../../services/page-controller.service';
 
 @Component({
   selector: 'liv-cover-front',
   templateUrl: './cover-front.component.html',
-  styleUrls: ['./cover-front.component.scss'],
+  styleUrls: ['./cover-front.component.scss']
 })
 export class CoverFrontComponent implements OnInit {
   readonly book$: Observable<BookState> =
@@ -16,7 +17,15 @@ export class CoverFrontComponent implements OnInit {
 
   @Output() seePortfolio = new EventEmitter();
 
-  constructor(private pageControllerService: PageControllerService) {}
+  constructor(
+    private pageControllerService: PageControllerService,
+    private readonly _coverFrontService: CoverFrontService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this._coverFrontService.getCover(12).subscribe(res => {
+      console.log('DATA', res);
+    });
+    //this.pageControllerService.saveContent(res.data)
+  }
 }

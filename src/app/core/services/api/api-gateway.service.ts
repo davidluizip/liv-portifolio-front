@@ -8,6 +8,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LivSuccessResponse } from 'src/app/core/models/liv-response-protocol.model';
+import { environment } from 'src/environments/environment';
 
 export interface IRequestOptions {
   headers?: HttpHeaders;
@@ -22,14 +23,14 @@ export interface IRequestOptions {
 export class ApiGatewayService {
   private readonly _BASE_URL: string;
   constructor(private httpClient: HttpClient) {
-    this._BASE_URL = '';
+    this._BASE_URL = environment.baseUserStrapi;
   }
 
-  get<T>(endpoint: string, options: IRequestOptions = {}): Observable<T> {
+  get<T>(endpoint: string, options: IRequestOptions = {}): Observable<LivSuccessResponse<T>> {
     const url = encodeURI(this.service + endpoint);
     return this.httpClient
       .get<LivSuccessResponse<T>>(url, options)
-      .pipe(map(res => res.data));
+      //.pipe(map(res => res.data));
   }
 
   upload<T>(
@@ -62,47 +63,47 @@ export class ApiGatewayService {
     endpoint: string,
     body: unknown,
     options: IRequestOptions = {}
-  ): Observable<T> {
+  ): Observable<LivSuccessResponse<T>> {
     const url = encodeURI(this.service + endpoint);
     return this.httpClient
       .post<LivSuccessResponse<T>>(url, body, options)
-      .pipe(map(res => res.data));
+      //.pipe(map(res => res.data));
   }
 
   put<T>(
     endpoint: string,
     body: unknown,
     options: IRequestOptions = {}
-  ): Observable<T> {
+  ): Observable<LivSuccessResponse<T>> {
     const url = encodeURI(this.service + endpoint);
     return this.httpClient
       .put<LivSuccessResponse<T>>(url, body, options)
-      .pipe(map(res => res.data));
+      //.pipe(map(res => res.data));
   }
 
   patch<T>(
     endpoint: string,
     body: unknown,
     options: IRequestOptions = {}
-  ): Observable<T> {
+  ): Observable<LivSuccessResponse<T>> {
     const url = encodeURI(this.service + endpoint);
     return this.httpClient
       .patch<LivSuccessResponse<T>>(url, body, options)
-      .pipe(map(res => res.data));
+      //.pipe(map(res => res.data));
   }
 
-  delete<T>(endpoint: string, options: IRequestOptions = {}): Observable<T> {
+  delete<T>(endpoint: string, options: IRequestOptions = {}): Observable<LivSuccessResponse<T>> {
     const url = encodeURI(this.service + endpoint);
     return this.httpClient
       .delete<LivSuccessResponse<T>>(url, options)
-      .pipe(map(res => res.data));
+      //.pipe(map(res => res.data));
   }
 
-  graphql<T>(query: string, options: IRequestOptions = {}): Observable<T> {
+  graphql<T>(query: string, options: IRequestOptions = {}): Observable<LivSuccessResponse<T>> {
     const url = encodeURI(this.service + '/graphql');
     return this.httpClient
       .post<LivSuccessResponse<T>>(url, JSON.stringify({ query }), options)
-      .pipe(map(res => res.data));
+      //.pipe(map(res => res.data));
   }
 
   get service(): string {

@@ -1,12 +1,25 @@
+export interface Model<T> {
+  id: number;
+  attributes: T;
+};
+export interface Meta {
+  pagination: Pagination;
+};
+export interface Pagination {
+  page: number;
+  pageSize: number;
+  pageCount: number;
+  total: number;
+};
+
 export interface LivResponseProtocol<T = unknown> {
-  status: number;
   data: T;
   error?: ErrorResponse;
 }
 
 export interface LivSuccessResponse<T = unknown> {
-  status: number;
-  data: T;
+  data: Model<T>;
+  meta: Meta;
 }
 
 export interface LivErrorResponse {
@@ -20,6 +33,8 @@ export interface LivErrorStackResponse {
 }
 
 interface ErrorResponse {
-  stack: LivErrorStackResponse;
+  details: LivErrorStackResponse;
+  name: string;
   message: string;
+  status: number;
 }

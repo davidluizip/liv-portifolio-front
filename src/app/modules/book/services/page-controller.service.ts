@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, filter, map, shareReplay } from 'rxjs';
+import { Model } from 'src/app/core/models/liv-response-protocol.model';
+import { TeacherModel } from 'src/app/core/models/teacher.model';
 
 export interface Colors {
   brand: string;
@@ -24,7 +26,7 @@ interface Content {
 export interface BookState {
   mascot: Mascot;
   colors: Colors;
-  content: Content;
+  content: Model<TeacherModel>;
 }
 
 @Injectable({
@@ -65,7 +67,7 @@ export class PageControllerService {
     });
   }
 
-  saveContent(content: Content) {
+  saveContent(content: Model<TeacherModel>) {
     this._state.next({
       ...this.state,
       content,

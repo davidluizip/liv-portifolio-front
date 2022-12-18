@@ -57,7 +57,7 @@ export class BookComponent implements OnInit, AfterViewInit {
 
     this.pageControllerService.saveColors(colors);
     this.pageControllerService.saveMascot(mascot);
-    this.pageControllerService.saveContent(content);
+    //this.pageControllerService.saveContent(content);
   }
 
   get totalPages() {
@@ -92,7 +92,7 @@ export class BookComponent implements OnInit, AfterViewInit {
         const { colors, content, mascot } = this.book;
         this.pageControllerService.saveColors(colors);
         this.pageControllerService.saveMascot(mascot);
-        this.pageControllerService.saveContent(content);
+        //this.pageControllerService.saveContent(content);
       });
   }
 
