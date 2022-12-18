@@ -4,7 +4,7 @@
       class="dropzone"
       livDragDropFileUpload
       (click)="fileField.click()"
-      (fileDropped)="upload($event)"
+      (fileDropped)="onUpload($event)"
     >
       <div class="dropzone__info">
         <svg-icon src="assets/icons/gallery.svg"></svg-icon>
@@ -18,7 +18,7 @@
       accept="image/png,image/jpeg,image/gif"
       #fileField
       hidden
-      (change)="upload($event.target['files'])"
+      (change)="onChange($event)"
     />
   </section>
 

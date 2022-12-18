@@ -13,15 +13,12 @@
     <div
       class="book"
       [style.--brandColor]="book.colors.brand"
-      [style.--brandLightColor]="book.colors.brandLight"
+      [style.--brand_lightColor]="book.colors.brand_light"
     >
       <div id="main-front-cover" class="main-cover"></div>
       <div id="pages" class="pages">
         <div class="page cover-front">
-          <liv-cover-front
-            [book]="book"
-            (seePortfolio)="handleNextPage()"
-          ></liv-cover-front>
+          <liv-cover-front (seePortfolio)="handleNextPage()"></liv-cover-front>
         </div>
         <div class="page cover-front cover-front--backside">
           <liv-cover-front-backside></liv-cover-front-backside>
@@ -33,17 +30,10 @@
             </ng-container>
 
             <ng-template #customPages>
-              <liv-introduction
-                *ngIf="i === 0"
-                [book]="book"
-              ></liv-introduction>
-              <liv-lesson-track
-                *ngIf="i === 1"
-                [book]="book"
-              ></liv-lesson-track>
+              <liv-introduction *ngIf="i === 0"></liv-introduction>
+              <liv-lesson-track *ngIf="i === 1"></liv-lesson-track>
               <liv-lesson-track-register
                 *ngIf="i === 2"
-                [book]="book"
               ></liv-lesson-track-register>
               <liv-register *ngIf="i === 3"></liv-register>
             </ng-template>

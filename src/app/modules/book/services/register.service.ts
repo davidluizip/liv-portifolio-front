@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { RegisterSelectModalComponent } from '../pages/register/components/register-select-modal/register-select-modal.component';
 
 interface TextField {
@@ -35,16 +35,18 @@ interface AudioField {
   };
 }
 
+type FieldData = TextField | ImageField | VideoField | AudioField | null;
+
 interface RegisterField {
   id: number;
-  data: TextField | ImageField | VideoField | AudioField | null;
+  data: FieldData;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class RegisterService {
-  private _registerFields = new BehaviorSubject([
+  private _registerFields = new BehaviorSubject<RegisterField[]>([
     {
       id: 1,
       data: null,
@@ -63,9 +65,10 @@ export class RegisterService {
     },
   ]);
 
-  registerFields$ = this._registerFields.asObservable();
+  registerFields$: Observable<RegisterField[]> =
+    this._registerFields.asObservable();
 
-  private _selectedRegisterFieldId = new BehaviorSubject<number>(null);
+  private _selectedRegisterFieldId = new BehaviorSubject<number | null>(null);
 
   constructor(private ngbModal: NgbModal) {}
 
@@ -76,11 +79,12 @@ export class RegisterService {
     };
   }
 
-  setFieldValue(id: number, data: RegisterField['data']) {
+  setFieldValue(id: number, data: FieldData) {
     const registerFields = this._registerFields.getValue();
     const fieldIndex = this._registerFields
       .getValue()
       .findIndex(field => field.id === id);
+
     registerFields[fieldIndex].data = data;
     this._registerFields.next(registerFields);
   }

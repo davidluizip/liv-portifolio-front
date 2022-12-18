@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import {
   Colors,
@@ -6,11 +6,11 @@ import {
 } from '../../services/page-controller.service';
 
 @Component({
-  selector: 'liv-lesson-track-register',
-  templateUrl: './lesson-track-register.component.html',
-  styleUrls: ['./lesson-track-register.component.scss'],
+  selector: 'liv-introduction',
+  templateUrl: './introduction.component.html',
+  styleUrls: ['./introduction.component.scss'],
 })
-export class LessonTrackRegisterComponent {
+export class IntroductionComponent {
   readonly colors$: Observable<Colors> = this.pageControllerService.colors$;
 
   constructor(private pageControllerService: PageControllerService) {}

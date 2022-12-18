@@ -80,10 +80,11 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
             !!event.target.files &&
             !!this.registerService.snapshot.selectedRegisterFieldId
         ),
+        filter(() => !!this.registerService.snapshot.selectedRegisterFieldId),
         map(({ target }) => ({
           type: this.selectedInputType,
-          file: target.files[0],
-          id: this.registerService.snapshot.selectedRegisterFieldId,
+          file: target.files![0],
+          id: this.registerService.snapshot.selectedRegisterFieldId!,
         }))
       )
       .subscribe(async ({ type, file, id }) => {
@@ -106,7 +107,7 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
             break;
           case 'video':
             {
-              const url = URL.createObjectURL(file);
+              const url = (await this.fileService.base64Encode(file)) as string;
               this.registerService.setFieldValue(id, {
                 type: 'video',
                 value: {
@@ -134,7 +135,7 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
             return;
         }
 
-        delete this.fileInput.nativeElement.files;
+        delete this.fileInput.nativeElement.files![0];
 
         this.registerService.resetSelectedRegisterField();
         this.ngbActiveModal.close();

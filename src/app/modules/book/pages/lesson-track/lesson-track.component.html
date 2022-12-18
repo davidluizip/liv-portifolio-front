@@ -1,7 +1,7 @@
 <div
   class="lesson-track-container"
-  [style.--colorBrand]="book?.colors.brand"
-  [style.--colorBrandLight]="book?.colors.brandLight"
+  [style.--color_brand]="(colors$ | async)?.brand"
+  [style.--color_brand_light]="(colors$ | async)?.brand_light"
 >
   <header class="lesson-track-header">
     <liv-title-badge name="Empatia"></liv-title-badge>

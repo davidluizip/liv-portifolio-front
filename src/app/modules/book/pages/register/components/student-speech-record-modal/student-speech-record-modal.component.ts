@@ -56,13 +56,15 @@ export class StudentSpeechRecordModalComponent
 
     const { about, name } = this.form.value;
 
-    this.registerService.setFieldValue(fieldId, {
-      type: 'text',
-      value: {
-        about,
-        name,
-      },
-    });
+    if (fieldId) {
+      this.registerService.setFieldValue(fieldId, {
+        type: 'text',
+        value: {
+          about,
+          name,
+        },
+      });
+    }
 
     this.ngbModal.dismissAll();
   }

@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   Component,
   ElementRef,
   Input,
@@ -28,20 +27,20 @@ enum PlayingState {
 }
 
 @Component({
-  selector: 'liv-audio-player',
-  templateUrl: './audio-player.component.html',
-  styleUrls: ['./audio-player.component.scss'],
+  selector: 'liv-video-player',
+  templateUrl: './video-player.component.html',
+  styleUrls: ['./video-player.component.scss'],
 })
-export class AudioPlayerComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('audioRef') audio: ElementRef<HTMLAudioElement | undefined> | null;
+export class VideoPlayerComponent implements OnDestroy {
+  @ViewChild('videoRef') video: ElementRef<HTMLVideoElement | undefined> | null;
 
   @Input() set src(value: SafeResourceUrl) {
     const state = this.state.getValue();
     state.src = value;
     this.state.next(state);
 
-    if (this.audio?.nativeElement && state.src) {
-      this.audio?.nativeElement?.load();
+    if (this.video?.nativeElement && state.src) {
+      this.video.nativeElement.load();
     }
   }
 
@@ -59,8 +58,8 @@ export class AudioPlayerComponent implements AfterViewInit, OnDestroy {
   private volume = 0.5;
 
   ngOnDestroy(): void {
-    if (this.audio?.nativeElement?.src) {
-      URL.revokeObjectURL(this.audio?.nativeElement?.src);
+    if (this.video?.nativeElement?.src) {
+      URL.revokeObjectURL(this.video.nativeElement.src);
     }
     this.destroy$.next(true);
     this.destroy$.complete();
@@ -68,22 +67,24 @@ export class AudioPlayerComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     queueMicrotask(() => {
-      if (this.audio?.nativeElement) {
-        this.audio.nativeElement.volume = this.volume;
+      if (this.video?.nativeElement) {
+        this.video.nativeElement.volume = this.volume;
+        this.video.nativeElement.controls = false;
       }
     });
 
     this.state$
       .pipe(
+        takeUntil(this.destroy$),
         filter(({ playing, src }) => playing !== PlayingState.stop && !!src),
         shareReplay()
       )
       .subscribe(({ playing }) => {
         if (playing === PlayingState.play) {
-          this.audio?.nativeElement?.play();
+          this.video?.nativeElement?.play();
           this.playerIcon = 'pause.svg';
         } else {
-          this.audio?.nativeElement?.pause();
+          this.video?.nativeElement?.pause();
           this.playerIcon = 'play.svg';
         }
       });

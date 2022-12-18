@@ -9,7 +9,7 @@
     <article
       class="intro-article"
       [ngStyle]="{
-        background: book?.colors.brandLight
+        background: (colors$ | async)?.brand_light
       }"
     >
       Chegou o material tão esperado do nosso semestre: nosso portfólio digital!

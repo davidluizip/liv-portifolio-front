@@ -2,7 +2,7 @@ import {
   HttpErrorResponse,
   HttpEvent,
   HttpEventType,
-  HttpResponse
+  HttpResponse,
 } from '@angular/common/http';
 import {
   MonoTypeOperatorFunction,
@@ -10,17 +10,17 @@ import {
   pipe,
   throwError,
   timer,
-  UnaryFunction
+  UnaryFunction,
 } from 'rxjs';
 import { filter, map, RetryConfig, tap } from 'rxjs/operators';
 
 export function filterResponse<T>(): UnaryFunction<
-  Observable<HttpEvent<T>>,
-  Observable<T>
+  Observable<HttpResponse<T>>,
+  Observable<T | null>
 > {
   return pipe(
-    filter((event: HttpEvent<T>) => event.type === HttpEventType.Response),
-    map((response: HttpResponse<T>) => response.body)
+    filter((event: HttpResponse<T>) => event.type === HttpEventType.Response),
+    map((response: HttpResponse<T>) => response.body!)
   );
 }
 
@@ -28,7 +28,7 @@ export function uploadProgress<T>(
   cb: (progress: number) => void
 ): MonoTypeOperatorFunction<HttpEvent<T>> {
   return tap((event: HttpEvent<T>) => {
-    if (event.type === HttpEventType.UploadProgress) {
+    if (event.type === HttpEventType.UploadProgress && event.total) {
       cb(Math.round((event.loaded * 100) / event.total));
     }
   });
@@ -37,7 +37,7 @@ export function uploadProgress<T>(
 export function shouldRetry({
   maxRetryAttempts = 3,
   scalingDuration = 1000,
-  excludedStatusCodes = []
+  excludedStatusCodes = [],
 }: GenericRetryStrategy = {}): RetryConfig {
   return {
     count: maxRetryAttempts,
@@ -50,7 +50,7 @@ export function shouldRetry({
         return throwError(() => err);
       }
       return timer(retryAttempt * scalingDuration);
-    }
+    },
   } as RetryConfig;
 }
 
