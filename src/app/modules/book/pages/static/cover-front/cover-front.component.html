@@ -35,15 +35,15 @@
       </picture>
 
       <h1 class="cover-front-content__title">
-        {{ book?.content }}
+        {{ book?.content.attributes.turma }}
       </h1>
     </div>
 
     <footer class="cover-front-footer">
       <div class="cover-front-footer__content">
-        <!--  <strong>{{ book.content?.gradeName }}</strong>
-        <h3>{{ book.content?.schoolName }}</h3>
-        <span>Professor(a) {{ book.content.teacherName }}</span> -->
+         <strong>{{ book.content?.attributes.serie }}</strong>
+        <h3>{{ book.content?.attributes.escola }}</h3>
+        <span>Professor(a) {{ book.content?.attributes.professor.data.attributes.apelido }}</span>
       </div>
       <svg
         width="256"

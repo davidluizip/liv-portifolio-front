@@ -1,4 +1,5 @@
-import { Model } from 'src/app/core/models/liv-response-protocol.model';
+import { Data, Model } from 'src/app/core/models/liv-response-protocol.model';
+import { PhotoModel } from './photo.model';
 import { TeacherModel } from './teacher.model';
 
 export interface TeacherBookModel {
@@ -7,7 +8,7 @@ export interface TeacherBookModel {
   escola: string;
   pagina_turma: PaginaTurma;
   registros: Registros;
-  professor: Model<TeacherModel>;
+  professor: Data<TeacherModel>;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date;
@@ -16,9 +17,10 @@ export interface TeacherBookModel {
 interface PaginaTurma {
   id: number;
   descricao: string;
+  midia: Data<PhotoModel>;
 }
 
 interface Registros {
   id: number;
-  objetivo_atividade: string;
+  midia: Data<Model<PhotoModel>[]>;
 }

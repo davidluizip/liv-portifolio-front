@@ -1,3 +1,6 @@
+export interface Data<T> {
+  data: Model<T>;
+}
 export interface Model<T> {
   id: number;
   attributes: T;
@@ -15,7 +18,8 @@ export interface Pagination {
 }
 
 export interface LivResponseProtocol<T = unknown> {
-  data: T;
+  data: Model<T>;
+  meta: Meta;
   error?: ErrorResponse;
 }
 

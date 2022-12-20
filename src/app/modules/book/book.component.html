@@ -1,5 +1,5 @@
 <div class="book-container">
-  <main class="book-hero">
+  <main class="book-hero" *ngIf="bookColors$ | async; let colors ">
     <button
       class="switch-pages-action-button switch-pages-action-button__previous"
       [ngClass]="{
@@ -12,8 +12,8 @@
 
     <div
       class="book"
-      [style.--brandColor]="book.colors.brand"
-      [style.--brand_lightColor]="book.colors.brand_light"
+      [style.--brandColor]="colors.brand"
+      [style.--brand_lightColor]="colors.brand_light"
     >
       <div id="main-front-cover" class="main-cover"></div>
       <div id="pages" class="pages">

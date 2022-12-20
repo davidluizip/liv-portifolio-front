@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, filter, map, shareReplay } from 'rxjs';
 import { Model } from 'src/app/core/models/liv-response-protocol.model';
-import { TeacherModel } from '../models/teacher.model';
+import { TeacherBookModel } from '../models/teacher-book.model';
 
 export interface Colors {
   brand: string;
@@ -19,14 +19,18 @@ interface Mascot {
 export interface BookState {
   mascot: Mascot;
   colors: Colors;
-  content: Model<TeacherModel>;
+  content: Model<TeacherBookModel>;
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class PageControllerService {
-  private _state = new BehaviorSubject<BookState>({} as BookState);
+  private _currentPage = new BehaviorSubject<number>(null);
+  public currentPage$ = this._currentPage.asObservable();
+  private _bookId = new BehaviorSubject<number>(null);
+  public bookId$ = this._bookId.asObservable();
+  private _state = new BehaviorSubject<BookState>(null);
   public state$ = this._state.asObservable();
 
   public colors$ = this._state.asObservable().pipe(
@@ -40,34 +44,43 @@ export class PageControllerService {
 
   get snapshot() {
     return {
+      currentPage: this._currentPage.getValue(),
+      bookId: this._bookId.getValue(),
       mascot: this._state.getValue()?.mascot,
       colors: this._state.getValue()?.colors,
-      content: this._state.getValue()?.content,
+      content: this._state.getValue()?.content
     };
   }
 
   saveColors(colors: Colors) {
     this._state.next({
       ...this.state,
-      colors,
+      colors
     });
   }
 
   saveMascot(mascot: Mascot) {
     this._state.next({
       ...this.state,
-      mascot,
+      mascot
     });
   }
 
-  saveContent(content: Model<TeacherModel>) {
+  saveContent(content: Model<TeacherBookModel>) {
     this._state.next({
       ...this.state,
-      content,
+      content
     });
+  }
+
+  saveBookId(bookId: number) {
+    this._bookId.next(bookId);
+  }
+  saveCurrentPage(page: number){
+    this._currentPage.next(page);
   }
 
   reset() {
-    this._state.next({} as BookState);
+    this._state.next(null);
   }
 }

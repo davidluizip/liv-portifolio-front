@@ -5,12 +5,13 @@ import {
   Inject,
   OnInit,
   Renderer2,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { filter, from, mergeMap, of, Subject } from 'rxjs';
+import { filter, from, mergeMap, of, Subject, tap } from 'rxjs';
 import { grades } from './grades';
+import { CoverFrontService } from './services/api/cover-front.service';
 import { PageControllerService } from './services/page-controller.service';
 
 interface HTMLDivElementPage extends HTMLDivElement {
@@ -21,7 +22,7 @@ interface HTMLDivElementPage extends HTMLDivElement {
   selector: 'liv-book',
   templateUrl: './book.component.html',
   styleUrls: ['./book.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.None
 })
 export class BookComponent implements OnInit, AfterViewInit {
   pages: string[] = [
@@ -32,10 +33,10 @@ export class BookComponent implements OnInit, AfterViewInit {
     'Quinta Pagina',
     'Sexta Pagina',
     'Setima Pagina',
-    'Oitava Pagina',
+    'Oitava Pagina'
   ];
 
-  book = grades['1-ano'];
+  bookColors$ = this.pageControllerService.colors$.pipe(tap(console.log));
 
   private _switchingPage = false;
   private _switchingPageTimeout: NodeJS.Timeout;
@@ -51,14 +52,9 @@ export class BookComponent implements OnInit, AfterViewInit {
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
     private route: ActivatedRoute,
-    private pageControllerService: PageControllerService
-  ) {
-    const { colors, content, mascot } = this.book;
-
-    this.pageControllerService.saveColors(colors);
-    this.pageControllerService.saveMascot(mascot);
-    //this.pageControllerService.saveContent(content);
-  }
+    private pageControllerService: PageControllerService,
+    private readonly _coverFrontService: CoverFrontService
+  ) {}
 
   get totalPages() {
     return this.pages.length;
@@ -77,23 +73,15 @@ export class BookComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.route.queryParams
-      .pipe(
-        filter(
-          params =>
-            params['grade'] &&
-            Object.keys(grades).some(key => key === params['grade'])
-        )
-      )
-      .subscribe(params => {
-        const grade = (params as { grade: keyof typeof grades }).grade;
-        this.book = grades[grade];
-
-        const { colors, content, mascot } = this.book;
-        this.pageControllerService.saveColors(colors);
-        this.pageControllerService.saveMascot(mascot);
-        //this.pageControllerService.saveContent(content);
-      });
+    const bookId = this.route.snapshot.paramMap.get('id');
+    this.pageControllerService.saveBookId(Number(bookId));
+    this._coverFrontService.getCoverFront(Number(bookId)).subscribe(res => {
+      const serie = res.attributes.serie.replace(/ /g, '-');
+      this.pageControllerService.saveContent(res);
+      this.pageControllerService.saveColors(grades[serie].colors);
+      this.pageControllerService.saveMascot(grades[serie].mascot);
+      setTimeout(() => this.startConfigPages(), 1000);
+    });
   }
 
   ngOnDestroy(): void {
@@ -103,7 +91,9 @@ export class BookComponent implements OnInit, AfterViewInit {
     this._destroy$.complete();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit() {}
+
+  startConfigPages() {
     const pages = Array.from(
       this.document.getElementsByClassName('page')
     ) as HTMLDivElementPage[];
@@ -118,7 +108,6 @@ export class BookComponent implements OnInit, AfterViewInit {
         }
       });
   }
-
   handleCloseBook() {
     if (this.currentPage === 0) return;
 
@@ -161,7 +150,7 @@ export class BookComponent implements OnInit, AfterViewInit {
     }
 
     this.currentPage = lastFlippedPageNum - 2;
-
+    this.pageControllerService.saveCurrentPage(this.currentPage);
     this._switchingPageTimeout = setTimeout(
       () => (this._switchingPage = false),
       450
@@ -203,7 +192,7 @@ export class BookComponent implements OnInit, AfterViewInit {
     }
 
     this.currentPage = nextPageToFlip.pageNum;
-
+    this.pageControllerService.saveCurrentPage(this.currentPage);
     this._switchingPageTimeout = setTimeout(
       () => (this._switchingPage = false),
       450

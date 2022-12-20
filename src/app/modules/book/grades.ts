@@ -1,14 +1,8 @@
 export const grades = {
-  ['1-ano']: {
+  ['1º-ano']: {
     mascot: {
       src: 'assets/images/mascots/1-ano.png',
       alt: 'Imagem do mascote do 1º ano',
-    },
-    content: {
-      className: 'Turma A',
-      gradeName: '1º ano',
-      schoolName: 'Escola Eleva Barra',
-      teacherName: 'Sônia Maria',
     },
     colors: {
       brand: '#4F89C8',
@@ -18,16 +12,10 @@ export const grades = {
       tertiary: '#FFDECD',
     },
   },
-  ['2-ano']: {
+  ['2º-ano']: {
     mascot: {
       src: 'assets/images/mascots/2-ano.png',
       alt: 'Imagem do mascote do 2º ano',
-    },
-    content: {
-      className: 'Turma A',
-      gradeName: '2º ano',
-      schoolName: 'Escola Eleva Barra',
-      teacherName: 'Sônia Maria',
     },
     colors: {
       brand: '#FF7C39',
@@ -37,16 +25,23 @@ export const grades = {
       tertiary: '#F6F4F9',
     },
   },
-  ['3-ano']: {
+  ['3º-ano']: {
     mascot: {
       src: 'assets/images/mascots/3-ano.png',
       alt: 'Imagem do mascote do 3º ano',
     },
-    content: {
-      className: 'Turma A',
-      gradeName: '3º ano',
-      schoolName: 'Escola Eleva Barra',
-      teacherName: 'Sônia Maria',
+    colors: {
+      brand: '#4E2F92',
+      brand_light: '#FFBE12',
+      primary: '#B8ACD3',
+      secondary: '#40A299',
+      tertiary: '#F6F4F9',
+    },
+  },
+  ['4º-ano']: {
+    mascot: {
+      src: 'assets/images/mascots/4-anos.png',
+      alt: 'Imagem do mascote do 4º ano',
     },
     colors: {
       brand: '#4E2F92',
@@ -61,12 +56,6 @@ export const grades = {
       src: 'assets/images/mascots/3-anos.png',
       alt: 'Imagem do mascote do 3 anos',
     },
-    content: {
-      className: 'Turma A',
-      gradeName: '3 anos',
-      schoolName: 'Escola Eleva Barra',
-      teacherName: 'Sônia Maria',
-    },
     colors: {
       brand: '#72A1D3',
       brand_light: '#B9D0E9',
@@ -80,12 +69,6 @@ export const grades = {
       src: 'assets/images/mascots/4-anos.png',
       alt: 'Imagem do mascote do 4 anos',
     },
-    content: {
-      className: 'Turma A',
-      gradeName: '4 anos',
-      schoolName: 'Escola Eleva Barra',
-      teacherName: 'Sônia Maria',
-    },
     colors: {
       brand: '#FFBE12',
       brand_light: '#FFD871',
@@ -98,12 +81,6 @@ export const grades = {
     mascot: {
       src: 'assets/images/mascots/5-anos.png',
       alt: 'Imagem do mascote do 5 anos',
-    },
-    content: {
-      className: 'Turma A',
-      gradeName: '5 anos',
-      schoolName: 'Escola Eleva Barra',
-      teacherName: 'Sônia Maria',
     },
     colors: {
       brand: '#B8ACD3',

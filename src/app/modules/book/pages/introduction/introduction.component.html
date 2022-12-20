@@ -12,18 +12,7 @@
         background: (colors$ | async)?.brand_light
       }"
     >
-      Chegou o material tão esperado do nosso semestre: nosso portfólio digital!
-      <br />
-      A partir dele, você poderá ter acesso a diferentes registros de atividades
-      que demonstram o processo de aprendizagem dos nossos alunos. Mas, antes de
-      tudo… quais aprendizagens são essas? Aqui na escola Espaço Pensar
-      possuímos um importante espaço para desenvolver a formação integral dos
-      nossos alunos, o LIV!
-      <br />
-      Temos dentro dele uma matéria específica para conversar sobre habilidades
-      e competências ligadas ao universo socioemocional, ou seja, é nessa aula
-      que aprendemos a reconhecer e nomear os nossos sentimentos, além de
-      procurar maneiras assertivas e genuínas de lidar com eles.
+      {{ (bookPortifolio$ | async)?.attributes.introducao.descricao }}
     </article>
   </main>
 </div>

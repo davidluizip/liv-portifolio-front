@@ -2,12 +2,12 @@ import {
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
-  HttpRequest,
+  HttpRequest
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-const whiteList = ['/assets/', '/importData'];
+const whiteList = ['/assets/', '/importData', '/upload'];
 
 @Injectable()
 export class ContentTypeInterceptor implements HttpInterceptor {
@@ -18,8 +18,8 @@ export class ContentTypeInterceptor implements HttpInterceptor {
     const whiteListed = new RegExp(whiteList.join('|')).test(req.url);
     const request = req.clone({
       setHeaders: {
-        'Content-Type': 'application/json',
-      },
+        'Content-Type': 'application/json'
+      }
     });
 
     if (whiteListed) {
