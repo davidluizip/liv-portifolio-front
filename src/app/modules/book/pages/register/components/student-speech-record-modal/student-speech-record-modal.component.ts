@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { RegisterService } from 'src/app/modules/book/services/register.service';
+import { RegisterContextService } from 'src/app/modules/book/services/register-context.service';
 
 @Component({
   selector: 'liv-student-speech-record-modal',
@@ -23,7 +23,7 @@ export class StudentSpeechRecordModalComponent
   constructor(
     private ngbActiveModal: NgbActiveModal,
     private ngbModal: NgbModal,
-    private registerService: RegisterService
+    private registerContextService: RegisterContextService
   ) {}
 
   ngOnInit(): void {
@@ -52,12 +52,13 @@ export class StudentSpeechRecordModalComponent
   }
 
   handleFinishStudentSpeechRecordRegister() {
-    const { selectedRegisterFieldId: fieldId } = this.registerService.snapshot;
+    const { selectedRegisterFieldId: fieldId } =
+      this.registerContextService.snapshot;
 
     const { about, name } = this.form.value;
 
     if (fieldId) {
-      this.registerService.setFieldValue(fieldId, {
+      this.registerContextService.setFieldValue(fieldId, {
         type: 'text',
         value: {
           about,

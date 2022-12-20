@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Model } from 'src/app/core/models/liv-response-protocol.model';
 import { ApiGatewayService } from 'src/app/core/services/api/api-gateway.service';
-import { ETypeComponentStrapi } from 'src/app/shared/enum/e-type-component-strapi';
+import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
 import { PhotoModel } from '../../models/photo.model';
 import { TeacherBookModel } from '../../models/teacher-book.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CoverFrontService {
   constructor(private _apiGatewayService: ApiGatewayService) {}
@@ -20,7 +20,7 @@ export class CoverFrontService {
   }
   getCoverFront(
     bookTeacherId: number,
-    typeComponent = ETypeComponentStrapi.professor
+    typeComponent = ETypesComponentStrapi.professor
   ): Observable<Model<TeacherBookModel>> {
     const params = new HttpParams().set('populate', typeComponent);
 

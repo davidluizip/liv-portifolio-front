@@ -7,6 +7,11 @@ const routes: Routes = [
     path: ':id',
     component: BookComponent,
   },
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: '/',
+  },
 ];
 
 @NgModule({

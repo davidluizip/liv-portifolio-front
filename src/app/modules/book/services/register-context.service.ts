@@ -45,7 +45,7 @@ interface RegisterField {
 @Injectable({
   providedIn: 'root',
 })
-export class RegisterService {
+export class RegisterContextService {
   private _registerFields = new BehaviorSubject<RegisterField[]>([
     {
       id: 1,

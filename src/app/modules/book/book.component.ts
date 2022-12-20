@@ -5,24 +5,24 @@ import {
   Inject,
   OnInit,
   Renderer2,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { filter, from, mergeMap, of, Subject, tap } from 'rxjs';
+import { delay, filter, from, mergeMap, of, Subject, take, tap } from 'rxjs';
 import { grades } from './grades';
 import { CoverFrontService } from './services/api/cover-front.service';
 import { PageControllerService } from './services/page-controller.service';
 
 interface HTMLDivElementPage extends HTMLDivElement {
-  pageNum: number;
+  ['page-number']: number;
 }
 
 @Component({
   selector: 'liv-book',
   templateUrl: './book.component.html',
   styleUrls: ['./book.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class BookComponent implements OnInit, AfterViewInit {
   pages: string[] = [
@@ -33,7 +33,7 @@ export class BookComponent implements OnInit, AfterViewInit {
     'Quinta Pagina',
     'Sexta Pagina',
     'Setima Pagina',
-    'Oitava Pagina'
+    'Oitava Pagina',
   ];
 
   bookColors$ = this.pageControllerService.colors$.pipe(tap(console.log));
@@ -47,6 +47,8 @@ export class BookComponent implements OnInit, AfterViewInit {
   media = new FormControl(null);
   currentPage = 0;
   pagesElement: HTMLDivElementPage[];
+
+  private startPageConfig$ = new Subject<boolean>();
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -74,14 +76,26 @@ export class BookComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     const bookId = this.route.snapshot.paramMap.get('id');
-    this.pageControllerService.saveBookId(Number(bookId));
-    this._coverFrontService.getCoverFront(Number(bookId)).subscribe(res => {
-      const serie = res.attributes.serie.replace(/ /g, '-');
-      this.pageControllerService.saveContent(res);
-      this.pageControllerService.saveColors(grades[serie].colors);
-      this.pageControllerService.saveMascot(grades[serie].mascot);
-      setTimeout(() => this.startConfigPages(), 1000);
-    });
+
+    const id = Number(bookId);
+
+    this.pageControllerService.saveBookId(id);
+    this._coverFrontService
+      .getCoverFront(id)
+      .pipe(take(1))
+      .subscribe(data => {
+        if (data.attributes) {
+          const serie = data.attributes.serie.replace(/ /g, '-');
+
+          const { colors, mascot } = grades[serie];
+
+          this.pageControllerService.saveContent(data);
+          this.pageControllerService.saveColors(colors);
+          this.pageControllerService.saveMascot(mascot);
+
+          this.startPageConfig$.next(true);
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -91,7 +105,14 @@ export class BookComponent implements OnInit, AfterViewInit {
     this._destroy$.complete();
   }
 
-  ngAfterViewInit() {}
+  ngAfterViewInit(): void {
+    this.startPageConfig$
+      .pipe(
+        filter(start => !!start),
+        delay(250)
+      )
+      .subscribe(() => this.startConfigPages());
+  }
 
   startConfigPages() {
     const pages = Array.from(
@@ -102,12 +123,13 @@ export class BookComponent implements OnInit, AfterViewInit {
     from(pages)
       .pipe(mergeMap((page, index) => of({ page, index })))
       .subscribe(({ page, index }) => {
-        page.pageNum = index + 1;
+        page['page-number'] = index + 1;
         if (index % 2 === 0) {
           this.renderer.setStyle(page, 'z-index', pages.length - index);
         }
       });
   }
+
   handleCloseBook() {
     if (this.currentPage === 0) return;
 
@@ -132,11 +154,9 @@ export class BookComponent implements OnInit, AfterViewInit {
     const lastFlippedPageIndex = flippedPages.length - 1;
     const lastFlippedPage = flippedPages[lastFlippedPageIndex];
 
-    const lastFlippedPageNum = (
-      lastFlippedPage as HTMLDivElement & { pageNum: number }
-    ).pageNum as number;
+    const lastFlippedPageNum = lastFlippedPage['page-number'];
     const previousPageToFlip = this.pagesElement.find(
-      page => page.pageNum === lastFlippedPageNum
+      page => page['page-number'] === lastFlippedPageNum
     );
 
     previousPageToFlip?.classList.remove('flipped');
@@ -176,22 +196,22 @@ export class BookComponent implements OnInit, AfterViewInit {
       const lastFlippedPageIndex = flippedPages.length - 1;
       const lastFlippedPage = flippedPages[lastFlippedPageIndex];
 
-      const lastFlippedPageNum = lastFlippedPage.pageNum;
+      const lastFlippedPageNum = lastFlippedPage['page-number'];
 
       nextPageToFlip = this.pagesElement.find(
-        page => page.pageNum === lastFlippedPageNum + 1
+        page => page['page-number'] === lastFlippedPageNum + 1
       )!;
     }
 
     nextPageToFlip.classList.add('flipped');
     nextPageToFlip.nextElementSibling?.classList.add('flipped');
 
-    if (nextPageToFlip.pageNum === 1) {
+    if (nextPageToFlip['page-number'] === 1) {
       const frontCover = this.document.getElementById('main-front-cover');
       frontCover?.classList.add('main-cover--active');
     }
 
-    this.currentPage = nextPageToFlip.pageNum;
+    this.currentPage = nextPageToFlip['page-number'];
     this.pageControllerService.saveCurrentPage(this.currentPage);
     this._switchingPageTimeout = setTimeout(
       () => (this._switchingPage = false),

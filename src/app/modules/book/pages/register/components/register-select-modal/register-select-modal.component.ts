@@ -9,7 +9,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { filter, fromEvent, map, Subject, takeUntil } from 'rxjs';
 import { DOMEvent } from 'src/app/shared/interfaces/dom-event';
 import { FileService } from 'src/app/shared/utils/services/file/file.service';
-import { RegisterService } from '../../../../services/register.service';
+import { RegisterContextService } from '../../../../services/register-context.service';
 import { StudentSpeechRecordModalComponent } from '../student-speech-record-modal/student-speech-record-modal.component';
 
 interface RegisterAction {
@@ -55,7 +55,7 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
   constructor(
     private ngbActiveModal: NgbActiveModal,
     private ngbModal: NgbModal,
-    private registerService: RegisterService,
+    private registerContextService: RegisterContextService,
     private fileService: FileService
   ) {}
 
@@ -78,13 +78,15 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
         filter(
           event =>
             !!event.target.files &&
-            !!this.registerService.snapshot.selectedRegisterFieldId
+            !!this.registerContextService.snapshot.selectedRegisterFieldId
         ),
-        filter(() => !!this.registerService.snapshot.selectedRegisterFieldId),
+        filter(
+          () => !!this.registerContextService.snapshot.selectedRegisterFieldId
+        ),
         map(({ target }) => ({
           type: this.selectedInputType,
           file: target.files![0],
-          id: this.registerService.snapshot.selectedRegisterFieldId!,
+          id: this.registerContextService.snapshot.selectedRegisterFieldId!,
         }))
       )
       .subscribe(async ({ type, file, id }) => {
@@ -96,7 +98,7 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
               const base64 = (await this.fileService.base64Encode(
                 file
               )) as string;
-              this.registerService.setFieldValue(id, {
+              this.registerContextService.setFieldValue(id, {
                 type: 'image',
                 value: {
                   src: base64,
@@ -108,7 +110,7 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
           case 'video':
             {
               const url = (await this.fileService.base64Encode(file)) as string;
-              this.registerService.setFieldValue(id, {
+              this.registerContextService.setFieldValue(id, {
                 type: 'video',
                 value: {
                   src: url,
@@ -121,7 +123,7 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
           case 'audio':
             {
               const url = URL.createObjectURL(file);
-              this.registerService.setFieldValue(id, {
+              this.registerContextService.setFieldValue(id, {
                 type: 'audio',
                 value: {
                   src: url,
@@ -137,13 +139,13 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
 
         delete this.fileInput.nativeElement.files![0];
 
-        this.registerService.resetSelectedRegisterField();
+        this.registerContextService.resetSelectedRegisterField();
         this.ngbActiveModal.close();
       });
   }
 
   handleCloseModal() {
-    this.registerService.resetSelectedRegisterField();
+    this.registerContextService.resetSelectedRegisterField();
     this.ngbActiveModal.close();
   }
 

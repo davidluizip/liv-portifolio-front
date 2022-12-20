@@ -1,39 +1,40 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, take, tap } from 'rxjs';
+import { filter, Observable, switchMap, take } from 'rxjs';
 import { Model } from 'src/app/core/models/liv-response-protocol.model';
-import { EPages } from 'src/app/shared/enum/e-pages';
+import { EPages } from 'src/app/shared/enum/pages.enum';
 import { TeacherBookModel } from '../../models/teacher-book.model';
-import { RegisterServiceAPI } from '../../services/api/register.service';
+import { RegisterService } from '../../services/api/register.service';
 import { PageControllerService } from '../../services/page-controller.service';
 
-import { RegisterService } from '../../services/register.service';
+import { RegisterContextService } from '../../services/register-context.service';
 
 @Component({
   selector: 'liv-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
-  readonly registerFields$ = this.registerService.registerFields$;
+  readonly registerFields$ = this.registerContextService.registerFields$;
   public registers$: Observable<Model<TeacherBookModel>>;
 
   constructor(
-    private registerService: RegisterService,
-    private readonly _pageControllerService: PageControllerService,
-    private _registerServiceAPI: RegisterServiceAPI
+    private registerContextService: RegisterContextService,
+    private readonly pageControllerService: PageControllerService,
+    private registerService: RegisterService
   ) {}
+
   ngOnInit(): void {
-    this._pageControllerService.currentPage$.subscribe(page => {
-      if (EPages.REGISTER == page) {
-        //this.registers$ =
-        this._registerServiceAPI
-          .get(this._pageControllerService.snapshot.bookId)
-          .pipe(tap(console.log), take(1))
-          .subscribe(res => console.log(res.attributes.registros.midia.data));
-      }
-    });
+    this.registers$ = this.pageControllerService.currentPage$.pipe(
+      filter(page => EPages.register === page),
+      switchMap(() =>
+        this.registerService
+          .get(this.pageControllerService.snapshot.bookId)
+          .pipe(take(1))
+      )
+    );
   }
-  handleOpenRegisterTypeModal(fieldId: number) {
-    this.registerService.openRegisterTypeModal(fieldId);
+
+  handleOpenRegisterTypeModal(fieldId: number): void {
+    this.registerContextService.openRegisterTypeModal(fieldId);
   }
 }
