@@ -10,7 +10,7 @@ import {
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { delay, filter, from, mergeMap, of, Subject, take, tap } from 'rxjs';
-import { grades } from './grades';
+import { grades } from './book-config';
 import { CoverFrontService } from './services/api/cover-front.service';
 import { PageControllerService } from './services/page-controller.service';
 

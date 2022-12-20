@@ -1,4 +1,4 @@
-export const grades = {
+export default {
   ['1º-ano']: {
     mascot: {
       src: 'assets/images/mascots/1-ano.png',
@@ -90,4 +90,4 @@ export const grades = {
       tertiary: '#FFDECD',
     },
   },
-};
+} as const;
