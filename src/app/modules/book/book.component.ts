@@ -10,7 +10,7 @@ import {
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { delay, filter, from, mergeMap, of, Subject, take, tap } from 'rxjs';
-import { grades } from './book-config';
+import bookConfig from './book-config';
 import { CoverFrontService } from './services/api/cover-front.service';
 import { PageControllerService } from './services/page-controller.service';
 
@@ -87,7 +87,7 @@ export class BookComponent implements OnInit, AfterViewInit {
         if (data.attributes) {
           const serie = data.attributes.serie.replace(/ /g, '-');
 
-          const { colors, mascot } = grades[serie];
+          const { colors, mascot } = bookConfig[serie];
 
           this.pageControllerService.saveContent(data);
           this.pageControllerService.saveColors(colors);
