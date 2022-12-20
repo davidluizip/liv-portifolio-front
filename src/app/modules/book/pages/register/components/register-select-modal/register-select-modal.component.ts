@@ -137,7 +137,7 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
             return;
         }
 
-        delete this.fileInput.nativeElement.files![0];
+        this.fileInput.nativeElement.value = null;
 
         this.registerContextService.resetSelectedRegisterField();
         this.ngbActiveModal.close();

@@ -2,11 +2,10 @@ import {
   HttpClient,
   HttpEvent,
   HttpHeaders,
-  HttpParams
+  HttpParams,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { LivSuccessResponse } from 'src/app/core/models/liv-response-protocol.model';
 import { environment } from 'src/environments/environment';
 
@@ -44,7 +43,7 @@ export class ApiGatewayService {
     return this.httpClient.request<T>('post', url, {
       params,
       observe: 'events',
-      body: data
+      body: data,
     });
   }
 
@@ -52,7 +51,7 @@ export class ApiGatewayService {
     const url = encodeURI(this.service + endpoint);
     return this.httpClient.get<T>(url, {
       ...options,
-      responseType: 'blob' as 'json'
+      responseType: 'blob' as 'json',
     });
   }
 

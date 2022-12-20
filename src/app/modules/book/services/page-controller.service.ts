@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, filter, map, shareReplay } from 'rxjs';
+import { BehaviorSubject, filter, map } from 'rxjs';
 import { Model } from 'src/app/core/models/liv-response-protocol.model';
 import { TeacherBookModel } from '../models/teacher-book.model';
 
@@ -23,7 +23,7 @@ export interface BookState {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PageControllerService {
   private _currentPage = new BehaviorSubject<number>(null);
@@ -48,35 +48,35 @@ export class PageControllerService {
       bookId: this._bookId.getValue(),
       mascot: this._state.getValue()?.mascot,
       colors: this._state.getValue()?.colors,
-      content: this._state.getValue()?.content
+      content: this._state.getValue()?.content,
     };
   }
 
   saveColors(colors: Colors) {
     this._state.next({
       ...this.state,
-      colors
+      colors,
     });
   }
 
   saveMascot(mascot: Mascot) {
     this._state.next({
       ...this.state,
-      mascot
+      mascot,
     });
   }
 
   saveContent(content: Model<TeacherBookModel>) {
     this._state.next({
       ...this.state,
-      content
+      content,
     });
   }
 
   saveBookId(bookId: number) {
     this._bookId.next(bookId);
   }
-  saveCurrentPage(page: number){
+  saveCurrentPage(page: number) {
     this._currentPage.next(page);
   }
 

@@ -19,7 +19,7 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private registerContextService: RegisterContextService,
-    private readonly pageControllerService: PageControllerService,
+    private pageControllerService: PageControllerService,
     private registerService: RegisterService
   ) {}
 

@@ -19,14 +19,14 @@ export class IntroductionComponent implements OnInit {
   public bookPortifolio$: Observable<Model<PortfolioBookModel>>;
 
   constructor(
-    private readonly _introService: IntroService,
+    private introService: IntroService,
     private pageControllerService: PageControllerService
   ) {}
 
   ngOnInit(): void {
     this.bookPortifolio$ = this.pageControllerService.currentPage$.pipe(
       filter(page => EPages.class === page),
-      switchMap(() => this._introService.get().pipe(take(1)))
+      switchMap(() => this.introService.get().pipe(take(1)))
     );
   }
 }
