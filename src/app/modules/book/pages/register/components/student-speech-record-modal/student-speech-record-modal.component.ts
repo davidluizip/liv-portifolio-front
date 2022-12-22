@@ -52,20 +52,15 @@ export class StudentSpeechRecordModalComponent
   }
 
   handleFinishStudentSpeechRecordRegister() {
-    const { selectedRegisterFieldId: fieldId } =
+    const { selectedRegisterFieldId: id } =
       this.registerContextService.snapshot;
 
     const { about, name } = this.form.value;
 
-    if (fieldId) {
-      this.registerContextService.setFieldValue(fieldId, {
-        type: 'text',
-        value: {
-          about,
-          name,
-        },
-      });
-    }
+    this.registerContextService.saveTextRegister(id, {
+      about,
+      name,
+    });
 
     this.ngbModal.dismissAll();
   }

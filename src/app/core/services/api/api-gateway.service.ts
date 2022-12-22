@@ -31,7 +31,6 @@ export class ApiGatewayService {
   ): Observable<LivSuccessResponse<T>> {
     const url = encodeURI(this.service + endpoint);
     return this.httpClient.get<LivSuccessResponse<T>>(url, options);
-    //.pipe(map(res => res.data));
   }
 
   upload<T>(
@@ -62,7 +61,6 @@ export class ApiGatewayService {
   ): Observable<LivSuccessResponse<T>> {
     const url = encodeURI(this.service + endpoint);
     return this.httpClient.post<LivSuccessResponse<T>>(url, body, options);
-    //.pipe(map(res => res.data));
   }
 
   put<T>(
@@ -72,7 +70,6 @@ export class ApiGatewayService {
   ): Observable<LivSuccessResponse<T>> {
     const url = encodeURI(this.service + endpoint);
     return this.httpClient.put<LivSuccessResponse<T>>(url, body, options);
-    //.pipe(map(res => res.data));
   }
 
   patch<T>(
@@ -82,7 +79,6 @@ export class ApiGatewayService {
   ): Observable<LivSuccessResponse<T>> {
     const url = encodeURI(this.service + endpoint);
     return this.httpClient.patch<LivSuccessResponse<T>>(url, body, options);
-    //.pipe(map(res => res.data));
   }
 
   delete<T>(
@@ -91,7 +87,6 @@ export class ApiGatewayService {
   ): Observable<LivSuccessResponse<T>> {
     const url = encodeURI(this.service + endpoint);
     return this.httpClient.delete<LivSuccessResponse<T>>(url, options);
-    //.pipe(map(res => res.data));
   }
 
   graphql<T>(
@@ -104,7 +99,6 @@ export class ApiGatewayService {
       JSON.stringify({ query }),
       options
     );
-    //.pipe(map(res => res.data));
   }
 
   get service(): string {

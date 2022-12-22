@@ -1,9 +1,8 @@
 import {
   Data,
   DataArray,
-  Model
 } from 'src/app/core/models/liv-response-protocol.model';
-import { PhotoModel } from './photo.model';
+import { MediaModel } from './media.model';
 import { TeacherModel } from './teacher.model';
 
 export interface TeacherBookModel {
@@ -21,10 +20,10 @@ export interface TeacherBookModel {
 interface PaginaTurma {
   id: number;
   descricao: string;
-  midia: Data<PhotoModel>;
+  midia: Data<MediaModel>;
 }
 
 interface Registros {
   id: number;
-  midia: DataArray<PhotoModel>;
+  midia: DataArray<MediaModel>;
 }

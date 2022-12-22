@@ -1,5 +1,5 @@
 import { Model } from 'src/app/core/models/liv-response-protocol.model';
-import { PhotoModel } from './photo.model';
+import { MediaModel } from './media.model';
 import { SeriesModel } from './series.model';
 
 export interface TeacherModel {
@@ -7,7 +7,7 @@ export interface TeacherModel {
   descricao: string;
   etapa: number;
   series: SeriesModel[];
-  foto: Model<PhotoModel>;
+  foto: Model<MediaModel>;
   createdAt: Date;
   updatedAt: Date;
 }

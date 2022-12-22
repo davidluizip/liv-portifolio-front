@@ -1,6 +1,6 @@
 import { Formats } from 'src/app/core/models/media-formats.model';
 
-export interface PhotoModel {
+export interface MediaModel {
   name: string;
   alternativeText: string;
   caption: string;

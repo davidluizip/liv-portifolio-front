@@ -2,13 +2,13 @@ import {
   AfterContentInit,
   AfterViewInit,
   Component,
-  OnInit
+  OnInit,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Data } from 'src/app/core/models/liv-response-protocol.model';
 import { EPages } from 'src/app/shared/enum/pages.enum';
 import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
-import { PhotoModel } from '../../../models/photo.model';
+import { MediaModel } from '../../../models/media.model';
 import { CoverFrontService } from '../../../services/api/cover-front.service';
 import { PageControllerService } from '../../../services/page-controller.service';
 import { filter, switchMap, tap } from 'rxjs';
@@ -16,12 +16,12 @@ import { filter, switchMap, tap } from 'rxjs';
 @Component({
   selector: 'liv-cover-front-backside',
   templateUrl: './cover-front-backside.component.html',
-  styleUrls: ['./cover-front-backside.component.scss']
+  styleUrls: ['./cover-front-backside.component.scss'],
 })
 export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
   isEnabledEdit = false;
   textareaValue = 'Escreva aqui um breve texto sobre a sua turma.';
-  midia: Data<PhotoModel>;
+  midia: Data<MediaModel>;
   photoForm: FormControl = new FormControl(null);
 
   constructor(

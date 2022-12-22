@@ -1,76 +1,79 @@
 import { Injectable } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { BehaviorSubject, Observable } from 'rxjs';
+import {
+  BehaviorSubject,
+  catchError,
+  EMPTY,
+  finalize,
+  Observable,
+  ReplaySubject,
+  take,
+} from 'rxjs';
+import { ToastService } from 'src/app/core/services/toast.service';
 import { RegisterSelectModalComponent } from '../pages/register/components/register-select-modal/register-select-modal.component';
+import { RegisterService } from './api/register.service';
 
-interface TextField {
-  type: 'text';
-  value: {
-    about: string;
-    name: string;
-  };
+interface TextContent {
+  about: string;
+  name: string;
 }
 
-interface ImageField {
-  type: 'image';
-  value: {
-    src: string;
-    alt?: string;
-  };
+interface ImageContent {
+  src: string;
+  alt?: string;
 }
 
-interface VideoField {
-  type: 'video';
-  value: {
-    src: string;
-    type: string;
-  };
+interface VideoContent {
+  src: string;
+  type?: string;
 }
 
-interface AudioField {
-  type: 'audio';
-  value: {
-    src: string;
-    type: string;
-  };
+interface AudioContent {
+  src: string;
+  type?: string;
 }
 
-type FieldData = TextField | ImageField | VideoField | AudioField | null;
+export type FieldContent = {
+  text: TextContent;
+  image: ImageContent;
+  video: VideoContent;
+  audio: AudioContent;
+};
+
+export type KeyFieldContent = keyof FieldContent;
+export type KeyValueFieldContent = FieldContent[KeyFieldContent];
 
 interface RegisterField {
   id: number;
-  data: FieldData;
+  type: KeyFieldContent;
+  content: KeyValueFieldContent;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class RegisterContextService {
-  private _registerFields = new BehaviorSubject<RegisterField[]>([
-    {
-      id: 1,
-      data: null,
-    },
-    {
-      id: 2,
-      data: null,
-    },
-    {
-      id: 3,
-      data: null,
-    },
-    {
-      id: 4,
-      data: null,
-    },
-  ]);
+  private _loading = new ReplaySubject(1);
+  public loading$ = this._loading.asObservable();
+
+  private _registerFields = new BehaviorSubject<RegisterField[]>(
+    Array.from({ length: 4 }, (_, index) => ({
+      id: index + 1,
+      type: null,
+      content: null,
+    }))
+  );
 
   registerFields$: Observable<RegisterField[]> =
     this._registerFields.asObservable();
 
   private _selectedRegisterFieldId = new BehaviorSubject<number | null>(null);
 
-  constructor(private ngbModal: NgbModal) {}
+  constructor(
+    private ngbModal: NgbModal,
+    private registerService: RegisterService,
+    private toastService: ToastService
+  ) {}
 
   get snapshot() {
     return {
@@ -79,13 +82,21 @@ export class RegisterContextService {
     };
   }
 
-  setFieldValue(id: number, data: FieldData) {
+  setFieldValue<Type extends KeyFieldContent>(
+    type: Type,
+    data: {
+      id: number;
+      content: FieldContent[Type];
+    }
+  ) {
     const registerFields = this._registerFields.getValue();
     const fieldIndex = this._registerFields
       .getValue()
-      .findIndex(field => field.id === id);
+      .findIndex(field => field.id === data.id);
 
-    registerFields[fieldIndex].data = data;
+    registerFields[fieldIndex].type = type;
+    registerFields[fieldIndex].content = data.content;
+
     this._registerFields.next(registerFields);
   }
 
@@ -102,7 +113,10 @@ export class RegisterContextService {
     const fieldIndex = this._registerFields
       .getValue()
       .findIndex(field => field.id === id);
-    registerFields[fieldIndex].data = null;
+
+    registerFields[fieldIndex].type = null;
+    registerFields[fieldIndex].content = null;
+
     this._registerFields.next(registerFields);
   }
 
@@ -112,5 +126,86 @@ export class RegisterContextService {
       centered: true,
       modalDialogClass: 'register-select-modal',
     });
+  }
+
+  saveTextRegister(id: number, content: TextContent) {
+    // TO-DO
+    // return this.registerService
+    //   .uploadMedia(content)
+    //   .pipe(
+    //     take(1),
+    //     catchError(() => {
+    //       this.toastService.error(
+    //         'Houve um erro ao fazer o salvar a fala do aluno'
+    //       );
+    //       return EMPTY;
+    //     }),
+    //     finalize(() => {
+    //       this._loading.next(false);
+    //     })
+    //   )
+    //   .subscribe(() => {
+    //     this.saveFieldValue('text', {
+    //       id,
+    //       content,
+    //     });
+    //   });
+  }
+
+  saveMediaRegister(
+    id: number,
+    data: FormData,
+    type: Exclude<KeyFieldContent, 'text'>
+  ) {
+    return this.registerService
+      .uploadMedia(data)
+      .pipe(
+        take(1),
+        catchError(() => {
+          this.toastService.error(
+            'Houve um erro ao fazer o upload do seu arquivo'
+          );
+          return EMPTY;
+        }),
+        finalize(() => {
+          this._loading.next(false);
+        })
+      )
+      .subscribe(({ url, mime }) => {
+        switch (type) {
+          case 'image':
+            this.setFieldValue(type, {
+              id,
+              content: {
+                src: url,
+                alt: '',
+              },
+            });
+            break;
+
+          case 'video':
+            this.setFieldValue(type, {
+              id,
+              content: {
+                src: url,
+                type: mime,
+              },
+            });
+            break;
+
+          case 'audio':
+            this.setFieldValue(type, {
+              id,
+              content: {
+                src: url,
+                type: mime,
+              },
+            });
+            break;
+
+          default:
+            break;
+        }
+      });
   }
 }

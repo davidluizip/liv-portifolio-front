@@ -1,11 +1,11 @@
-import { HttpEvent, HttpParams } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { Model } from 'src/app/core/models/liv-response-protocol.model';
 import { ApiGatewayService } from 'src/app/core/services/api/api-gateway.service';
 import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
-import { PhotoModel } from '../../models/photo.model';
-import { PortfolioBookModel } from '../../models/portfolio-book.model';
+import { filterResponse } from 'src/app/shared/rxjs/custom-operators';
+import { MediaModel } from '../../models/media.model';
 import { TeacherBookModel } from '../../models/teacher-book.model';
 
 @Injectable({
@@ -14,8 +14,10 @@ import { TeacherBookModel } from '../../models/teacher-book.model';
 export class RegisterService {
   constructor(private apiGatewayService: ApiGatewayService) {}
 
-  uploadPhoto(data: FormData): Observable<HttpEvent<PhotoModel>> {
-    return this.apiGatewayService.upload<PhotoModel>('/upload', data, null);
+  uploadMedia(data: FormData): Observable<MediaModel> {
+    return this.apiGatewayService
+      .upload<MediaModel>('/upload', data, null)
+      .pipe(filterResponse());
   }
 
   get(

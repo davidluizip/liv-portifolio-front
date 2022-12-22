@@ -2,7 +2,7 @@ import {
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
-  HttpRequest
+  HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -16,15 +16,17 @@ export class ContentTypeInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     const whiteListed = new RegExp(whiteList.join('|')).test(req.url);
-    const request = req.clone({
-      setHeaders: {
-        'Content-Type': 'application/json'
-      }
-    });
-
     if (whiteListed) {
+      console.log(req.headers);
       return next.handle(req);
     }
+
+    const request = req.clone({
+      setHeaders: {
+        'Content-Type': 'application/json',
+      },
+    });
+
     return next.handle(request);
   }
 }

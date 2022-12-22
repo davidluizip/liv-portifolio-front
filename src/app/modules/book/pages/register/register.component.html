@@ -1,39 +1,36 @@
 <div class="register-container">
   <main class="registrer-wrapper">
-    <ng-container *ngIf="midias.length > 0">
+    <ng-container *ngIf="registerFields$ | async; let registerFields">
       <div
         class="register-card"
-        *ngFor="let field of midias; let i = index"
+        *ngFor="let field of registerFields"
         (click)="handleOpenRegisterTypeModal(field.id)"
         role="button"
         [ngClass]="{
-          'register-card--empty': !field.id
+          'register-card--empty': !field.content
         }"
       >
-        <ng-container *ngIf="field.id !== 0; else emptyCard">
-          <ng-container [ngSwitch]="field.attributes.mime">
-            <div class="register-card__image" *ngSwitchCase="'image/png'">
-              <img
-                [src]="field.attributes.url"
-                [alt]="field.attributes.alternativeText || ''"
-              />
+        <ng-container *ngIf="field.content && field.type; else emptyCard">
+          <ng-container [ngSwitch]="field.type">
+            <div class="register-card__image" *ngSwitchCase="'image'">
+              <img [src]="field.content['src']" [alt]="field.content['alt']" />
             </div>
 
             <div class="register-card__text" *ngSwitchCase="'text'">
               <svg-icon src="assets/icons/quotation-marks.svg"></svg-icon>
-              <p>{{ field.attributes['about'] }}</p>
-              <strong>{{ field.attributes['name'] }}</strong>
+              <p>{{ field.content['about'] }}</p>
+              <strong>{{ field.content['name'] }}</strong>
             </div>
 
-            <div class="register-card__audio" *ngSwitchCase="'audio/mpeg'">
+            <div class="register-card__audio" *ngSwitchCase="'video'">
               <liv-audio-player
-                [src]="field.attributes.url | safeTransform : 'RESOURCE'"
+                [src]="field.content['src'] | safeTransform : 'RESOURCE'"
               ></liv-audio-player>
             </div>
 
-            <div class="register-card__video" *ngSwitchCase="'video/mp4'">
+            <div class="register-card__video" *ngSwitchCase="'audio'">
               <liv-video-player
-                [src]="field.attributes.url | safeTransform : 'RESOURCE'"
+                [src]="field.content['src'] | safeTransform : 'RESOURCE'"
               ></liv-video-player>
             </div>
           </ng-container>
