@@ -1,4 +1,8 @@
-import { Data, Model } from 'src/app/core/models/liv-response-protocol.model';
+import {
+  Data,
+  DataArray,
+  Model
+} from 'src/app/core/models/liv-response-protocol.model';
 import { PhotoModel } from './photo.model';
 import { TeacherModel } from './teacher.model';
 
@@ -22,5 +26,5 @@ interface PaginaTurma {
 
 interface Registros {
   id: number;
-  midia: Data<Model<PhotoModel>[]>;
+  midia: DataArray<PhotoModel>;
 }

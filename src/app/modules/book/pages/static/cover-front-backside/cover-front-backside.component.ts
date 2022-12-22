@@ -2,7 +2,7 @@ import {
   AfterContentInit,
   AfterViewInit,
   Component,
-  OnInit,
+  OnInit
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Data } from 'src/app/core/models/liv-response-protocol.model';
@@ -11,12 +11,12 @@ import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strap
 import { PhotoModel } from '../../../models/photo.model';
 import { CoverFrontService } from '../../../services/api/cover-front.service';
 import { PageControllerService } from '../../../services/page-controller.service';
-import { filter, switchMap } from 'rxjs';
+import { filter, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'liv-cover-front-backside',
   templateUrl: './cover-front-backside.component.html',
-  styleUrls: ['./cover-front-backside.component.scss'],
+  styleUrls: ['./cover-front-backside.component.scss']
 })
 export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
   isEnabledEdit = false;
@@ -52,6 +52,7 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
 
     this.pageControllerService.currentPage$
       .pipe(
+        tap(d => console.log('CoverFrontBacksideComponent', d)),
         filter(page => EPages.class === page),
         switchMap(() =>
           this._coverFrontService.getCoverFront(
