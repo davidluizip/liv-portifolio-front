@@ -12,7 +12,9 @@
         background: (colors$ | async)?.brand_light
       }"
     >
-      {{ (bookPortifolio$ | async)?.attributes.introducao.descricao }}
+      <div class="intro-article__description">
+        <div [innerHTML]="description$ | async | markdown"></div>
+      </div>
     </article>
   </main>
 </div>

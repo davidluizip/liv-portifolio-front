@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { filter, Observable, switchMap, take } from 'rxjs';
+import { filter, map, Observable, switchMap, take } from 'rxjs';
 import { Model } from 'src/app/core/models/liv-response-protocol.model';
 import { EPages } from 'src/app/shared/enum/pages.enum';
 import { PortfolioBookModel } from '../../models/portfolio-book.model';
@@ -16,7 +16,7 @@ import {
 })
 export class IntroductionComponent implements OnInit {
   readonly colors$: Observable<Colors> = this.pageControllerService.colors$;
-  public bookPortifolio$: Observable<Model<PortfolioBookModel>>;
+  public description$: Observable<string>;
 
   constructor(
     private introService: IntroService,
@@ -24,9 +24,10 @@ export class IntroductionComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.bookPortifolio$ = this.pageControllerService.currentPage$.pipe(
+    this.description$ = this.pageControllerService.currentPage$.pipe(
       filter(page => EPages.class === page),
-      switchMap(() => this.introService.get().pipe(take(1)))
+      switchMap(() => this.introService.get().pipe(take(1))),
+      map(({ attributes }) => attributes.introducao.descricao)
     );
   }
 }

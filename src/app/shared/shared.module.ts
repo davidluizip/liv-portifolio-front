@@ -7,11 +7,13 @@ import { OverlayDirective } from './directives/overlay.directive';
 import { SafeTransformPipe } from './pipes/safe-tranform.pipe';
 import { UploadMediaInputComponent } from './components/upload-media-input/upload-media-input.component';
 import { DragDropFileUploadDirective } from './directives/drag-drop-file-upload.directive';
+import { MarkdownPipe } from './pipes/markdown.pipe';
 
 @NgModule({
   declarations: [
     OverlayDirective,
     ImagePreloadDirective,
+    MarkdownPipe,
     SafeTransformPipe,
     IfLoadedDirective,
     DragDropFileUploadDirective,
@@ -22,6 +24,7 @@ import { DragDropFileUploadDirective } from './directives/drag-drop-file-upload.
     OverlayDirective,
     ImagePreloadDirective,
     SafeTransformPipe,
+    MarkdownPipe,
     IfLoadedDirective,
     DragDropFileUploadDirective,
     UploadMediaInputComponent,
