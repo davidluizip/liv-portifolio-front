@@ -9,9 +9,9 @@ export interface TeacherBookModel {
   turma: string;
   serie: string;
   escola: string;
-  pagina_turma: PaginaTurma;
-  registros: Registros;
-  professor: Data<TeacherModel>;
+  pagina_turma?: PaginaTurma;
+  registros?: Registros;
+  professor?: Data<TeacherModel>;
   createdAt: Date;
   updatedAt: Date;
   publishedAt: Date;

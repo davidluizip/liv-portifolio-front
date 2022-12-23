@@ -1,17 +1,28 @@
-import {
-  AfterContentInit,
-  AfterViewInit,
-  Component,
-  OnInit,
-} from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Data } from 'src/app/core/models/liv-response-protocol.model';
 import { EPages } from 'src/app/shared/enum/pages.enum';
 import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
-import { MediaModel } from '../../../models/media.model';
 import { CoverFrontService } from '../../../services/api/cover-front.service';
 import { PageControllerService } from '../../../services/page-controller.service';
-import { filter, switchMap, tap } from 'rxjs';
+import {
+  catchError,
+  EMPTY,
+  filter,
+  map,
+  Observable,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs';
+import { ToastService } from 'src/app/core/services/toast.service';
+
+interface ClassData {
+  turma: string;
+  serie: string;
+  descricao: string;
+  escola: string;
+  professor: string;
+}
 
 @Component({
   selector: 'liv-cover-front-backside',
@@ -19,14 +30,15 @@ import { filter, switchMap, tap } from 'rxjs';
   styleUrls: ['./cover-front-backside.component.scss'],
 })
 export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
-  isEnabledEdit = false;
-  textareaValue = 'Escreva aqui um breve texto sobre a sua turma.';
-  midia: Data<MediaModel>;
-  photoForm: FormControl = new FormControl(null);
+  isEnabledEdit = true;
+  photoControl: FormControl = new FormControl(null);
+
+  data$: Observable<ClassData>;
 
   constructor(
-    private readonly _coverFrontService: CoverFrontService,
-    private pageControllerService: PageControllerService
+    private coverFrontService: CoverFrontService,
+    private pageControllerService: PageControllerService,
+    private toastService: ToastService
   ) {}
 
   get textareaPlaceholder() {
@@ -35,35 +47,61 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
       : '';
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.data$ = this.pageControllerService.currentPage$.pipe(
+      filter(page => EPages.class === page),
+      switchMap(() =>
+        this.coverFrontService.getCoverFront(
+          this.pageControllerService.snapshot.bookId
+        )
+      ),
+      tap(({ attributes }) => {
+        if (attributes.pagina_turma.midia?.data) {
+          this.photoControl.patchValue(
+            attributes.pagina_turma.midia.data.attributes.url,
+            {
+              emitEvent: false,
+              onlySelf: true,
+            }
+          );
+        }
+
+        if (attributes.pagina_turma.descricao) {
+          this.isEnabledEdit = false;
+        }
+      }),
+      map(({ attributes }) => {
+        return {
+          turma: attributes.turma,
+          serie: attributes.serie,
+          professor: attributes.professor?.data?.attributes.apelido,
+          descricao:
+            attributes.pagina_turma.descricao ||
+            'Escreva aqui um breve texto sobre a sua turma.',
+          escola: attributes.escola,
+        };
+      })
+    );
+  }
 
   ngAfterViewInit(): void {
-    this.photoForm.valueChanges
+    this.photoControl.valueChanges
       .pipe(
-        filter(file => !!file),
-        switchMap(file => {
+        switchMap((file: File | null) => {
           const data = new FormData();
           data.append('files', file);
 
-          return this._coverFrontService.uploadPhoto(data);
+          return this.coverFrontService.uploadPhoto(data).pipe(take(1));
+        }),
+        catchError(() => {
+          this.toastService.success(
+            'Houve um erro inesperado, por favor tente novamente mais tarde'
+          );
+          return EMPTY;
         })
       )
-      .subscribe(data => console.log(data));
-
-    this.pageControllerService.currentPage$
-      .pipe(
-        tap(d => console.log('CoverFrontBacksideComponent', d)),
-        filter(page => EPages.class === page),
-        switchMap(() =>
-          this._coverFrontService.getCoverFront(
-            this.pageControllerService.snapshot.bookId,
-            ETypesComponentStrapi.class
-          )
-        )
-      )
-      .subscribe(data => {
-        this.midia = data.attributes.pagina_turma.midia;
-        this.textareaValue = data.attributes.pagina_turma.descricao;
-      });
+      .subscribe(() =>
+        this.toastService.success('Sua foto foi salva com sucesso 🥳')
+      );
   }
 }

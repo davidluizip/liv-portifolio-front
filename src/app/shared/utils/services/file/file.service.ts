@@ -19,4 +19,13 @@ export class FileService {
     const url = await this.base64Encode(blob);
     return url ? url.toString() : null;
   }
+
+  createObjectURL(obj: File | MediaSource): string {
+    const url = URL.createObjectURL(obj);
+    return url;
+  }
+
+  revokeObjectURL(url: string): void {
+    URL.revokeObjectURL(url);
+  }
 }

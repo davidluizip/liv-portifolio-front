@@ -17,7 +17,7 @@ import { FileService } from '../../utils/services/file/file.service';
 })
 export class UploadMediaInputComponent implements ControlValueAccessor {
   private _file: File | null;
-  private _base64: string | null;
+  private _url: string | null;
 
   constructor(private fileService: FileService) {}
 
@@ -25,15 +25,22 @@ export class UploadMediaInputComponent implements ControlValueAccessor {
     return this._file;
   }
 
-  set file(value: File | null) {
-    if (value !== this.file) {
-      this._file = value;
-      this.onChangeCb(value);
+  set file(obj: File | null) {
+    if (obj !== this.file) {
+      this._file = obj;
+      if (this.file) {
+        if (typeof obj === 'string') {
+          this._url = obj;
+        } else {
+          this.fileService.createObjectURL(obj);
+        }
+      }
+      this.onChangeCb(obj);
     }
   }
 
-  get base64(): string | null {
-    return this._base64;
+  get url(): string | null {
+    return this._url;
   }
 
   onChangeCb: (_: File | null) => void = () => {};
@@ -54,7 +61,6 @@ export class UploadMediaInputComponent implements ControlValueAccessor {
   async onUpload(files: File[] | null): Promise<void> {
     if (files) {
       this.file = files[0];
-      this._base64 = (await this.fileService.base64Encode(this.file)) as string;
     }
   }
 
@@ -62,12 +68,15 @@ export class UploadMediaInputComponent implements ControlValueAccessor {
     const { files } = event.target as DOMEvent<HTMLInputElement>['target'];
     if (files) {
       this.file = files[0];
-      this._base64 = (await this.fileService.base64Encode(this.file)) as string;
     }
   }
 
   removePicture() {
     this.file = null;
-    this._base64 = null;
+
+    if (this.url) {
+      this.fileService.revokeObjectURL(this.url);
+      this._url = null;
+    }
   }
 }

@@ -21,9 +21,17 @@ export class CoverFrontService {
 
   getCoverFront(
     bookTeacherId: number,
-    typeComponent = ETypesComponentStrapi.professor
+    populate: ETypesComponentStrapi[] = [
+      ETypesComponentStrapi.class,
+      ETypesComponentStrapi.professor,
+    ]
   ): Observable<Model<TeacherBookModel>> {
-    const params = new HttpParams().set('populate', typeComponent);
+    let params = new HttpParams();
+    if (populate.length > 0) {
+      const filters = populate.join(',');
+      console.log(populate, filters);
+      params = params.set('populate', filters);
+    }
 
     return this.apiGatewayService
       .get<TeacherBookModel>(`/livros/${bookTeacherId}`, { params })

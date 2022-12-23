@@ -5,11 +5,12 @@ import {
   Inject,
   OnInit,
   Renderer2,
-  ViewEncapsulation
+  ViewEncapsulation,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { delay, filter, from, mergeMap, of, Subject, take, tap } from 'rxjs';
+import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
 import bookConfig from './book-config';
 import { CoverFrontService } from './services/api/cover-front.service';
 import { PageControllerService } from './services/page-controller.service';
@@ -22,7 +23,7 @@ interface HTMLDivElementPage extends HTMLDivElement {
   selector: 'liv-book',
   templateUrl: './book.component.html',
   styleUrls: ['./book.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 export class BookComponent implements OnInit, AfterViewInit {
   pages: string[] = [
@@ -33,7 +34,7 @@ export class BookComponent implements OnInit, AfterViewInit {
     'Quinta Pagina',
     'Sexta Pagina',
     'Setima Pagina',
-    'Oitava Pagina'
+    'Oitava Pagina',
   ];
 
   bookColors$ = this.pageControllerService.colors$.pipe(tap(console.log));

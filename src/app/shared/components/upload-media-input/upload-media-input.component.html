@@ -30,7 +30,7 @@
           svgClass="picture-content__trashButton__icon"
         ></svg-icon>
       </button>
-      <img [src]="base64" alt="" />
+      <img [src]="url | safeTransform : 'RESOURCE'" alt="" />
     </div>
   </ng-template>
 </div>
