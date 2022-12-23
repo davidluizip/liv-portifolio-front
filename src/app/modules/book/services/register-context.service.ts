@@ -129,6 +129,10 @@ export class RegisterContextService {
   }
 
   saveTextRegister(id: number, content: TextContent) {
+    this.setFieldValue('text', {
+      id,
+      content,
+    });
     // TO-DO
     // return this.registerService
     //   .uploadMedia(content)
@@ -145,7 +149,7 @@ export class RegisterContextService {
     //     })
     //   )
     //   .subscribe(() => {
-    //     this.saveFieldValue('text', {
+    //     this.setFieldValue('text', {
     //       id,
     //       content,
     //     });

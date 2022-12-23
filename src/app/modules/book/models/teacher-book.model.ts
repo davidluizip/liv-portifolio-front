@@ -25,5 +25,5 @@ interface PaginaTurma {
 
 interface Registros {
   id: number;
-  midia: DataArray<MediaModel>;
+  midia?: DataArray<MediaModel>;
 }

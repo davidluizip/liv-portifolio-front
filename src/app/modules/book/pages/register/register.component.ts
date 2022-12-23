@@ -17,6 +17,7 @@ export class RegisterComponent implements OnInit {
   readonly registerFields$ = this.registerContextService.registerFields$.pipe(
     tap(console.log)
   );
+
   public registers$: Observable<Model<TeacherBookModel>>;
 
   constructor(
@@ -25,36 +26,6 @@ export class RegisterComponent implements OnInit {
     private registerService: RegisterService
   ) {}
 
-  ngAfterViewInit(): void {
-    this.pageControllerService.currentPage$
-      .pipe(
-        tap(d => console.log('RegisterComponent', d)),
-        filter(page => EPages.register === page),
-        switchMap(() =>
-          this.registerService
-            .get(this.pageControllerService.snapshot.bookId)
-            .pipe(take(1))
-        )
-      )
-      .subscribe(res => {
-        const midias = res.attributes.registros.midia.data;
-
-        midias.forEach(({ attributes }) => {
-          //  if(attributes.mime.includes('video')) {
-          //   this.registerContextService.saveFieldValue()
-          //  }
-        });
-
-        // if (this.midias.length < 4) {
-        //   const addRegister = 4 - this.midias.length;
-        //   for (let index = 1; index <= addRegister; index++) {
-        //     this.midias.push({ id: 0 } as Model<MediaModel>);
-
-        //     this.registerContextService.saveFieldValue(this.midias[0].attributes.)
-        //   }
-        // }
-      });
-  }
   ngOnInit(): void {
     // this.registers$ = this.pageControllerService.currentPage$.pipe(
     //   filter(page => EPages.register === page),
@@ -64,6 +35,20 @@ export class RegisterComponent implements OnInit {
     //       .pipe(take(1))
     //   )
     // );
+
+    this.pageControllerService.currentPage$
+      .pipe(
+        filter(page => EPages.register === page),
+        switchMap(() =>
+          this.registerService
+            .get(this.pageControllerService.snapshot.bookId)
+            .pipe(take(1))
+        ),
+        filter(({ attributes }) => !!attributes.registros?.midia?.data)
+      )
+      .subscribe(({ attributes }) => {
+        console.log(attributes);
+      });
   }
 
   handleOpenRegisterTypeModal(fieldId: number): void {
