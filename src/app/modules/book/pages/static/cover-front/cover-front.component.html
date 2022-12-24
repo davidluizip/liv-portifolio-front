@@ -41,9 +41,14 @@
 
     <footer class="cover-front-footer">
       <div class="cover-front-footer__content">
-         <strong>{{ book.content?.attributes.serie }}</strong>
+        <strong>{{ book.content?.attributes.serie }}</strong>
         <h3>{{ book.content?.attributes.escola }}</h3>
-        <span>Professor(a) {{ book.content?.attributes.professor.data.attributes.apelido }}</span>
+        <span
+          >Professor(a)
+          {{
+            book.content?.attributes.professor?.data?.attributes.apelido
+          }}</span
+        >
       </div>
       <svg
         width="256"

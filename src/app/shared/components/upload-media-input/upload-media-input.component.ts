@@ -25,17 +25,17 @@ export class UploadMediaInputComponent implements ControlValueAccessor {
     return this._file;
   }
 
-  set file(obj: File | null) {
+  set file(obj: File | null | string) {
     if (obj !== this.file) {
-      this._file = obj;
-      if (this.file) {
-        if (typeof obj === 'string') {
-          this._url = obj;
-        } else {
-          this.fileService.createObjectURL(obj);
+      if (typeof obj === 'string') {
+        this._url = obj;
+      } else {
+        this._file = obj;
+        if (this._file) {
+          this._url = this.fileService.createObjectURL(obj);
         }
+        this.onChangeCb(this._file);
       }
-      this.onChangeCb(obj);
     }
   }
 

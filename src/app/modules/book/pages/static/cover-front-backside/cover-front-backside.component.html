@@ -23,9 +23,10 @@
         <ng-container *ngIf="isEnabledEdit; else notEnabledEdit">
           <button
             class="class-description__saveButton"
-            (click)="isEnabledEdit = !isEnabledEdit"
+            (click)="handleSaveDescription()"
+            [disabled]="savingDescription"
           >
-            Salvar
+            {{ savingDescription ? 'Aguarde' : 'Salvar' }}
           </button>
         </ng-container>
 
@@ -42,9 +43,9 @@
         </ng-template>
       </div>
       <textarea
-        [value]="data.descricao"
+        [formControl]="descriptionControl"
         [placeholder]="textareaPlaceholder"
-        [readonly]="!isEnabledEdit"
+        [readonly]="!isEnabledEdit || savingDescription"
       ></textarea>
     </section>
   </ng-container>

@@ -1,13 +1,14 @@
 import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { EPages } from 'src/app/shared/enum/pages.enum';
-import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
 import { CoverFrontService } from '../../../services/api/cover-front.service';
 import { PageControllerService } from '../../../services/page-controller.service';
 import {
   catchError,
   EMPTY,
   filter,
+  finalize,
+  iif,
   map,
   Observable,
   switchMap,
@@ -19,7 +20,6 @@ import { ToastService } from 'src/app/core/services/toast.service';
 interface ClassData {
   turma: string;
   serie: string;
-  descricao: string;
   escola: string;
   professor: string;
 }
@@ -30,10 +30,15 @@ interface ClassData {
   styleUrls: ['./cover-front-backside.component.scss'],
 })
 export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
-  isEnabledEdit = true;
-  photoControl: FormControl = new FormControl(null);
+  public photoControl: FormControl = new FormControl(null);
+  public descriptionControl: FormControl = new FormControl('');
 
-  data$: Observable<ClassData>;
+  public data$: Observable<ClassData>;
+
+  public savingDescription = false;
+  public isEnabledEdit = true;
+
+  private fileId: number | null;
 
   constructor(
     private coverFrontService: CoverFrontService,
@@ -48,15 +53,67 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+    this.getClassData();
+  }
+
+  ngAfterViewInit(): void {
+    this.photoControl.valueChanges
+      .pipe(
+        switchMap((file: File | null) => this.chooseUpdateAction(file)),
+        catchError(() => {
+          this.toastService.error(
+            'Houve um erro inesperado, por favor tente novamente mais tarde'
+          );
+          return EMPTY;
+        })
+      )
+      .subscribe();
+  }
+
+  handleSaveDescription(): void {
+    const description: string = this.descriptionControl.value;
+
+    if (description.trim() !== '') {
+      this.savingDescription = true;
+      const data = {
+        data: {
+          pagina_turma: {
+            descricao: description,
+          },
+        },
+      };
+
+      this.coverFrontService
+        .saveClassDescription(this.pageControllerService.snapshot.bookId, data)
+        .pipe(
+          catchError(() => {
+            this.toastService.error(
+              'Houve um erro inesperado ao atualizar a descrição da turma'
+            );
+            return EMPTY;
+          }),
+          finalize(() => (this.savingDescription = false))
+        )
+        .subscribe(() => {
+          this.isEnabledEdit = !this.isEnabledEdit;
+          this.toastService.success(
+            'A descrição da turma foi atualizada com sucesso 🥳'
+          );
+        });
+    }
+  }
+
+  getClassData(): void {
     this.data$ = this.pageControllerService.currentPage$.pipe(
       filter(page => EPages.class === page),
       switchMap(() =>
-        this.coverFrontService.getCoverFront(
+        this.coverFrontService.getClassData(
           this.pageControllerService.snapshot.bookId
         )
       ),
       tap(({ attributes }) => {
         if (attributes.pagina_turma.midia?.data) {
+          this.fileId = attributes.pagina_turma.midia?.data.id;
           this.photoControl.patchValue(
             attributes.pagina_turma.midia.data.attributes.url,
             {
@@ -67,6 +124,10 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
         }
 
         if (attributes.pagina_turma.descricao) {
+          this.descriptionControl.patchValue(
+            attributes.pagina_turma.descricao,
+            { emitEvent: false }
+          );
           this.isEnabledEdit = false;
         }
       }),
@@ -75,33 +136,30 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
           turma: attributes.turma,
           serie: attributes.serie,
           professor: attributes.professor?.data?.attributes.apelido,
-          descricao:
-            attributes.pagina_turma.descricao ||
-            'Escreva aqui um breve texto sobre a sua turma.',
           escola: attributes.escola,
         };
       })
     );
   }
 
-  ngAfterViewInit(): void {
-    this.photoControl.valueChanges
-      .pipe(
-        switchMap((file: File | null) => {
-          const data = new FormData();
-          data.append('files', file);
+  private chooseUpdateAction(file: File | null) {
+    const data = new FormData();
+    data.append('files', file);
 
-          return this.coverFrontService.uploadPhoto(data).pipe(take(1));
-        }),
-        catchError(() => {
-          this.toastService.success(
-            'Houve um erro inesperado, por favor tente novamente mais tarde'
-          );
-          return EMPTY;
+    const bookTeacherId = this.pageControllerService.snapshot.bookId;
+
+    return iif(
+      () => !!file,
+      this.coverFrontService.uploadPhoto(bookTeacherId, data).pipe(
+        tap(({ id, attributes }) => {
+          this.fileId = id;
+          this.photoControl.patchValue(attributes.url, {
+            emitEvent: false,
+            onlySelf: true,
+          });
         })
-      )
-      .subscribe(() =>
-        this.toastService.success('Sua foto foi salva com sucesso 🥳')
-      );
+      ),
+      this.coverFrontService.removePhoto(this.fileId)
+    );
   }
 }

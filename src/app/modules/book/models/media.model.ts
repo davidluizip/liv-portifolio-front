@@ -1,6 +1,7 @@
 import { Formats } from 'src/app/core/models/media-formats.model';
 
 export interface MediaModel {
+  id: number;
   name: string;
   alternativeText: string;
   caption: string;

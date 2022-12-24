@@ -7,6 +7,7 @@ import {
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { LivSuccessResponse } from 'src/app/core/models/liv-response-protocol.model';
+import { filterResponse } from 'src/app/shared/rxjs/custom-operators';
 import { environment } from 'src/environments/environment';
 
 export interface IRequestOptions {
@@ -37,18 +38,21 @@ export class ApiGatewayService {
     endpoint: string,
     data: FormData,
     params: HttpParams
-  ): Observable<HttpEvent<T>> {
+  ): Observable<HttpEvent<LivSuccessResponse<T>>> {
     const url = encodeURI(this.service + endpoint);
-    return this.httpClient.request<T>('post', url, {
+    return this.httpClient.request<LivSuccessResponse<T>>('post', url, {
       params,
       observe: 'events',
       body: data,
     });
   }
 
-  download<T>(endpoint: string, options: IRequestOptions = {}): Observable<T> {
+  download<T>(
+    endpoint: string,
+    options: IRequestOptions = {}
+  ): Observable<LivSuccessResponse<T>> {
     const url = encodeURI(this.service + endpoint);
-    return this.httpClient.get<T>(url, {
+    return this.httpClient.get<LivSuccessResponse<T>>(url, {
       ...options,
       responseType: 'blob' as 'json',
     });

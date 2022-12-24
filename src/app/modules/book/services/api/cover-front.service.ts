@@ -1,11 +1,20 @@
 import { HttpEvent, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
-import { Model } from 'src/app/core/models/liv-response-protocol.model';
+import { map, Observable, take, tap } from 'rxjs';
+import {
+  DataPut,
+  Model,
+} from 'src/app/core/models/liv-response-protocol.model';
 import { ApiGatewayService } from 'src/app/core/services/api/api-gateway.service';
 import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
+import { filterResponse } from 'src/app/shared/rxjs/custom-operators';
+import { AtLeastOne } from 'src/app/shared/types/generics';
 import { MediaModel } from '../../models/media.model';
-import { TeacherBookModel } from '../../models/teacher-book.model';
+import {
+  SaveClassPageDescription,
+  TeacherBookModel,
+} from '../../models/teacher-book.model';
+import { TeacherModel } from '../../models/teacher.model';
 
 @Injectable({
   providedIn: 'root',
@@ -13,13 +22,24 @@ import { TeacherBookModel } from '../../models/teacher-book.model';
 export class CoverFrontService {
   constructor(private apiGatewayService: ApiGatewayService) {}
 
-  /** Para controller no response sobre os componentes que devem retornar */
-
-  uploadPhoto(data: FormData): Observable<HttpEvent<MediaModel>> {
-    return this.apiGatewayService.upload<MediaModel>('/upload', data, null);
+  uploadPhoto(bookTeacherId: number, data: FormData) {
+    return this.apiGatewayService
+      .upload<MediaModel>(
+        `/livros/upload/pagina_turma/${bookTeacherId}`,
+        data,
+        null
+      )
+      .pipe(
+        filterResponse(),
+        map(res => res.data)
+      );
   }
 
-  getCoverFront(
+  removePhoto(fileId: number) {
+    return this.apiGatewayService.delete(`/livros/upload/${fileId}`);
+  }
+
+  getClassData(
     bookTeacherId: number,
     populate: ETypesComponentStrapi[] = [
       ETypesComponentStrapi.class,
@@ -36,5 +56,11 @@ export class CoverFrontService {
     return this.apiGatewayService
       .get<TeacherBookModel>(`/livros/${bookTeacherId}`, { params })
       .pipe(map(res => res.data));
+  }
+
+  saveClassDescription(bookTeacherId: number, data: SaveClassPageDescription) {
+    return this.apiGatewayService
+      .put<void>(`/livros/${bookTeacherId}`, data)
+      .pipe(take(1));
   }
 }

@@ -13,14 +13,26 @@ import {
   UnaryFunction,
 } from 'rxjs';
 import { filter, map, RetryConfig, tap } from 'rxjs/operators';
+import { LivResponseProtocol } from 'src/app/core/models/liv-response-protocol.model';
 
 export function filterResponse<T>(): UnaryFunction<
   Observable<HttpResponse<T>>,
-  Observable<T | null>
+  Observable<T>
 > {
   return pipe(
-    filter((event: HttpResponse<T>) => event.type === HttpEventType.Response),
-    map((response: HttpResponse<T>) => response.body!)
+    filter((event: HttpEvent<T>) => event.type === HttpEventType.Response),
+    map((response: HttpResponse<any>) => {
+      const body = response.body as LivResponseProtocol<T>;
+
+      if (body.data) {
+        return {
+          data: body.data,
+          meta: body.meta,
+        };
+      }
+
+      return response.body;
+    })
   );
 }
 

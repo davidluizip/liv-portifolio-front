@@ -56,7 +56,7 @@ export class BookComponent implements OnInit, AfterViewInit {
     private renderer: Renderer2,
     private route: ActivatedRoute,
     private pageControllerService: PageControllerService,
-    private readonly _coverFrontService: CoverFrontService
+    private coverFrontService: CoverFrontService
   ) {}
 
   get totalPages() {
@@ -81,8 +81,8 @@ export class BookComponent implements OnInit, AfterViewInit {
     const id = Number(bookId);
 
     this.pageControllerService.saveBookId(id);
-    this._coverFrontService
-      .getCoverFront(id)
+    this.coverFrontService
+      .getClassData(id)
       .pipe(take(1))
       .subscribe(data => {
         if (data.attributes) {

@@ -1,9 +1,15 @@
 export interface Data<T> {
   data: Model<T>;
 }
+
+export interface DataPut<T> {
+  data: T;
+}
+
 export interface DataArray<T> {
   data: Model<T>[];
 }
+
 export interface Model<T> {
   id: number;
   attributes: T;

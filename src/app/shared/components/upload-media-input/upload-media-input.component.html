@@ -1,5 +1,5 @@
 <div class="upload-file-content">
-  <section class="upload-file" *ngIf="!file; else showAvatar">
+  <section class="upload-file" *ngIf="!file && !url; else showAvatar">
     <div
       class="dropzone"
       livDragDropFileUpload

@@ -4,7 +4,7 @@ import {
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
-  HttpResponse
+  HttpResponse,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
@@ -14,7 +14,6 @@ import {
   LivErrorResponse,
   LivResponseProtocol,
   LivSuccessResponse,
-  Model
 } from '../models/liv-response-protocol.model';
 import { ToastService } from '../services/toast.service';
 
@@ -37,7 +36,7 @@ export class ResponseProtocolInterceptor implements HttpInterceptor {
         shouldRetry({
           maxRetryAttempts: 2,
           scalingDuration: 3000,
-          excludedStatusCodes: [404, 403, 401, 400]
+          excludedStatusCodes: [404, 403, 401, 400],
         })
       ),
       catchError((err: HttpErrorResponse) => this.handleError(err))
@@ -62,7 +61,7 @@ export class ResponseProtocolInterceptor implements HttpInterceptor {
     if (response.data) {
       return {
         data: response.data,
-        meta: response.meta
+        meta: response.meta,
       };
     } else {
       if (response.error) {
@@ -70,20 +69,14 @@ export class ResponseProtocolInterceptor implements HttpInterceptor {
           throw new HttpErrorResponse({
             status: response.error.status,
             error: response.error,
-            url: event.url!
+            url: event.url,
           });
         }
-
-        throw new HttpErrorResponse({
-          status: event.status,
-          error: response.error,
-          url: event.url!
-        });
       }
       throw new HttpErrorResponse({
         status: event.status,
         error: event.body,
-        url: event.url!
+        url: event.url,
       });
     }
   }
@@ -111,9 +104,9 @@ export class ResponseProtocolInterceptor implements HttpInterceptor {
           message: response.error.message,
           details: {
             ...response.error.details,
-            url: response.url
-          }
-        }
+            url: response.url,
+          },
+        },
       } as LivErrorResponse;
     });
   }

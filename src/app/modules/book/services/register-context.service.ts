@@ -175,7 +175,7 @@ export class RegisterContextService {
           this._loading.next(false);
         })
       )
-      .subscribe(({ url, mime }) => {
+      .subscribe(({ id, attributes: { url, mime } }) => {
         switch (type) {
           case 'image':
             this.setFieldValue(type, {

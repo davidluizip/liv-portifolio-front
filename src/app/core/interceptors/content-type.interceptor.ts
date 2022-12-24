@@ -17,7 +17,6 @@ export class ContentTypeInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     const whiteListed = new RegExp(whiteList.join('|')).test(req.url);
     if (whiteListed) {
-      console.log(req.headers);
       return next.handle(req);
     }
 
