@@ -11,8 +11,7 @@ import {
   styleUrls: ['./cover-front.component.scss'],
 })
 export class CoverFrontComponent implements OnInit {
-  readonly book$: Observable<BookState> =
-    this.pageControllerService.state$.pipe(tap(console.log));
+  readonly book$: Observable<BookState> = this.pageControllerService.state$;
 
   @Output() seePortfolio = new EventEmitter();
 

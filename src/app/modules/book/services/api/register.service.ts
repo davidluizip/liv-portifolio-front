@@ -8,24 +8,21 @@ import { filterResponse } from 'src/app/shared/rxjs/custom-operators';
 import { MediaModel } from '../../models/media.model';
 import {
   SaveRegisterPageDescription,
-  TeacherBookModel
+  TeacherBookModel,
 } from '../../models/teacher-book.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RegisterService {
   constructor(private apiGatewayService: ApiGatewayService) {}
 
-  uploadMedia(
-    data: FormData,
-    bookId: number,
-    type: ETypesComponentStrapi
-  ): Observable<Model<MediaModel>> {
+  uploadMedia(data: FormData, bookId: number, type: ETypesComponentStrapi) {
     return this.apiGatewayService
-      .upload<Model<MediaModel>>(`/livros/upload/${type}/${bookId}`, data, null)
-      .pipe(filterResponse(), tap(console.log));
+      .upload<MediaModel>(`/livros/upload/${type}/${bookId}`, data, null)
+      .pipe(filterResponse());
   }
+
   get(
     bookTeacherId: number,
     typeComponent = ETypesComponentStrapi.registers
@@ -36,6 +33,7 @@ export class RegisterService {
       .get<TeacherBookModel>(`/livros/${bookTeacherId}`, { params })
       .pipe(map(res => res.data));
   }
+
   saveRegisterDescription(
     bookTeacherId: number,
     data: SaveRegisterPageDescription

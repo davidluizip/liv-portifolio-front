@@ -7,13 +7,13 @@ import { PagesModel } from '../../models/portfolio-book.model';
 import { LessonTrackService } from '../../services/api/lesson-track.service';
 import {
   Colors,
-  PageControllerService
+  PageControllerService,
 } from '../../services/page-controller.service';
 
 @Component({
   selector: 'liv-lesson-track',
   templateUrl: './lesson-track.component.html',
-  styleUrls: ['./lesson-track.component.scss']
+  styleUrls: ['./lesson-track.component.scss'],
 })
 export class LessonTrackComponent implements OnInit {
   readonly colors$: Observable<Colors> = this.pageControllerService.colors$;
@@ -23,10 +23,11 @@ export class LessonTrackComponent implements OnInit {
     private pageControllerService: PageControllerService,
     private lessonTrackService: LessonTrackService
   ) {}
+
   ngOnInit(): void {
-    console.log('LessonTrackComponent');
     this.getLessonTrack();
   }
+
   getLessonTrack(): void {
     this.pageData$ = this.pageControllerService.currentPage$.pipe(
       tap(console.log),

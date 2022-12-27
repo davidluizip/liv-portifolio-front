@@ -7,7 +7,7 @@ import {
   finalize,
   Observable,
   ReplaySubject,
-  take
+  take,
 } from 'rxjs';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
@@ -53,7 +53,7 @@ interface RegisterField {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RegisterContextService {
   private _loading = new ReplaySubject(1);
@@ -63,7 +63,7 @@ export class RegisterContextService {
     Array.from({ length: 4 }, (_, index) => ({
       id: index + 1,
       type: null,
-      content: null
+      content: null,
     }))
   );
 
@@ -82,7 +82,7 @@ export class RegisterContextService {
   get snapshot() {
     return {
       registerFields: this._registerFields.getValue(),
-      selectedRegisterFieldId: this._selectedRegisterFieldId.getValue()
+      selectedRegisterFieldId: this._selectedRegisterFieldId.getValue(),
     };
   }
 
@@ -94,7 +94,6 @@ export class RegisterContextService {
     }
   ) {
     const registerFields = this._registerFields.getValue();
-    console.log('this._registerFields', this._registerFields);
     const fieldIndex = this._registerFields
       .getValue()
       .findIndex(field => field.id === data.id);
@@ -129,19 +128,19 @@ export class RegisterContextService {
     this._selectedRegisterFieldId.next(fieldId);
     this.ngbModal.open(RegisterSelectModalComponent, {
       centered: true,
-      modalDialogClass: 'register-select-modal'
+      modalDialogClass: 'register-select-modal',
     });
   }
 
   saveTextRegister(id: number, content: TextContent) {
     this.setFieldValue('text', {
       id,
-      content
+      content,
     });
     this.registerService.saveRegisterDescription(
       this.pageControllerService.snapshot.bookId,
       {
-        data: { registros: { descricao: content.about, nome: content.name } }
+        data: { registros: { descricao: content.about, nome: content.name } },
       }
     );
 
@@ -173,7 +172,6 @@ export class RegisterContextService {
     data: FormData,
     type: Exclude<KeyFieldContent, 'text'>
   ) {
-    console.log('saveMediaRegister');
     return this.registerService
       .uploadMedia(
         data,
@@ -192,15 +190,16 @@ export class RegisterContextService {
           this._loading.next(false);
         })
       )
-      .subscribe(({ id, attributes: { url, mime } }) => {
+      .subscribe(({ data: { attributes } }) => {
+        console.log(type, attributes.url);
         switch (type) {
           case 'image':
             this.setFieldValue(type, {
               id,
               content: {
-                src: url,
-                alt: ''
-              }
+                src: attributes.url,
+                alt: '',
+              },
             });
             break;
 
@@ -208,9 +207,9 @@ export class RegisterContextService {
             this.setFieldValue(type, {
               id,
               content: {
-                src: url,
-                type: mime
-              }
+                src: attributes.url,
+                type: attributes.mime,
+              },
             });
             break;
 
@@ -218,9 +217,9 @@ export class RegisterContextService {
             this.setFieldValue(type, {
               id,
               content: {
-                src: url,
-                type: mime
-              }
+                src: attributes.url,
+                type: attributes.mime,
+              },
             });
             break;
 

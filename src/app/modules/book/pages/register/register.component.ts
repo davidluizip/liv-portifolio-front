@@ -12,7 +12,7 @@ import { RegisterContextService } from '../../services/register-context.service'
 @Component({
   selector: 'liv-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
   readonly registerFields$ = this.registerContextService.registerFields$.pipe(
@@ -45,7 +45,8 @@ export class RegisterComponent implements OnInit {
             .get(this.pageControllerService.snapshot.bookId)
             .pipe(take(1))
         ),
-        tap(console.log)
+        filter(({ attributes }) => !!attributes.registros),
+        tap(data => console.log(data))
       )
       .subscribe(({ attributes }) => {
         this.registerContextService.resetSelectedRegisterField();
@@ -54,8 +55,8 @@ export class RegisterComponent implements OnInit {
             id: 1,
             content: {
               about: attributes.registros.descricao,
-              name: attributes.registros.nome
-            }
+              name: attributes.registros.nome,
+            },
           });
         }
         if (attributes.registros.midia.data)
@@ -69,14 +70,15 @@ export class RegisterComponent implements OnInit {
       this.setMedia(type[0], midia.attributes);
     }
   }
+
   setMedia(type, data: MediaModel) {
     switch (type) {
       case 'audio':
         this.registerContextService.setFieldValue('audio', {
           id: 2,
           content: {
-            src: data.url
-          }
+            src: data.url,
+          },
         });
         break;
       case 'video':
@@ -84,8 +86,8 @@ export class RegisterComponent implements OnInit {
           id: 3,
           content: {
             src: data.url,
-            type
-          }
+            type,
+          },
         });
         break;
       case 'image':
@@ -93,8 +95,8 @@ export class RegisterComponent implements OnInit {
           id: 4,
           content: {
             src: data.url,
-            alt: data.alternativeText
-          }
+            alt: data.alternativeText,
+          },
         });
         break;
 

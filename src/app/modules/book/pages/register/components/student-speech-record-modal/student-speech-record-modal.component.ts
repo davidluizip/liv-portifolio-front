@@ -30,7 +30,7 @@ export class StudentSpeechRecordModalComponent
     this.form = new FormGroup({
       about: new FormControl(
         '',
-        Validators.compose([Validators.required, Validators.maxLength(64)])
+        Validators.compose([Validators.required, Validators.maxLength(120)])
       ),
       name: new FormControl(
         '',
