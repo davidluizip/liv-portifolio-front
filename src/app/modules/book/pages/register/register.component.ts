@@ -15,9 +15,7 @@ import { RegisterContextService } from '../../services/register-context.service'
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
-  readonly registerFields$ = this.registerContextService.registerFields$.pipe(
-    tap(console.log)
-  );
+  readonly registerFields$ = this.registerContextService.registerFields$;
 
   public registers$: Observable<Model<TeacherBookModel>>;
 
@@ -28,15 +26,10 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // this.registers$ = this.pageControllerService.currentPage$.pipe(
-    //   filter(page => EPages.register === page),
-    //   switchMap(() =>
-    //     this.registerService
-    //       .get(this.pageControllerService.snapshot.bookId)
-    //       .pipe(take(1))
-    //   )
-    // );
+    this.getRegisters();
+  }
 
+  getRegisters(): void {
     this.pageControllerService.currentPage$
       .pipe(
         filter(page => EPages.register === page),
@@ -45,14 +38,13 @@ export class RegisterComponent implements OnInit {
             .get(this.pageControllerService.snapshot.bookId)
             .pipe(take(1))
         ),
-        filter(({ attributes }) => !!attributes.registros),
-        tap(data => console.log(data))
+        filter(({ attributes }) => !!attributes.registros)
       )
       .subscribe(({ attributes }) => {
         this.registerContextService.resetSelectedRegisterField();
         if (attributes.registros.nome) {
           this.registerContextService.setFieldValue('text', {
-            id: 1,
+            id: attributes.registros.alternativeText,
             content: {
               about: attributes.registros.descricao,
               name: attributes.registros.nome,
@@ -66,16 +58,16 @@ export class RegisterComponent implements OnInit {
 
   populateMidias(midias: Model<MediaModel>[]) {
     for (const midia of midias) {
-      const type = midia.attributes.mime.split('/');
-      this.setMedia(type[0], midia.attributes);
+      const [type] = midia.attributes.mime.split('/');
+      this.setMedia(type, midia.attributes);
     }
   }
 
-  setMedia(type, data: MediaModel) {
+  setMedia(type: string, data: MediaModel) {
     switch (type) {
       case 'audio':
         this.registerContextService.setFieldValue('audio', {
-          id: 2,
+          id: data.alternativeText,
           content: {
             src: data.url,
           },
@@ -83,7 +75,7 @@ export class RegisterComponent implements OnInit {
         break;
       case 'video':
         this.registerContextService.setFieldValue('video', {
-          id: 3,
+          id: data.alternativeText,
           content: {
             src: data.url,
             type,
@@ -92,10 +84,10 @@ export class RegisterComponent implements OnInit {
         break;
       case 'image':
         this.registerContextService.setFieldValue('image', {
-          id: 4,
+          id: data.alternativeText,
           content: {
             src: data.url,
-            alt: data.alternativeText,
+            alt: data.caption,
           },
         });
         break;
@@ -104,6 +96,7 @@ export class RegisterComponent implements OnInit {
         break;
     }
   }
+
   handleOpenRegisterTypeModal(fieldId: number): void {
     this.registerContextService.openRegisterTypeModal(fieldId);
   }

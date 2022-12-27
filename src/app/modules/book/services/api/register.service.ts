@@ -37,10 +37,7 @@ export class RegisterService {
   saveRegisterDescription(
     bookTeacherId: number,
     data: SaveRegisterPageDescription
-  ): void {
-    this.apiGatewayService
-      .put<void>(`/livros/${bookTeacherId}`, data)
-      .pipe(take(1))
-      .subscribe();
+  ) {
+    return this.apiGatewayService.put<void>(`/livros/${bookTeacherId}`, data);
   }
 }

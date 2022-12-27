@@ -133,38 +133,40 @@ export class RegisterContextService {
   }
 
   saveTextRegister(id: number, content: TextContent) {
-    this.setFieldValue('text', {
-      id,
-      content,
-    });
-    this.registerService.saveRegisterDescription(
-      this.pageControllerService.snapshot.bookId,
-      {
-        data: { registros: { descricao: content.about, nome: content.name } },
-      }
-    );
+    const requestPayload: SaveRegisterPageDescription = {
+      data: {
+        registros: {
+          alternativeText: id,
+          descricao: content.about,
+          nome: content.name,
+        },
+      },
+    };
 
-    // TO-DO
-    // return this.registerService
-    //   .uploadMedia(content)
-    //   .pipe(
-    //     take(1),
-    //     catchError(() => {
-    //       this.toastService.error(
-    //         'Houve um erro ao fazer o salvar a fala do aluno'
-    //       );
-    //       return EMPTY;
-    //     }),
-    //     finalize(() => {
-    //       this._loading.next(false);
-    //     })
-    //   )
-    //   .subscribe(() => {
-    //     this.setFieldValue('text', {
-    //       id,
-    //       content,
-    //     });
-    //   });
+    this.registerService
+      .saveRegisterDescription(
+        this.pageControllerService.snapshot.bookId,
+        requestPayload
+      )
+      .pipe(
+        take(1),
+        catchError(() => {
+          this.toastService.error(
+            'Houve um erro ao fazer o salvar a fala do aluno'
+          );
+          return EMPTY;
+        }),
+        finalize(() => {
+          this.resetSelectedRegisterField();
+          this._loading.next(false);
+        })
+      )
+      .subscribe(() => {
+        this.setFieldValue('text', {
+          id,
+          content,
+        });
+      });
   }
 
   saveMediaRegister(
@@ -187,6 +189,7 @@ export class RegisterContextService {
           return EMPTY;
         }),
         finalize(() => {
+          this.resetSelectedRegisterField();
           this._loading.next(false);
         })
       )

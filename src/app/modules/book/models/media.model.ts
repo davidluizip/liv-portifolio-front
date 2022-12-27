@@ -3,7 +3,7 @@ import { Formats } from 'src/app/core/models/media-formats.model';
 export interface MediaModel {
   id: number;
   name: string;
-  alternativeText: string;
+  alternativeText: number;
   caption: string;
   width: number;
   height: number;
