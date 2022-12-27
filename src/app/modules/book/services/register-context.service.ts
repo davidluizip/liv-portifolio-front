@@ -7,11 +7,14 @@ import {
   finalize,
   Observable,
   ReplaySubject,
-  take,
+  take
 } from 'rxjs';
 import { ToastService } from 'src/app/core/services/toast.service';
+import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
+import { SaveRegisterPageDescription } from '../models/teacher-book.model';
 import { RegisterSelectModalComponent } from '../pages/register/components/register-select-modal/register-select-modal.component';
 import { RegisterService } from './api/register.service';
+import { PageControllerService } from './page-controller.service';
 
 interface TextContent {
   about: string;
@@ -50,7 +53,7 @@ interface RegisterField {
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class RegisterContextService {
   private _loading = new ReplaySubject(1);
@@ -60,7 +63,7 @@ export class RegisterContextService {
     Array.from({ length: 4 }, (_, index) => ({
       id: index + 1,
       type: null,
-      content: null,
+      content: null
     }))
   );
 
@@ -72,13 +75,14 @@ export class RegisterContextService {
   constructor(
     private ngbModal: NgbModal,
     private registerService: RegisterService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private pageControllerService: PageControllerService
   ) {}
 
   get snapshot() {
     return {
       registerFields: this._registerFields.getValue(),
-      selectedRegisterFieldId: this._selectedRegisterFieldId.getValue(),
+      selectedRegisterFieldId: this._selectedRegisterFieldId.getValue()
     };
   }
 
@@ -90,6 +94,7 @@ export class RegisterContextService {
     }
   ) {
     const registerFields = this._registerFields.getValue();
+    console.log('this._registerFields', this._registerFields);
     const fieldIndex = this._registerFields
       .getValue()
       .findIndex(field => field.id === data.id);
@@ -124,15 +129,22 @@ export class RegisterContextService {
     this._selectedRegisterFieldId.next(fieldId);
     this.ngbModal.open(RegisterSelectModalComponent, {
       centered: true,
-      modalDialogClass: 'register-select-modal',
+      modalDialogClass: 'register-select-modal'
     });
   }
 
   saveTextRegister(id: number, content: TextContent) {
     this.setFieldValue('text', {
       id,
-      content,
+      content
     });
+    this.registerService.saveRegisterDescription(
+      this.pageControllerService.snapshot.bookId,
+      {
+        data: { registros: { descricao: content.about, nome: content.name } }
+      }
+    );
+
     // TO-DO
     // return this.registerService
     //   .uploadMedia(content)
@@ -161,8 +173,13 @@ export class RegisterContextService {
     data: FormData,
     type: Exclude<KeyFieldContent, 'text'>
   ) {
+    console.log('saveMediaRegister');
     return this.registerService
-      .uploadMedia(data)
+      .uploadMedia(
+        data,
+        this.pageControllerService.snapshot.bookId,
+        ETypesComponentStrapi.registersPUT
+      )
       .pipe(
         take(1),
         catchError(() => {
@@ -182,8 +199,8 @@ export class RegisterContextService {
               id,
               content: {
                 src: url,
-                alt: '',
-              },
+                alt: ''
+              }
             });
             break;
 
@@ -192,8 +209,8 @@ export class RegisterContextService {
               id,
               content: {
                 src: url,
-                type: mime,
-              },
+                type: mime
+              }
             });
             break;
 
@@ -202,8 +219,8 @@ export class RegisterContextService {
               id,
               content: {
                 src: url,
-                type: mime,
-              },
+                type: mime
+              }
             });
             break;
 
@@ -211,5 +228,12 @@ export class RegisterContextService {
             break;
         }
       });
+  }
+
+  saveRegisterDescription(
+    bookTeacherId: number,
+    data: SaveRegisterPageDescription
+  ) {
+    this.registerService.saveRegisterDescription(bookTeacherId, data);
   }
 }

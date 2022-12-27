@@ -5,7 +5,7 @@ import {
   Inject,
   OnInit,
   Renderer2,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -23,7 +23,7 @@ interface HTMLDivElementPage extends HTMLDivElement {
   selector: 'liv-book',
   templateUrl: './book.component.html',
   styleUrls: ['./book.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.None
 })
 export class BookComponent implements OnInit, AfterViewInit {
   pages: string[] = [
@@ -34,7 +34,7 @@ export class BookComponent implements OnInit, AfterViewInit {
     'Quinta Pagina',
     'Sexta Pagina',
     'Setima Pagina',
-    'Oitava Pagina',
+    'Oitava Pagina'
   ];
 
   bookColors$ = this.pageControllerService.colors$.pipe(tap(console.log));
@@ -214,6 +214,7 @@ export class BookComponent implements OnInit, AfterViewInit {
     }
 
     this.currentPage = nextPageToFlip['page-number'];
+    console.log('this.currentPage', this.currentPage);
     this.pageControllerService.saveCurrentPage(this.currentPage);
     this._switchingPageTimeout = setTimeout(
       () => (this._switchingPage = false),

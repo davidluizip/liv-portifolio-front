@@ -3,7 +3,7 @@ import {
   Component,
   ElementRef,
   OnDestroy,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -16,14 +16,14 @@ import {
   Subject,
   switchMap,
   take,
-  takeUntil,
+  takeUntil
 } from 'rxjs';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { RegisterService } from 'src/app/modules/book/services/api/register.service';
 import { DOMEvent } from 'src/app/shared/interfaces/dom-event';
 import {
   KeyFieldContent,
-  RegisterContextService,
+  RegisterContextService
 } from '../../../../services/register-context.service';
 import { StudentSpeechRecordModalComponent } from '../student-speech-record-modal/student-speech-record-modal.component';
 
@@ -36,7 +36,7 @@ interface RegisterAction {
 @Component({
   selector: 'liv-register-select-modal',
   templateUrl: './register-select-modal.component.html',
-  styleUrls: ['./register-select-modal.component.scss'],
+  styleUrls: ['./register-select-modal.component.scss']
 })
 export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
   @ViewChild('fileInput') fileInput: ElementRef<HTMLInputElement>;
@@ -45,23 +45,23 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
     {
       icon: 'gallery',
       type: 'image',
-      name: 'Imagem',
+      name: 'Imagem'
     },
     {
       icon: 'typography',
       type: 'text',
-      name: 'Fala do aluno',
+      name: 'Fala do aluno'
     },
     {
       icon: 'video-camera',
       type: 'video',
-      name: 'Vídeo',
+      name: 'Vídeo'
     },
     {
       icon: 'microphone',
       type: 'audio',
-      name: 'Áudio do aluno',
-    },
+      name: 'Áudio do aluno'
+    }
   ];
 
   private selectedInputType: RegisterAction['type'];
@@ -105,15 +105,16 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
           return {
             type,
             file: target.files[0],
-            id: this.registerContextService.snapshot.selectedRegisterFieldId,
+            id: this.registerContextService.snapshot.selectedRegisterFieldId
           };
         })
       )
       .subscribe(({ type, file, id }) => {
+        console.log('listenerInputChangeEvent', type);
+
         const data = new FormData();
 
         data.append('files', file);
-
         this.registerContextService
           .saveMediaRegister(id, data, type)
           .add(() => {
@@ -136,7 +137,7 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
       case 'text':
         this.ngbModal.open(StudentSpeechRecordModalComponent, {
           centered: true,
-          modalDialogClass: 'register-select-modal',
+          modalDialogClass: 'register-select-modal'
         });
         break;
       case 'image':

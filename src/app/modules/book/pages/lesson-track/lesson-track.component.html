@@ -7,18 +7,19 @@
     <liv-title-badge name="Empatia"></liv-title-badge>
   </header>
 
-  <main class="lesson-track-hero">
+  <main class="lesson-track-hero" *ngIf="pageData$ | async; let page">
     <picture class="lesson-track-hero__picture">
-      <img src="assets/images/lesson-track-dummy.jpg" alt="" />
+      <img src="{{ page?.imagem?.url }}" alt="" />
     </picture>
 
-    <article class="lesson-track-article">
-      <span class="lesson-track-article__tag">Aula 1</span>
-      <h1 class="lesson-track-article__title">Muito prazer, Fernanda!</h1>
+    <article
+      class="lesson-track-article"
+      *ngFor="let classes of page?.aulas; let i = index"
+    >
+      <span class="lesson-track-article__tag">{{ classes.titulo }}</span>
+      <h1 class="lesson-track-article__title">{{ classes.subtitulo }}</h1>
       <p class="lesson-track-article__description">
-        Fernanda é a nova integrante da nossa turma!Nas conversas com ela,
-        refletiremos sobre nossas relações e laços afetivos, pensando aquilo que
-        pode estar em jogo quando convivemos com o outro.
+        {{ classes.descricao }}
       </p>
     </article>
   </main>
