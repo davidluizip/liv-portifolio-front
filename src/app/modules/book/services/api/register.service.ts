@@ -8,11 +8,11 @@ import { filterResponse } from 'src/app/shared/rxjs/custom-operators';
 import { MediaModel } from '../../models/media.model';
 import {
   SaveRegisterPageDescription,
-  TeacherBookModel,
+  TeacherBookModel
 } from '../../models/teacher-book.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class RegisterService {
   constructor(private apiGatewayService: ApiGatewayService) {}
@@ -38,6 +38,9 @@ export class RegisterService {
     bookTeacherId: number,
     data: SaveRegisterPageDescription
   ) {
-    return this.apiGatewayService.put<void>(`/livros/${bookTeacherId}`, data);
+    return this.apiGatewayService.put<void>(
+      `/livros/registro/texto/${bookTeacherId}`,
+      data
+    );
   }
 }

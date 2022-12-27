@@ -1,7 +1,7 @@
 import {
   Data,
   DataArray,
-  DataPut,
+  DataPut
 } from 'src/app/core/models/liv-response-protocol.model';
 import { MediaModel } from './media.model';
 import { TeacherModel } from './teacher.model';
@@ -24,9 +24,11 @@ export type SaveClassPageDescription = DataPut<{
 
 export type SaveRegisterPageDescription = DataPut<{
   registros: {
-    alternativeText: number;
-    descricao: string;
-    nome: string;
+    texto: {
+      alternativeText: number;
+      descricao: string;
+      nome: string;
+    };
   };
 }>;
 
