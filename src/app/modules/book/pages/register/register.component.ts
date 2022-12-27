@@ -3,7 +3,10 @@ import { filter, Observable, switchMap, take, tap } from 'rxjs';
 import { Model } from 'src/app/core/models/liv-response-protocol.model';
 import { EPages } from 'src/app/shared/enum/pages.enum';
 import { MediaModel } from '../../models/media.model';
-import { TeacherBookModel } from '../../models/teacher-book.model';
+import {
+  RegisterText,
+  TeacherBookModel,
+} from '../../models/teacher-book.model';
 import { RegisterService } from '../../services/api/register.service';
 import { PageControllerService } from '../../services/page-controller.service';
 
@@ -42,21 +45,27 @@ export class RegisterComponent implements OnInit {
       )
       .subscribe(({ attributes }) => {
         this.registerContextService.resetSelectedRegisterField();
-        if (attributes.registros.nome) {
-          this.registerContextService.setFieldValue('text', {
-            id: attributes.registros.alternativeText,
-            content: {
-              about: attributes.registros.descricao,
-              name: attributes.registros.nome,
-            },
-          });
+        if (attributes.registros.texto?.length > 0) {
+          this.populateTexts(attributes.registros.texto);
         }
         if (attributes.registros.midia.data)
-          this.populateMidias(attributes.registros.midia.data);
+          this.populateMedias(attributes.registros.midia.data);
       });
   }
 
-  populateMidias(midias: Model<MediaModel>[]) {
+  populateTexts(texts: RegisterText[]) {
+    for (const text of texts) {
+      this.registerContextService.setFieldValue('text', {
+        id: text.alternativeText,
+        content: {
+          about: text.descricao,
+          name: text.nome,
+        },
+      });
+    }
+  }
+
+  populateMedias(midias: Model<MediaModel>[]) {
     for (const midia of midias) {
       const [type] = midia.attributes.mime.split('/');
       this.setMedia(type, midia.attributes);

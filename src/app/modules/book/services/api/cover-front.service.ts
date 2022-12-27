@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable, take, tap } from 'rxjs';
 import {
   DataPut,
-  Model
+  Model,
 } from 'src/app/core/models/liv-response-protocol.model';
 import { ApiGatewayService } from 'src/app/core/services/api/api-gateway.service';
 import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
@@ -12,12 +12,12 @@ import { AtLeastOne } from 'src/app/shared/types/generics';
 import { MediaModel } from '../../models/media.model';
 import {
   SaveClassPageDescription,
-  TeacherBookModel
+  TeacherBookModel,
 } from '../../models/teacher-book.model';
 import { TeacherModel } from '../../models/teacher.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CoverFrontService {
   constructor(private apiGatewayService: ApiGatewayService) {}
@@ -43,13 +43,12 @@ export class CoverFrontService {
     bookTeacherId: number,
     populate: ETypesComponentStrapi[] = [
       ETypesComponentStrapi.class,
-      ETypesComponentStrapi.professor
+      ETypesComponentStrapi.professor,
     ]
   ): Observable<Model<TeacherBookModel>> {
     let params = new HttpParams();
     if (populate.length > 0) {
       const filters = populate.join(',');
-      console.log(populate, filters);
       params = params.set('populate', filters);
     }
 

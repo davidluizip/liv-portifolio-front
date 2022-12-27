@@ -1,7 +1,7 @@
 import {
   Data,
   DataArray,
-  DataPut
+  DataPut,
 } from 'src/app/core/models/liv-response-protocol.model';
 import { MediaModel } from './media.model';
 import { TeacherModel } from './teacher.model';
@@ -38,10 +38,14 @@ export interface ClassPage {
   midia: Data<MediaModel>;
 }
 
-export interface Register {
-  id: number;
+export interface RegisterText {
   alternativeText: number;
-  midia?: DataArray<MediaModel>;
   descricao: string;
   nome: string;
+}
+
+export interface Register {
+  id: number;
+  midia?: DataArray<MediaModel>;
+  texto?: RegisterText[];
 }

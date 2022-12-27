@@ -8,11 +8,11 @@ import { filterResponse } from 'src/app/shared/rxjs/custom-operators';
 import { MediaModel } from '../../models/media.model';
 import {
   SaveRegisterPageDescription,
-  TeacherBookModel
+  TeacherBookModel,
 } from '../../models/teacher-book.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RegisterService {
   constructor(private apiGatewayService: ApiGatewayService) {}
@@ -25,9 +25,16 @@ export class RegisterService {
 
   get(
     bookTeacherId: number,
-    typeComponent = ETypesComponentStrapi.registers
+    populate: ETypesComponentStrapi[] = [
+      ETypesComponentStrapi.registers,
+      ETypesComponentStrapi.registersText,
+    ]
   ): Observable<Model<TeacherBookModel>> {
-    const params = new HttpParams().set('populate', typeComponent);
+    let params = new HttpParams();
+    if (populate.length > 0) {
+      const filters = populate.join(',');
+      params = params.set('populate', filters);
+    }
 
     return this.apiGatewayService
       .get<TeacherBookModel>(`/livros/${bookTeacherId}`, { params })

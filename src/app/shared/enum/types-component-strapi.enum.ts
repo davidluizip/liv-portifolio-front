@@ -4,11 +4,12 @@ export enum ETypesComponentStrapi {
   registersPUT = 'registro',
   intro = 'introducao',
   registers = 'registros.midia',
+  registersText = 'registros.texto',
   paginas_aulas = 'paginas.aulas',
   paginas_imagem = 'paginas.imagem',
   paginas_footer = 'paginas.footer',
   professor = 'professor',
   photo = 'foto',
   series = 'series',
-  professor_book = 'livro_professors'
+  professor_book = 'livro_professors',
 }
