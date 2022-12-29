@@ -7,12 +7,12 @@ import {
   Renderer2,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { delay, filter, from, mergeMap, of, Subject, take, tap } from 'rxjs';
-import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
+import { EPages } from 'src/app/shared/enum/pages.enum';
 import bookConfig from './book-config';
 import { CoverFrontService } from './services/api/cover-front.service';
+import { LessonTrackService } from './services/api/lesson-track.service';
 import { PageControllerService } from './services/page-controller.service';
 
 interface HTMLDivElementPage extends HTMLDivElement {
@@ -26,28 +26,26 @@ interface HTMLDivElementPage extends HTMLDivElement {
   encapsulation: ViewEncapsulation.None,
 })
 export class BookComponent implements OnInit, AfterViewInit {
-  pages: string[] = [
-    'Primeira Pagina',
-    'Segunda Pagina',
-    'Terceira Pagina',
-    'Quarta Pagina',
-    'Quinta Pagina',
-    'Sexta Pagina',
-    'Setima Pagina',
-    'Oitava Pagina',
-  ];
+  readonly PageEnum = EPages;
 
+  currentPage = 0;
+  totalPages = 0;
+
+  pages$ = this.pageControllerService.pages$.pipe(
+    tap(pages => (this.totalPages = pages.length))
+  );
   bookColors$ = this.pageControllerService.colors$;
 
   private _switchingPage = false;
   private _switchingPageTimeout: NodeJS.Timeout;
   private _destroy$ = new Subject<boolean>();
 
-  footerBackground: string;
+  private coverBackPage: HTMLDivElementPage;
 
-  media = new FormControl(null);
-  currentPage = 0;
+  footerBackground: string;
   pagesElement: HTMLDivElementPage[];
+
+  private currentIsCoverBackPage = false;
 
   private startPageConfig$ = new Subject<boolean>();
 
@@ -56,23 +54,39 @@ export class BookComponent implements OnInit, AfterViewInit {
     private renderer: Renderer2,
     private route: ActivatedRoute,
     private pageControllerService: PageControllerService,
-    private coverFrontService: CoverFrontService
+    private coverFrontService: CoverFrontService,
+    private lessonTrackService: LessonTrackService
   ) {}
-
-  get totalPages() {
-    return this.pages.length;
-  }
 
   get showPreviousButton() {
     return this.currentPage > 0;
   }
 
   get showNextButton() {
-    return this.currentPage >= 0 && this.currentPage <= this.pages.length;
+    return (
+      this.currentPage <= this.totalPages + 1 &&
+      (!this.currentIsCoverBackPage ||
+        this.coverBackPage['page-number'] % 2 === 0)
+    );
   }
 
   get showCloseButton() {
     return this.currentPage > 0;
+  }
+
+  getFirstLessonTrackPage() {
+    this.lessonTrackService
+      .getTrailActivities()
+      .pipe(
+        filter(({ attributes }) => attributes && attributes.paginas?.count > 0)
+      )
+      .subscribe(({ attributes }) => {
+        Array.from({ length: attributes.paginas.count }).forEach(() => {
+          this.pageControllerService.savePage(EPages.lesson_track);
+        });
+        this.pageControllerService.savePage(EPages.register);
+        this.pageControllerService.savePage(EPages.register);
+      });
   }
 
   ngOnInit(): void {
@@ -95,6 +109,8 @@ export class BookComponent implements OnInit, AfterViewInit {
           this.pageControllerService.saveMascot(mascot);
 
           this.startPageConfig$.next(true);
+
+          this.getFirstLessonTrackPage();
         }
       });
   }
@@ -119,7 +135,11 @@ export class BookComponent implements OnInit, AfterViewInit {
     const pages = Array.from(
       this.document.getElementsByClassName('page')
     ) as HTMLDivElementPage[];
+
     this.pagesElement = pages;
+    this.coverBackPage = this.document.getElementById(
+      'cover-back-page'
+    ) as HTMLDivElementPage;
 
     from(pages)
       .pipe(mergeMap((page, index) => of({ page, index })))
@@ -145,6 +165,10 @@ export class BookComponent implements OnInit, AfterViewInit {
 
   handlePreviousPage() {
     if (this._switchingPage || this.currentPage === 0) return;
+
+    if (this.currentIsCoverBackPage) {
+      this.currentIsCoverBackPage = false;
+    }
 
     this._switchingPage = true;
 
@@ -176,12 +200,15 @@ export class BookComponent implements OnInit, AfterViewInit {
       () => (this._switchingPage = false),
       450
     );
+
+    console.log(this.totalPages, this.currentPage);
   }
 
   handleNextPage() {
     if (
       this._switchingPage ||
-      this.pagesElement[this.currentPage + 1].classList.contains('cover-back')
+      (this.currentIsCoverBackPage &&
+        this.coverBackPage['page-number'] % 2 !== 0)
     )
       return;
 
@@ -212,8 +239,15 @@ export class BookComponent implements OnInit, AfterViewInit {
       frontCover?.classList.add('main-cover--active');
     }
 
+    console.log(nextPageToFlip['page-number']);
+
     this.currentPage = nextPageToFlip['page-number'];
     this.pageControllerService.saveCurrentPage(this.currentPage);
+
+    this.currentIsCoverBackPage =
+      this.currentPage >= this.totalPages ||
+      this.pagesElement[this.currentPage + 1].classList.contains('cover-back');
+
     this._switchingPageTimeout = setTimeout(
       () => (this._switchingPage = false),
       450

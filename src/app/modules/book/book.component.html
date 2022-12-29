@@ -1,5 +1,5 @@
 <div class="book-container">
-  <main class="book-hero" *ngIf="bookColors$ | async; let colors ">
+  <main class="book-hero" *ngIf="bookColors$ | async; let colors">
     <button
       class="switch-pages-action-button switch-pages-action-button__previous"
       [ngClass]="{
@@ -23,37 +23,39 @@
         <div class="page cover-front cover-front--backside">
           <liv-cover-front-backside></liv-cover-front-backside>
         </div>
-        <div class="page" *ngFor="let page of pages; let i = index">
-          <article class="page__content">
-            <ng-container *ngIf="i > 3; else customPages">
-              {{ page }}
-            </ng-container>
-
-            <ng-template #customPages>
-              <liv-introduction *ngIf="i === 0"></liv-introduction>
-              <liv-lesson-track *ngIf="i === 1"></liv-lesson-track>
+        <ng-container *ngIf="pages$ | async; let pages">
+          <div class="page" *ngFor="let page of pages; let i = index">
+            <article class="page__content">
+              <liv-introduction
+                *ngIf="page === PageEnum.intro"
+              ></liv-introduction>
+              <liv-lesson-track
+                *ngIf="page === PageEnum.lesson_track"
+                [lessonTrackPage]="i"
+              ></liv-lesson-track>
               <liv-lesson-track-register
-                *ngIf="i === 2"
+                *ngIf="page === PageEnum.lesson_track_register"
               ></liv-lesson-track-register>
-              <liv-register *ngIf="i === 3"></liv-register>
-            </ng-template>
-          </article>
+              <liv-register *ngIf="page === PageEnum.register"></liv-register>
+            </article>
 
-          <footer
-            class="page__footer"
-            [ngStyle]="{
-              'background-image': 'url(' + footerBackground + ')'
-            }"
-            [ngClass]="{
-              'page__footer--background': !!footerBackground
-            }"
-          >
-            <span class="page__footer__pageNum"
-              >{{ i + 1 }} / {{ totalPages }}</span
+            <footer
+              class="page__footer"
+              [ngStyle]="{
+                'background-image': 'url(' + footerBackground + ')'
+              }"
+              [ngClass]="{
+                'page__footer--background': !!footerBackground
+              }"
             >
-          </footer>
-        </div>
-        <div class="page cover-back">
+              <span class="page__footer__pageNum"
+                >{{ i + 1 }} / {{ totalPages }}</span
+              >
+            </footer>
+          </div>
+        </ng-container>
+
+        <div id="cover-back-page" class="page cover-back">
           <h1>Fim!</h1>
         </div>
         <div id="main-back-cover" class="main-cover"></div>

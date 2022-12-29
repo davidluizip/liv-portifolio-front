@@ -7,7 +7,7 @@ import {
   finalize,
   Observable,
   ReplaySubject,
-  take
+  take,
 } from 'rxjs';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
@@ -53,7 +53,7 @@ interface RegisterField {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RegisterContextService {
   private _loading = new ReplaySubject(1);
@@ -63,7 +63,7 @@ export class RegisterContextService {
     Array.from({ length: 4 }, (_, index) => ({
       id: index + 1,
       type: null,
-      content: null
+      content: null,
     }))
   );
 
@@ -82,7 +82,7 @@ export class RegisterContextService {
   get snapshot() {
     return {
       registerFields: this._registerFields.getValue(),
-      selectedRegisterFieldId: this._selectedRegisterFieldId.getValue()
+      selectedRegisterFieldId: this._selectedRegisterFieldId.getValue(),
     };
   }
 
@@ -128,7 +128,7 @@ export class RegisterContextService {
     this._selectedRegisterFieldId.next(fieldId);
     this.ngbModal.open(RegisterSelectModalComponent, {
       centered: true,
-      modalDialogClass: 'register-select-modal'
+      modalDialogClass: 'register-select-modal',
     });
   }
 
@@ -139,10 +139,10 @@ export class RegisterContextService {
           texto: {
             alternativeText: id,
             descricao: content.about,
-            nome: content.name
-          }
-        }
-      }
+            nome: content.name,
+          },
+        },
+      },
     };
 
     this.registerService
@@ -166,7 +166,7 @@ export class RegisterContextService {
       .subscribe(() => {
         this.setFieldValue('text', {
           id,
-          content
+          content,
         });
       });
   }
@@ -196,15 +196,14 @@ export class RegisterContextService {
         })
       )
       .subscribe(({ data: { attributes } }) => {
-        console.log(type, attributes.url);
         switch (type) {
           case 'image':
             this.setFieldValue(type, {
               id,
               content: {
                 src: attributes.url,
-                alt: ''
-              }
+                alt: '',
+              },
             });
             break;
 
@@ -213,8 +212,8 @@ export class RegisterContextService {
               id,
               content: {
                 src: attributes.url,
-                type: attributes.mime
-              }
+                type: attributes.mime,
+              },
             });
             break;
 
@@ -223,8 +222,8 @@ export class RegisterContextService {
               id,
               content: {
                 src: attributes.url,
-                type: attributes.mime
-              }
+                type: attributes.mime,
+              },
             });
             break;
 

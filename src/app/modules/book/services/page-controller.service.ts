@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, filter, map } from 'rxjs';
 import { Model } from 'src/app/core/models/liv-response-protocol.model';
+import { EPages } from 'src/app/shared/enum/pages.enum';
 import { TeacherBookModel } from '../models/teacher-book.model';
 
 export interface Colors {
@@ -26,6 +27,9 @@ export interface BookState {
   providedIn: 'root',
 })
 export class PageControllerService {
+  private _pages = new BehaviorSubject<EPages[]>([EPages.intro]);
+  public pages$ = this._pages.asObservable();
+
   private _currentPage = new BehaviorSubject<number>(null);
   public currentPage$ = this._currentPage.asObservable();
   private _bookId = new BehaviorSubject<number>(null);
@@ -50,6 +54,10 @@ export class PageControllerService {
       colors: this._state.getValue()?.colors,
       content: this._state.getValue()?.content,
     };
+  }
+
+  savePage(page: EPages): void {
+    this._pages.next([...this._pages.getValue(), page]);
   }
 
   saveColors(colors: Colors) {
