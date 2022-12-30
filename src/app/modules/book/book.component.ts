@@ -1,14 +1,23 @@
 import { DOCUMENT } from '@angular/common';
 import {
-  AfterViewInit,
   Component,
   Inject,
+  OnDestroy,
   OnInit,
   Renderer2,
   ViewEncapsulation,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { delay, filter, from, mergeMap, of, Subject, take, tap } from 'rxjs';
+import {
+  filter,
+  from,
+  mergeMap,
+  of,
+  Subject,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs';
 import { EPages } from 'src/app/shared/enum/pages.enum';
 import bookConfig from './book-config';
 import { CoverFrontService } from './services/api/cover-front.service';
@@ -25,7 +34,7 @@ interface HTMLDivElementPage extends HTMLDivElement {
   styleUrls: ['./book.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class BookComponent implements OnInit, AfterViewInit {
+export class BookComponent implements OnInit, OnDestroy {
   readonly PageEnum = EPages;
 
   currentPage = 0;
@@ -74,45 +83,13 @@ export class BookComponent implements OnInit, AfterViewInit {
     return this.currentPage > 0;
   }
 
-  getFirstLessonTrackPage() {
-    this.lessonTrackService
-      .getTrailActivities()
-      .pipe(
-        filter(({ attributes }) => attributes && attributes.paginas?.count > 0)
-      )
-      .subscribe(({ attributes }) => {
-        Array.from({ length: attributes.paginas.count }).forEach(() => {
-          this.pageControllerService.savePage(EPages.lesson_track);
-        });
-        this.pageControllerService.savePage(EPages.register);
-        this.pageControllerService.savePage(EPages.register);
-      });
-  }
-
   ngOnInit(): void {
     const bookId = this.route.snapshot.paramMap.get('id');
 
     const id = Number(bookId);
 
     this.pageControllerService.saveBookId(id);
-    this.coverFrontService
-      .getClassData(id)
-      .pipe(take(1))
-      .subscribe(data => {
-        if (data.attributes) {
-          const serie = data.attributes.serie.replace(/ /g, '-');
-
-          const { colors, mascot } = bookConfig[serie];
-
-          this.pageControllerService.saveContent(data);
-          this.pageControllerService.saveColors(colors);
-          this.pageControllerService.saveMascot(mascot);
-
-          this.startPageConfig$.next(true);
-
-          this.getFirstLessonTrackPage();
-        }
-      });
+    this.getMainBookContent(id);
   }
 
   ngOnDestroy(): void {
@@ -122,13 +99,41 @@ export class BookComponent implements OnInit, AfterViewInit {
     this._destroy$.complete();
   }
 
-  ngAfterViewInit(): void {
-    this.startPageConfig$
+  getFirstLessonTrackPage() {
+    return this.lessonTrackService
+      .getTrailActivities()
       .pipe(
-        filter(start => !!start),
-        delay(250)
+        filter(({ attributes }) => attributes && attributes.paginas?.count > 0)
+      );
+  }
+
+  getMainBookContent(bookId: number) {
+    this.coverFrontService
+      .getClassData(bookId)
+      .pipe(
+        take(1),
+        tap(data => {
+          if (data.attributes) {
+            const serie = data.attributes.serie.replace(/ /g, '-');
+
+            const { colors, mascot } = bookConfig[serie];
+
+            this.pageControllerService.saveContent(data);
+            this.pageControllerService.saveColors(colors);
+            this.pageControllerService.saveMascot(mascot);
+
+            this.startPageConfig$.next(true);
+          }
+        }),
+        switchMap(() => this.getFirstLessonTrackPage())
       )
-      .subscribe(() => this.startConfigPages());
+      .subscribe(({ attributes }) => {
+        Array.from({ length: attributes.paginas.count + 2 }).forEach(() => {
+          this.pageControllerService.savePage(EPages.lesson_track);
+        });
+        this.pageControllerService.savePage(EPages.register);
+        this.startConfigPages();
+      });
   }
 
   startConfigPages() {
@@ -200,8 +205,6 @@ export class BookComponent implements OnInit, AfterViewInit {
       () => (this._switchingPage = false),
       450
     );
-
-    console.log(this.totalPages, this.currentPage);
   }
 
   handleNextPage() {
