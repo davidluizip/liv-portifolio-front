@@ -28,3 +28,10 @@ export class ClassModel {
   registro: boolean;
   descricao: string;
 }
+
+export interface RegisterResumoModel {
+  count: number;
+  imagem: boolean;
+  footer: boolean;
+  pagina_aula_registro: boolean;
+}

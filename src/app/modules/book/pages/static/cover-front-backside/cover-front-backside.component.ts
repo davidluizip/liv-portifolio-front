@@ -13,7 +13,7 @@ import {
   Observable,
   switchMap,
   take,
-  tap,
+  tap
 } from 'rxjs';
 import { ToastService } from 'src/app/core/services/toast.service';
 
@@ -27,7 +27,7 @@ interface ClassData {
 @Component({
   selector: 'liv-cover-front-backside',
   templateUrl: './cover-front-backside.component.html',
-  styleUrls: ['./cover-front-backside.component.scss'],
+  styleUrls: ['./cover-front-backside.component.scss']
 })
 export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
   public photoControl: FormControl = new FormControl(null);
@@ -78,9 +78,9 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
       const data = {
         data: {
           pagina_turma: {
-            descricao: description,
-          },
-        },
+            descricao: description
+          }
+        }
       };
 
       this.coverFrontService
@@ -118,7 +118,7 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
             attributes.pagina_turma.midia.data.attributes.url,
             {
               emitEvent: false,
-              onlySelf: true,
+              onlySelf: true
             }
           );
         }
@@ -136,7 +136,7 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
           turma: attributes.turma,
           serie: attributes.serie,
           professor: attributes.professor?.data?.attributes.apelido,
-          escola: attributes.escola,
+          escola: attributes.escola
         };
       })
     );
@@ -155,7 +155,7 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
           this.fileId = id;
           this.photoControl.patchValue(attributes.url, {
             emitEvent: false,
-            onlySelf: true,
+            onlySelf: true
           });
         })
       ),

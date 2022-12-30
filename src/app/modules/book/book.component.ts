@@ -5,7 +5,7 @@ import {
   OnDestroy,
   OnInit,
   Renderer2,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -16,10 +16,11 @@ import {
   Subject,
   switchMap,
   take,
-  tap,
+  tap
 } from 'rxjs';
 import { EPages } from 'src/app/shared/enum/pages.enum';
 import bookConfig from './book-config';
+import { RegisterResumoModel } from './models/portfolio-book.model';
 import { CoverFrontService } from './services/api/cover-front.service';
 import { LessonTrackService } from './services/api/lesson-track.service';
 import { PageControllerService } from './services/page-controller.service';
@@ -32,7 +33,7 @@ interface HTMLDivElementPage extends HTMLDivElement {
   selector: 'liv-book',
   templateUrl: './book.component.html',
   styleUrls: ['./book.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.None
 })
 export class BookComponent implements OnInit, OnDestroy {
   readonly PageEnum = EPages;
@@ -41,7 +42,8 @@ export class BookComponent implements OnInit, OnDestroy {
   totalPages = 0;
 
   pages$ = this.pageControllerService.pages$.pipe(
-    tap(pages => (this.totalPages = pages.length))
+    tap(pages => (this.totalPages = pages.length)),
+    tap(console.log)
   );
   bookColors$ = this.pageControllerService.colors$;
 
@@ -55,8 +57,6 @@ export class BookComponent implements OnInit, OnDestroy {
   pagesElement: HTMLDivElementPage[];
 
   private currentIsCoverBackPage = false;
-
-  private startPageConfig$ = new Subject<boolean>();
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
@@ -101,10 +101,8 @@ export class BookComponent implements OnInit, OnDestroy {
 
   getFirstLessonTrackPage() {
     return this.lessonTrackService
-      .getTrailActivities()
-      .pipe(
-        filter(({ attributes }) => attributes && attributes.paginas?.count > 0)
-      );
+      .getRegisterResumo()
+      .pipe(filter(({ attributes }) => attributes && attributes.count > 0));
   }
 
   getMainBookContent(bookId: number) {
@@ -121,19 +119,23 @@ export class BookComponent implements OnInit, OnDestroy {
             this.pageControllerService.saveContent(data);
             this.pageControllerService.saveColors(colors);
             this.pageControllerService.saveMascot(mascot);
-
-            this.startPageConfig$.next(true);
           }
         }),
         switchMap(() => this.getFirstLessonTrackPage())
       )
       .subscribe(({ attributes }) => {
-        Array.from({ length: attributes.paginas.count + 2 }).forEach(() => {
-          this.pageControllerService.savePage(EPages.lesson_track);
-        });
-        this.pageControllerService.savePage(EPages.register);
+        this.buildPages(attributes);
+
         this.startConfigPages();
       });
+  }
+  buildPages(attributes: RegisterResumoModel) {
+    Array.from({ length: attributes.count }).forEach(() => {
+      if (attributes.pagina_aula_registro)
+        this.pageControllerService.savePage(EPages.lesson_track_register);
+      else this.pageControllerService.savePage(EPages.lesson_track);
+    });
+    this.pageControllerService.savePage(EPages.register);
   }
 
   startConfigPages() {
@@ -234,7 +236,7 @@ export class BookComponent implements OnInit, OnDestroy {
       )!;
     }
 
-    nextPageToFlip.classList.add('flipped');
+    nextPageToFlip?.classList.add('flipped');
     nextPageToFlip.nextElementSibling?.classList.add('flipped');
 
     if (nextPageToFlip['page-number'] === 1) {
@@ -249,7 +251,7 @@ export class BookComponent implements OnInit, OnDestroy {
 
     this.currentIsCoverBackPage =
       this.currentPage >= this.totalPages ||
-      this.pagesElement[this.currentPage + 1].classList.contains('cover-back');
+      this.pagesElement[this.currentPage + 1]?.classList.contains('cover-back');
 
     this._switchingPageTimeout = setTimeout(
       () => (this._switchingPage = false),
