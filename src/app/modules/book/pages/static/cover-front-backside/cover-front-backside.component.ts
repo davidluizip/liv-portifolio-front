@@ -13,9 +13,10 @@ import {
   Observable,
   switchMap,
   take,
-  tap
+  tap,
 } from 'rxjs';
 import { ToastService } from 'src/app/core/services/toast.service';
+import { LoadingOverlayService } from 'src/app/shared/components/loading-overlay/loading-overlay.service';
 
 interface ClassData {
   turma: string;
@@ -27,7 +28,7 @@ interface ClassData {
 @Component({
   selector: 'liv-cover-front-backside',
   templateUrl: './cover-front-backside.component.html',
-  styleUrls: ['./cover-front-backside.component.scss']
+  styleUrls: ['./cover-front-backside.component.scss'],
 })
 export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
   public photoControl: FormControl = new FormControl(null);
@@ -43,13 +44,20 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
   constructor(
     private coverFrontService: CoverFrontService,
     private pageControllerService: PageControllerService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private loadingOverlayService: LoadingOverlayService
   ) {}
 
   get textareaPlaceholder() {
     return this.isEnabledEdit
       ? `Profressor, escreva aqui um uma descrição da turma.\n\nSugestão: Quantidade de alunos, características da tumas (são animados, curiosos, divertidos...).`
       : '';
+  }
+
+  get disableEditDescription() {
+    return (
+      this.descriptionControl.value?.trim() === '' || this.savingDescription
+    );
   }
 
   ngOnInit(): void {
@@ -59,7 +67,12 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.photoControl.valueChanges
       .pipe(
-        switchMap((file: File | null) => this.chooseUpdateAction(file)),
+        tap(() => this.loadingOverlayService.open()),
+        switchMap((file: File | null) =>
+          this.chooseUpdateAction(file).pipe(
+            finalize(() => this.loadingOverlayService.remove())
+          )
+        ),
         catchError(() => {
           this.toastService.error(
             'Houve um erro inesperado, por favor tente novamente mais tarde'
@@ -78,9 +91,9 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
       const data = {
         data: {
           pagina_turma: {
-            descricao: description
-          }
-        }
+            descricao: description,
+          },
+        },
       };
 
       this.coverFrontService
@@ -118,7 +131,7 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
             attributes.pagina_turma.midia.data.attributes.url,
             {
               emitEvent: false,
-              onlySelf: true
+              onlySelf: true,
             }
           );
         }
@@ -136,7 +149,7 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
           turma: attributes.turma,
           serie: attributes.serie,
           professor: attributes.professor?.data?.attributes.apelido,
-          escola: attributes.escola
+          escola: attributes.escola,
         };
       })
     );
@@ -155,7 +168,7 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
           this.fileId = id;
           this.photoControl.patchValue(attributes.url, {
             emitEvent: false,
-            onlySelf: true
+            onlySelf: true,
           });
         })
       ),

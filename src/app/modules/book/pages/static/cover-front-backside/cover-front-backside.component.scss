@@ -104,7 +104,12 @@
     color: color('neutral-low-pure');
     transition: 0.2s ease;
 
-    &:hover {
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    &:not(:disabled):hover {
       background-color: color('neutral-low-pure');
       color: color('neutral-hight-pure');
     }

@@ -8,15 +8,15 @@ import { filterResponse } from 'src/app/shared/rxjs/custom-operators';
 import { MediaModel } from '../../models/media.model';
 import {
   PortfolioBookModel,
-  RegisterResumoModel
+  ResumeRegisterModel,
 } from '../../models/portfolio-book.model';
 import {
   SaveClassPageDescription,
-  TeacherBookModel
+  TeacherBookModel,
 } from '../../models/teacher-book.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LessonTrackService {
   constructor(private apiGatewayService: ApiGatewayService) {}
@@ -26,7 +26,7 @@ export class LessonTrackService {
     populate: ETypesComponentStrapi[] = [
       ETypesComponentStrapi.paginas_aulas,
       ETypesComponentStrapi.paginas_footer,
-      ETypesComponentStrapi.paginas_imagem
+      ETypesComponentStrapi.paginas_imagem,
     ]
   ): Observable<Model<PortfolioBookModel>> {
     let params = new HttpParams();
@@ -37,18 +37,18 @@ export class LessonTrackService {
 
     return this.apiGatewayService
       .get<PortfolioBookModel>(`/livro-portifolio/next-page/${idPage}`, {
-        params
+        params,
       })
       .pipe(map(res => res.data));
   }
 
-  getRegisterResumo(
+  getResumeRegister(
     populate: ETypesComponentStrapi[] = [
       ETypesComponentStrapi.paginas_aulas,
       ETypesComponentStrapi.paginas_footer,
-      ETypesComponentStrapi.paginas_imagem
+      ETypesComponentStrapi.paginas_imagem,
     ]
-  ): Observable<Model<RegisterResumoModel>> {
+  ): Observable<Model<ResumeRegisterModel>> {
     let params = new HttpParams();
     if (populate.length > 0) {
       const filters = populate.join(',');
@@ -56,8 +56,8 @@ export class LessonTrackService {
     }
 
     return this.apiGatewayService
-      .get<RegisterResumoModel>('/livro-portifolio/registro/resumo', {
-        params
+      .get<ResumeRegisterModel>('/livro-portifolio/registro/resumo', {
+        params,
       })
       .pipe(map(res => res.data));
   }

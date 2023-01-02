@@ -29,7 +29,7 @@ export class ClassModel {
   descricao: string;
 }
 
-export interface RegisterResumoModel {
+export interface ResumeRegisterModel {
   count: number;
   imagem: boolean;
   footer: boolean;

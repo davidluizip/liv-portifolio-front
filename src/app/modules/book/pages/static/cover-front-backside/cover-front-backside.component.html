@@ -24,7 +24,7 @@
           <button
             class="class-description__saveButton"
             (click)="handleSaveDescription()"
-            [disabled]="savingDescription"
+            [disabled]="disableEditDescription"
           >
             {{ savingDescription ? 'Aguarde' : 'Salvar' }}
           </button>

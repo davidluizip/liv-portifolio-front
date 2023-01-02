@@ -6,10 +6,10 @@ import {
   EMPTY,
   finalize,
   Observable,
-  ReplaySubject,
   take,
 } from 'rxjs';
 import { ToastService } from 'src/app/core/services/toast.service';
+import { LoadingOverlayService } from 'src/app/shared/components/loading-overlay/loading-overlay.service';
 import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
 import { SaveRegisterPageDescription } from '../models/teacher-book.model';
 import { RegisterSelectModalComponent } from '../pages/register/components/register-select-modal/register-select-modal.component';
@@ -56,9 +56,6 @@ interface RegisterField {
   providedIn: 'root',
 })
 export class RegisterContextService {
-  private _loading = new ReplaySubject(1);
-  public loading$ = this._loading.asObservable();
-
   private _registerFields = new BehaviorSubject<RegisterField[]>(
     Array.from({ length: 4 }, (_, index) => ({
       id: index + 1,
@@ -76,7 +73,8 @@ export class RegisterContextService {
     private ngbModal: NgbModal,
     private registerService: RegisterService,
     private toastService: ToastService,
-    private pageControllerService: PageControllerService
+    private pageControllerService: PageControllerService,
+    private loadingOverlayService: LoadingOverlayService
   ) {}
 
   get snapshot() {
@@ -133,6 +131,8 @@ export class RegisterContextService {
   }
 
   saveTextRegister(id: number, content: TextContent) {
+    this.loadingOverlayService.open();
+
     const requestPayload: SaveRegisterPageDescription = {
       data: {
         registros: {
@@ -160,7 +160,7 @@ export class RegisterContextService {
         }),
         finalize(() => {
           this.resetSelectedRegisterField();
-          this._loading.next(false);
+          this.loadingOverlayService.remove();
         })
       )
       .subscribe(() => {
@@ -176,6 +176,8 @@ export class RegisterContextService {
     data: FormData,
     type: Exclude<KeyFieldContent, 'text'>
   ) {
+    this.loadingOverlayService.open();
+
     return this.registerService
       .uploadMedia(
         data,
@@ -192,7 +194,7 @@ export class RegisterContextService {
         }),
         finalize(() => {
           this.resetSelectedRegisterField();
-          this._loading.next(false);
+          this.loadingOverlayService.remove();
         })
       )
       .subscribe(({ data: { attributes } }) => {

@@ -3,7 +3,7 @@
   font-weight: $weight;
   font-style: normal;
   font-size: rem(28px);
-  line-height: 1.2;
+  line-height: 1.6;
   color: color('neutral-low-pure-dark');
 
   @include mq('laptop') {
@@ -20,7 +20,7 @@
   font-weight: $weight;
   font-style: normal;
   font-size: rem(22px);
-  line-height: 1.2;
+  line-height: 1.6;
   color: color('neutral-low-pure-dark');
 
   @include mq('laptop') {
@@ -37,7 +37,7 @@
   font-weight: $weight;
   font-style: normal;
   font-size: rem(16px);
-  line-height: 1.2;
+  line-height: 1.4;
   color: color('neutral-low-pure-dark');
 
   @include mq('laptop') {

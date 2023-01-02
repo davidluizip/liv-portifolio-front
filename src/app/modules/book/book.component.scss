@@ -195,7 +195,7 @@ $book-width: #{rem(1108px)};
 .cover-back {
   display: flex;
   flex-direction: column;
-  background: var(--brandColor) !important;
+  background: var(--color-brand) !important;
 }
 
 .main-cover {
@@ -246,7 +246,7 @@ $book-width: #{rem(1108px)};
   overflow: hidden;
 
   &--backside {
-    background: var(--brand_lightColor) !important;
+    background: var(--color-brand_light) !important;
     padding: 1.5rem;
   }
 }

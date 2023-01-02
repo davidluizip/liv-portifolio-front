@@ -28,13 +28,13 @@
 
     @include paragraph(700);
     color: color(neutral-hight-pure);
-    background-color: var(--color_brand);
+    background-color: var(--color-brand);
     border-radius: border-radius(lg);
   }
 
   &__title {
     @include headline-h3(400);
-    color: var(--color_brand);
+    color: var(--color-brand);
   }
 
   &__description {
@@ -44,9 +44,9 @@
 }
 
 .purpose-card {
-  background: var(--color_brand_light);
+  background: var(--color-brand_light);
   border-radius: border-radius(lg);
-  border: 1px solid var(--color_brand);
+  border: 1px solid var(--color-brand);
   padding: rem(24px) rem(16px);
 
   &__tag {
@@ -65,7 +65,7 @@
       align-items: center;
       justify-content: center;
 
-      background: var(--color_brand);
+      background: var(--color-brand);
       position: absolute;
       border-radius: border-radius(full);
       left: 0;
@@ -92,7 +92,7 @@
     &__title {
       display: block;
       font-weight: 700;
-      color: var(--color_brand);
+      color: var(--color-brand);
       margin-block: rem(16px);
     }
 

@@ -16,24 +16,38 @@
 
 .cover-front-header {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-  padding-inline: rem(24px) rem(32px);
+  padding-block: rem(24px);
+  padding-inline: rem(32px);
   width: 100%;
-  height: rem(70px);
+  min-height: rem(70px);
   position: relative;
 
   &::after {
     content: '';
-    width: calc(100% - 56px);
-    position: absolute;
+    width: calc(100% - rem(64px));
     bottom: 0;
+    position: absolute;
     border-bottom: 1px solid #000;
   }
+}
 
-  .pencil-icon {
-    width: 28px;
-    height: 28px;
+.cover-front-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  &__logo {
+    width: rem(42px);
+    height: rem(42px);
+    object-fit: cover;
+  }
+
+  &__pencilIcon {
+    width: rem(28px);
+    height: rem(28px);
   }
 }
 
@@ -43,28 +57,19 @@
   top: 0;
   z-index: -1;
   pointer-events: none;
-
-  img {
-    position: absolute;
-    top: 12%;
-    left: 18%;
-    width: rem(30px);
-    height: rem(32px);
-    object-fit: cover;
-  }
 }
 
 .cover-front-content {
   flex: 1;
-  padding: rem(32px) rem(24px);
-  margin-bottom: rem(24px);
+  padding: rem(24px);
+  margin-bottom: rem(16px);
   width: 100%;
   display: flex;
   flex-direction: column;
 
   .liv-mascot-image {
     position: relative;
-    margin-block: rem(32px) rem(48px);
+    margin-block: rem(48px) rem(16px);
     margin-inline: rem(24px) 0;
 
     &::before {
@@ -73,7 +78,7 @@
       width: rem(165px);
       height: rem(165px);
       border-radius: 50%;
-      background-color: var(--color_brand_light);
+      background-color: var(--color-brand_light);
       filter: opacity(0.6);
     }
 
@@ -88,7 +93,7 @@
 
   &__title {
     @include headline-h1();
-    font-size: rem(64px) !important;
+    font-size: rem(64px);
     color: color('neutral-hight-pure');
   }
 }
@@ -97,28 +102,8 @@
   width: 100%;
   flex: 1;
   position: relative;
-
-  &__content {
-    padding: rem(32px) rem(24px) rem(24px);
-    strong {
-      @include headline-h3(600);
-      color: color('neutral-low-pure-dark');
-    }
-
-    h3 {
-      margin-block: rem(4px) rem(8px);
-      @include headline-h3(500);
-      text-decoration: underline;
-      text-decoration-thickness: 1px;
-      text-underline-offset: 6px;
-      color: color('neutral-hight-pure');
-    }
-
-    span {
-      @include paragraph();
-      color: color('neutral-low-pure-dark');
-    }
-  }
+  display: flex;
+  padding: rem(16px) rem(24px) rem(24px);
 
   > svg {
     position: absolute;
@@ -128,31 +113,67 @@
     z-index: -1;
   }
 
-  &__seePortfolioButton {
-    position: absolute;
-    right: rem(24px);
-    bottom: rem(24px);
-
-    @include buttonSmall(500);
-    line-height: rem(32px);
+  .cover-front-footer-content {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: rem(12px);
-    width: rem(154px);
-    height: rem(48px);
+    justify-content: space-between;
 
-    border-radius: rem(48px);
+    &__wrapper {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+
+      strong {
+        @include headline-h3(600);
+        color: color('neutral-low-pure-dark');
+      }
+
+      h3 {
+        margin-block: rem(4px) rem(8px);
+        @include headline-h3(500);
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 6px;
+        color: color('neutral-hight-pure');
+      }
+
+      span {
+        @include paragraph();
+        color: color('neutral-low-pure-dark');
+      }
+    }
+
+    &__seePortfolioButton {
+      position: absolute;
+      right: rem(24px);
+      bottom: rem(24px);
+
+      @include buttonSmall(500);
+      line-height: rem(32px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: rem(12px);
+      width: rem(154px);
+      height: rem(48px);
+
+      border-radius: rem(48px);
+    }
   }
+}
 
-  .caret-icon-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.caret-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    background-color: var(--brandColor);
-    border-radius: border-radius(full);
-    width: rem(32px);
-    height: rem(32px);
+  background-color: var(--color-brand);
+  border-radius: border-radius(full);
+  width: rem(32px);
+  height: rem(32px);
+
+  &__caretIcon {
+    width: rem(16px);
+    height: rem(16px);
+    fill: color(neutral-hight-pure);
   }
 }

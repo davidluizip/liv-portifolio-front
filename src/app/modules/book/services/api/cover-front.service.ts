@@ -1,20 +1,15 @@
 import { HttpEvent, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, take, tap } from 'rxjs';
-import {
-  DataPut,
-  Model,
-} from 'src/app/core/models/liv-response-protocol.model';
+import { Model } from 'src/app/core/models/liv-response-protocol.model';
 import { ApiGatewayService } from 'src/app/core/services/api/api-gateway.service';
 import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
 import { filterResponse } from 'src/app/shared/rxjs/custom-operators';
-import { AtLeastOne } from 'src/app/shared/types/generics';
 import { MediaModel } from '../../models/media.model';
 import {
   SaveClassPageDescription,
   TeacherBookModel,
 } from '../../models/teacher-book.model';
-import { TeacherModel } from '../../models/teacher.model';
 
 @Injectable({
   providedIn: 'root',
