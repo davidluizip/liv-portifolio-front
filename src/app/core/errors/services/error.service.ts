@@ -31,7 +31,7 @@ export class ErrorService {
     if (error instanceof HttpErrorResponse) {
       return '';
     } else {
-      return JSON.stringify(error.error.stack);
+      return JSON.stringify(error.error);
     }
   }
 }

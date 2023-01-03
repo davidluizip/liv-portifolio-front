@@ -7,9 +7,9 @@ import {
 } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { filter, fromEvent, map, Subject, takeUntil } from 'rxjs';
-import { DOMEvent } from 'src/app/shared/types/dom-event';
-import { FileService } from 'src/app/shared/utils/services/file/file.service';
-import { RegisterService } from '../../../../services/register.service';
+
+import { DOMEvent } from 'src/app/shared/interfaces/dom-event';
+import { RegisterContextService } from '../../../../services/register-context.service';
 import { StudentSpeechRecordModalComponent } from '../student-speech-record-modal/student-speech-record-modal.component';
 
 interface RegisterAction {
@@ -55,8 +55,7 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
   constructor(
     private ngbActiveModal: NgbActiveModal,
     private ngbModal: NgbModal,
-    private registerService: RegisterService,
-    private fileService: FileService
+    private registerContextService: RegisterContextService
   ) {}
 
   ngAfterViewInit(): void {
@@ -78,58 +77,37 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
         filter(
           event =>
             !!event.target.files &&
-            !!this.registerService.snapshot.selectedRegisterFieldId
+            !!this.registerContextService.snapshot.selectedRegisterFieldId
         ),
-        map(({ target }) => ({
-          type: this.selectedInputType,
-          file: target.files[0],
-          id: this.registerService.snapshot.selectedRegisterFieldId,
-        }))
+        map(({ target }) => {
+          const type = this.selectedInputType as Exclude<
+            RegisterAction['type'],
+            'text'
+          >;
+
+          return {
+            type,
+            file: target.files[0],
+            id: this.registerContextService.snapshot.selectedRegisterFieldId,
+          };
+        })
       )
-      .subscribe(async ({ type, file, id }) => {
-        const base64 = (await this.fileService.base64Encode(file)) as string;
+      .subscribe(({ type, file, id }) => {
+        const data = new FormData();
 
-        switch (type) {
-          case 'image':
-            this.registerService.setFieldValue(id, {
-              type: 'image',
-              value: {
-                src: base64,
-                alt: '',
-              },
-            });
-            break;
-          case 'video':
-            this.registerService.setFieldValue(id, {
-              type: 'video',
-              value: {
-                src: '',
-                type: 'video/mp4',
-              },
-            });
-            break;
-          case 'audio':
-            this.registerService.setFieldValue(id, {
-              type: 'audio',
-              value: {
-                src: '',
-                type: 'audio/mp3',
-              },
-            });
-            break;
-          default:
-            return;
-        }
-
-        delete this.fileInput.nativeElement.files;
-
-        this.registerService.resetSelectedRegisterField();
-        this.ngbActiveModal.close();
+        data.append('files', file);
+        this.registerContextService
+          .saveMediaRegister(id, data, type)
+          .add(() => {
+            this.fileInput.nativeElement.value = null;
+            this.registerContextService.resetSelectedRegisterField();
+            this.ngbActiveModal.close();
+          });
       });
   }
 
   handleCloseModal() {
-    this.registerService.resetSelectedRegisterField();
+    this.registerContextService.resetSelectedRegisterField();
     this.ngbActiveModal.close();
   }
 
@@ -142,7 +120,6 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
           centered: true,
           modalDialogClass: 'register-select-modal',
         });
-        action;
         break;
       case 'image':
         {

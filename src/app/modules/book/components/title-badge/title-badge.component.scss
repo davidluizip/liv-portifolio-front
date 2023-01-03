@@ -1,0 +1,16 @@
+@import 'variables';
+
+.title-badge {
+  width: fit-content;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: rem(6px) rem(16px);
+
+  border: 1px solid color(neutral-low-pure);
+  border-radius: border-radius('2xl');
+
+  font-weight: 1em;
+  color: color(neutral-low-pure);
+}

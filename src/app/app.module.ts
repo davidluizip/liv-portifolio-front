@@ -12,6 +12,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { httpInterceptorProviders } from './core/interceptors';
 import { registerLocaleData } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SharedModule } from './shared/shared.module';
 
 registerLocaleData(localeBr, 'pt-BR');
 
@@ -21,6 +22,7 @@ registerLocaleData(localeBr, 'pt-BR');
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
+    SharedModule,
     HotToastModule.forRoot({
       reverseOrder: true,
     }),

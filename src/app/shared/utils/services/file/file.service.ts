@@ -8,7 +8,7 @@ export class FileService {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result);
+      reader.onload = () => resolve(reader.result!);
       reader.onerror = e => reject(e);
     });
   }
@@ -18,5 +18,14 @@ export class FileService {
     const blob = await response.blob();
     const url = await this.base64Encode(blob);
     return url ? url.toString() : null;
+  }
+
+  createObjectURL(obj: File | MediaSource): string {
+    const url = URL.createObjectURL(obj);
+    return url;
+  }
+
+  revokeObjectURL(url: string): void {
+    URL.revokeObjectURL(url);
   }
 }

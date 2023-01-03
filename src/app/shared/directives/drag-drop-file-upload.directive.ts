@@ -3,19 +3,19 @@ import {
   EventEmitter,
   HostBinding,
   HostListener,
-  Output
+  Output,
 } from '@angular/core';
 
 const COLORS = {
   ['NEUTRAL_HIGHT_PURE']: '#fff',
-  ['NEUTRAL_HIGHT_PURE_MEDIUM']: '#e0e2e9'
+  ['NEUTRAL_HIGHT_PURE_MEDIUM']: '#e0e2e9',
 } as const;
 
 type ColorKey = keyof typeof COLORS;
 type ColorValue = typeof COLORS[ColorKey];
 
 @Directive({
-  selector: '[livDragDropFileUpload]'
+  selector: '[livDragDropFileUpload]',
 })
 export class DragDropFileUploadDirective {
   @Output() fileDropped = new EventEmitter<File[]>();
@@ -42,9 +42,11 @@ export class DragDropFileUploadDirective {
     event.preventDefault();
     event.stopPropagation();
     this._backgroundColor = COLORS.NEUTRAL_HIGHT_PURE;
-    const { files } = event.dataTransfer;
-    if (files.length > 0) {
-      this.fileDropped.emit(Array.from(files).map(file => file));
+    if (event.dataTransfer) {
+      const { files } = event.dataTransfer;
+      if (files.length > 0) {
+        this.fileDropped.emit(Array.from(files).map(file => file));
+      }
     }
   }
 }

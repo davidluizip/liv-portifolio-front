@@ -50,34 +50,29 @@ export class ResponseProtocolInterceptor implements HttpInterceptor {
     const response: LivResponseProtocol = event.body;
 
     if (
-      event.url.includes('assets') ||
-      event.url.includes('google') ||
+      event.url?.includes('assets') ||
+      event.url?.includes('google') ||
       event.body instanceof Blob
     ) {
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return event.body;
     }
 
-    if (response.status) {
-      if (response.status === 401) {
-        throw new HttpErrorResponse({
-          status: response.status,
-          error: response.error,
-          url: event.url,
-        });
-      }
-      if (response?.error) {
-        throw new HttpErrorResponse({
-          status: event.status,
-          error: response.error,
-          url: event.url,
-        });
-      }
+    if (response.data) {
       return {
-        status: event.status,
-        data: response.data ?? response,
+        data: response.data,
+        meta: response.meta,
       };
     } else {
+      if (response.error) {
+        if (response.error.status === 401) {
+          throw new HttpErrorResponse({
+            status: response.error.status,
+            error: response.error,
+            url: event.url,
+          });
+        }
+      }
       throw new HttpErrorResponse({
         status: event.status,
         error: event.body,
@@ -106,8 +101,9 @@ export class ResponseProtocolInterceptor implements HttpInterceptor {
       return {
         status: response.status,
         error: {
-          message: response.error,
-          stack: {
+          message: response.error.message,
+          details: {
+            ...response.error.details,
             url: response.url,
           },
         },

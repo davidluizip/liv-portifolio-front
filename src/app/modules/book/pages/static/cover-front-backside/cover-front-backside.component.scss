@@ -1,0 +1,140 @@
+@import 'variables';
+@import 'typography';
+
+:host {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.cover-front-backside-container {
+  position: relative;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  width: 100%;
+}
+
+.cover-front-backside-header {
+  margin-bottom: rem(24px);
+
+  &__topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: rem(12px);
+  }
+
+  &__bottombar {
+    margin-top: rem(32px);
+    display: flex;
+    flex-direction: column;
+
+    &__divider {
+      display: inline-block;
+      width: 100%;
+      height: 1px;
+      margin-block: rem(8px);
+      background-color: color('neutral-low-pure');
+    }
+
+    strong {
+      @include paragraph(900);
+      color: color('neutral-low-pure');
+    }
+
+    span {
+      @include paragraph(500);
+      color: color('neutral-low-pure');
+    }
+  }
+}
+
+.class-description {
+  margin-top: rem(24px);
+  flex: 1;
+  display: grid;
+  grid-template-rows: auto 1fr;
+
+  &__topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: rem(12px);
+    height: rem(27px);
+
+    strong {
+      font-weight: 500;
+    }
+  }
+
+  &__editButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: rem(4px) rem(8px);
+    line-height: 0;
+    border-radius: border-radius('base');
+
+    &__pencilIcon {
+      width: 16px;
+      height: 16px;
+    }
+
+    &:hover {
+      .class-description__editButton__pencilIcon {
+        filter: opacity(0.7);
+        transition: 0.2s ease;
+      }
+    }
+  }
+
+  &__saveButton {
+    border-radius: border-radius('base');
+    border: 1px solid color('neutral-low-pure');
+    padding: rem(4px) rem(8px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    @include buttonSmall(500);
+    line-height: normal;
+    color: color('neutral-low-pure');
+    transition: 0.2s ease;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    &:not(:disabled):hover {
+      background-color: color('neutral-low-pure');
+      color: color('neutral-hight-pure');
+    }
+  }
+
+  textarea {
+    resize: none;
+    font-size: 0.875rem;
+    width: 100%;
+    height: 100%;
+    background-color: color('neutral-hight-pure-light');
+    color: color('neutral-low-pure-medium');
+    border-radius: border-radius('md');
+
+    &:not(:read-only) {
+      border: 1px solid color('neutral-hight-pure-medium');
+      padding: rem(8px);
+    }
+
+    &:read-only {
+      cursor: default;
+      box-shadow: none;
+      border: 0;
+      background-color: transparent;
+      color: color('neutral-low-pure');
+    }
+  }
+}
