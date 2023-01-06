@@ -8,10 +8,15 @@ import {
   Renderer2,
   ViewEncapsulation,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { filter, from, mergeMap, of, Subject } from 'rxjs';
-import { grades } from './grades';
+import { filter, from, mergeMap, of, Subject, take, tap } from 'rxjs';
+import { LoadingOverlayService } from 'src/app/shared/components/loading-overlay/loading-overlay.service';
+import { EPages } from 'src/app/shared/enum/pages.enum';
+import { PageControllerService } from './services/page-controller.service';
+
+interface HTMLDivElementPage extends HTMLDivElement {
+  ['page-number']: number;
+}
 
 @Component({
   selector: 'liv-book',
@@ -19,82 +24,85 @@ import { grades } from './grades';
   styleUrls: ['./book.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class BookComponent implements OnInit, OnDestroy, AfterViewInit {
-  pages: string[] = [
-    'Primeira Pagina',
-    'Segunda Pagina',
-    'Terceira Pagina',
-    'Quarta Pagina',
-    'Quinta Pagina',
-    'Sexta Pagina',
-    'Setima Pagina',
-    'Oitava Pagina',
-  ];
+export class BookComponent implements AfterViewInit, OnDestroy {
+  readonly PageEnum = EPages;
 
-  book = grades['1-ano'];
+  public currentPage = 0;
+  public totalPages = 0;
 
-  private _switchingPage = false;
-  private _switchingPageTimeout: NodeJS.Timeout;
-  private _destroy$ = new Subject<boolean>();
+  public bookColors$ = this.pageControllerService.colors$;
+  public pages$ = this.pageControllerService.pages$.pipe(
+    tap(pages => (this.totalPages = pages.length))
+  );
 
-  media = new FormControl(null);
-  currentPage = 0;
-  pagesElement: HTMLDivElement[];
+  private destroy$ = new Subject<boolean>();
+
+  private coverBackPage: HTMLDivElementPage;
+
+  public footerBackground: string;
+  public pagesElement: HTMLDivElementPage[];
+
+  private switchingPage = false;
+  private currentIsCoverBackPage = false;
+
+  /** Timeouts References */
+  private bookTimeoutRef: NodeJS.Timeout;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private renderer: Renderer2,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private pageControllerService: PageControllerService,
+    private loadingOverlayService: LoadingOverlayService
   ) {}
-
-  get totalPages() {
-    return this.pages.length;
-  }
 
   get showPreviousButton() {
     return this.currentPage > 0;
   }
 
   get showNextButton() {
-    return this.currentPage >= 0 && this.currentPage <= this.pages.length;
+    return (
+      this.currentPage <= this.totalPages + 1 &&
+      (!this.currentIsCoverBackPage ||
+        this.coverBackPage['page-number'] % 2 === 0)
+    );
   }
 
   get showCloseButton() {
     return this.currentPage > 0;
   }
 
-  ngOnInit(): void {
-    this.route.queryParams
-      .pipe(
-        filter(
-          params =>
-            params['grade'] &&
-            Object.keys(grades).some(key => key === params['grade'])
-        )
-      )
-      .subscribe(params => (this.book = grades[params['grade']]));
-  }
-
   ngOnDestroy(): void {
-    clearTimeout(this._switchingPageTimeout);
+    clearTimeout(this.bookTimeoutRef);
 
-    this._destroy$.next(true);
-    this._destroy$.complete();
+    this.destroy$.next(true);
+    this.destroy$.complete();
   }
 
   ngAfterViewInit() {
+    this.route.data
+      .pipe(filter(data => !!data['book']))
+      .subscribe(() => this.startConfigPages());
+  }
+
+  startConfigPages() {
     const pages = Array.from(
       this.document.getElementsByClassName('page')
-    ) as HTMLDivElement[];
+    ) as HTMLDivElementPage[];
+
     this.pagesElement = pages;
+    this.coverBackPage = this.document.getElementById(
+      'cover-back-page'
+    ) as HTMLDivElementPage;
 
     from(pages)
       .pipe(mergeMap((page, index) => of({ page, index })))
       .subscribe(({ page, index }) => {
-        page['pageNum'] = index + 1;
+        page['page-number'] = index + 1;
         if (index % 2 === 0) {
           this.renderer.setStyle(page, 'z-index', pages.length - index);
         }
+        this.awaitTimeout(() => this.loadingOverlayService.remove());
       });
   }
 
@@ -105,15 +113,19 @@ export class BookComponent implements OnInit, OnDestroy, AfterViewInit {
     Array.from(flippedPages).forEach(page => page.classList.remove('flipped'));
 
     const frontCover = this.document.getElementById('main-front-cover');
-    frontCover.classList.remove('main-cover--active');
+    frontCover?.classList.remove('main-cover--active');
 
     this.currentPage = 0;
   }
 
   handlePreviousPage() {
-    if (this._switchingPage || this.currentPage === 0) return;
+    if (this.switchingPage || this.currentPage === 0) return;
 
-    this._switchingPage = true;
+    if (this.currentIsCoverBackPage) {
+      this.currentIsCoverBackPage = false;
+    }
+
+    this.switchingPage = true;
 
     const flippedPages = this.pagesElement.filter(page =>
       page.classList.contains('flipped')
@@ -122,37 +134,36 @@ export class BookComponent implements OnInit, OnDestroy, AfterViewInit {
     const lastFlippedPageIndex = flippedPages.length - 1;
     const lastFlippedPage = flippedPages[lastFlippedPageIndex];
 
-    const lastFlippedPageNum = lastFlippedPage['pageNum'] as number;
+    const lastFlippedPageNum = lastFlippedPage['page-number'];
     const previousPageToFlip = this.pagesElement.find(
-      page => page['pageNum'] === lastFlippedPageNum
+      page => page['page-number'] === lastFlippedPageNum
     );
 
-    previousPageToFlip.classList.remove('flipped');
-    previousPageToFlip.previousElementSibling.classList.remove('flipped');
+    previousPageToFlip?.classList.remove('flipped');
+    previousPageToFlip?.previousElementSibling?.classList.remove('flipped');
 
     if (lastFlippedPageNum - 2 === 0) {
       const frontCover = this.document.getElementById('main-front-cover');
-      if (frontCover.classList.contains('main-cover--active')) {
+      if (frontCover?.classList.contains('main-cover--active')) {
         frontCover.classList.remove('main-cover--active');
       }
     }
 
     this.currentPage = lastFlippedPageNum - 2;
+    this.pageControllerService.saveCurrentPage(this.currentPage);
 
-    this._switchingPageTimeout = setTimeout(
-      () => (this._switchingPage = false),
-      450
-    );
+    this.awaitTimeout(() => (this.switchingPage = false));
   }
 
   handleNextPage() {
     if (
-      this._switchingPage ||
-      this.pagesElement[this.currentPage + 1].classList.contains('cover-back')
+      this.switchingPage ||
+      (this.currentIsCoverBackPage &&
+        this.coverBackPage['page-number'] % 2 !== 0)
     )
       return;
 
-    this._switchingPage = true;
+    this.switchingPage = true;
 
     let nextPageToFlip = this.pagesElement[0];
 
@@ -164,25 +175,32 @@ export class BookComponent implements OnInit, OnDestroy, AfterViewInit {
       const lastFlippedPageIndex = flippedPages.length - 1;
       const lastFlippedPage = flippedPages[lastFlippedPageIndex];
 
-      const lastFlippedPageNum = lastFlippedPage['pageNum'] as number;
+      const lastFlippedPageNum = lastFlippedPage['page-number'];
+
       nextPageToFlip = this.pagesElement.find(
-        page => page['pageNum'] === lastFlippedPageNum + 1
-      );
+        page => page['page-number'] === lastFlippedPageNum + 1
+      )!;
     }
 
-    nextPageToFlip.classList.add('flipped');
-    nextPageToFlip.nextElementSibling.classList.add('flipped');
+    nextPageToFlip?.classList.add('flipped');
+    nextPageToFlip.nextElementSibling?.classList.add('flipped');
 
-    if (nextPageToFlip['pageNum'] === 1) {
+    if (nextPageToFlip['page-number'] === 1) {
       const frontCover = this.document.getElementById('main-front-cover');
-      frontCover.classList.add('main-cover--active');
+      frontCover?.classList.add('main-cover--active');
     }
 
-    this.currentPage = nextPageToFlip['pageNum'];
+    this.currentPage = nextPageToFlip['page-number'];
+    this.pageControllerService.saveCurrentPage(this.currentPage);
 
-    this._switchingPageTimeout = setTimeout(
-      () => (this._switchingPage = false),
-      450
-    );
+    this.currentIsCoverBackPage =
+      this.currentPage >= this.totalPages ||
+      this.pagesElement[this.currentPage + 1]?.classList.contains('cover-back');
+
+    this.awaitTimeout(() => (this.switchingPage = false));
+  }
+
+  private awaitTimeout(fn: () => void) {
+    this.bookTimeoutRef = setTimeout(fn, 500);
   }
 }

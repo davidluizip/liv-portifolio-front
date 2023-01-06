@@ -8,11 +8,6 @@ const routes: Routes = [
       import('./modules/book/book.module').then(m => m.BookModule),
   },
   {
-    path: '',
-    pathMatch: 'full',
-    redirectTo: 'livro-do-professor',
-  },
-  {
     path: '**',
     redirectTo: '/',
   },

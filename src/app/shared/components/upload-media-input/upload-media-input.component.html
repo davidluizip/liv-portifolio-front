@@ -1,10 +1,10 @@
 <div class="upload-file-content">
-  <section class="upload-file" *ngIf="!file; else showAvatar">
+  <section class="upload-file" *ngIf="!file && !url; else showAvatar">
     <div
       class="dropzone"
       livDragDropFileUpload
       (click)="fileField.click()"
-      (fileDropped)="upload($event)"
+      (fileDropped)="onUpload($event)"
     >
       <div class="dropzone__info">
         <svg-icon src="assets/icons/gallery.svg"></svg-icon>
@@ -18,7 +18,7 @@
       accept="image/png,image/jpeg,image/gif"
       #fileField
       hidden
-      (change)="upload($event.target['files'])"
+      (change)="onChange($event)"
     />
   </section>
 
@@ -30,7 +30,7 @@
           svgClass="picture-content__trashButton__icon"
         ></svg-icon>
       </button>
-      <img [src]="base64" alt="" />
+      <img [src]="url | safeTransform : 'RESOURCE'" alt="" />
     </div>
   </ng-template>
 </div>

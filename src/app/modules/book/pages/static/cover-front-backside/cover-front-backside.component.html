@@ -1,0 +1,52 @@
+<div class="cover-front-backside-container">
+  <ng-container *ngIf="data$ | async; let data">
+    <header class="cover-front-backside-header">
+      <liv-title-badge name="Turma"></liv-title-badge>
+
+      <div class="cover-front-backside-header__bottombar">
+        <strong>{{ data.turma }}</strong>
+        <div class="cover-front-backside-header__bottombar__divider"></div>
+        <span>Professor(a) {{ data.professor }}</span>
+      </div>
+    </header>
+
+    <section class="profile-avatar">
+      <liv-upload-media-input
+        [formControl]="photoControl"
+      ></liv-upload-media-input>
+    </section>
+
+    <section class="class-description">
+      <div class="class-description__topbar">
+        <strong>Descrição da turma</strong>
+
+        <ng-container *ngIf="isEnabledEdit; else notEnabledEdit">
+          <button
+            class="class-description__saveButton"
+            (click)="handleSaveDescription()"
+            [disabled]="disableEditDescription"
+          >
+            {{ savingDescription ? 'Aguarde' : 'Salvar' }}
+          </button>
+        </ng-container>
+
+        <ng-template #notEnabledEdit>
+          <button
+            class="class-description__editButton"
+            (click)="isEnabledEdit = !isEnabledEdit"
+          >
+            <svg-icon
+              src="assets/icons/pencil.svg"
+              svgClass="class-description__editButton__pencilIcon"
+            ></svg-icon>
+          </button>
+        </ng-template>
+      </div>
+      <textarea
+        [formControl]="descriptionControl"
+        [placeholder]="textareaPlaceholder"
+        [readonly]="!isEnabledEdit || savingDescription"
+      ></textarea>
+    </section>
+  </ng-container>
+</div>

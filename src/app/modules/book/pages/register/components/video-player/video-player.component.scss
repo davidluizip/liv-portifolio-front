@@ -1,0 +1,50 @@
+@import 'variables';
+
+.video-player-wrapper {
+  position: relative;
+
+  height: 100%;
+  width: 100%;
+
+  &:hover {
+    .play-button {
+      transform: scale(1) translate(-50%, -50%);
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+}
+
+video {
+  height: inherit;
+  width: inherit;
+  left: 50%;
+  top: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
+.play-button {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+
+  width: rem(42px);
+  height: rem(42px);
+  border-radius: 50%;
+  color: transparent;
+  background: color(neutral-hight-pure);
+  border: 1px solid transparent;
+  transform: scale(0.95) translate(-50%, -50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s ease-in-out;
+
+  &:hover {
+    border-color: color(neutral-hight-pure-medium);
+  }
+
+  svg-icon svg {
+    fill: color(neutral-low-pure-medium);
+  }
+}

@@ -1,0 +1,32 @@
+@import 'variables';
+@import 'typography';
+
+.intro-page-header {
+  margin-bottom: rem(32px);
+}
+
+.intro-main-hero {
+  strong {
+    font-weight: 900;
+  }
+}
+
+.intro-article {
+  padding-block: rem(24px);
+  padding-inline: rem(24px) 0;
+  margin-top: rem(24px);
+  border-radius: border-radius('lg');
+  overflow: hidden;
+
+  &__description {
+    height: 100%;
+    overflow-y: auto;
+    padding-right: rem(24px);
+    max-height: calc(rem(400px) - rem(48px));
+  }
+
+  p {
+    color: color('neutral-low-pure');
+    opacity: 0.84;
+  }
+}

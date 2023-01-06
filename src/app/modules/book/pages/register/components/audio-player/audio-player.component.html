@@ -1,0 +1,29 @@
+<div class="audio-player-wrapper">
+  <ng-container *ngIf="state | async; let state">
+    <audio #audioRef>
+      <source [src]="state.src" />
+    </audio>
+
+    <button class="play-button" type="click" (click)="handleTogglePlay($event)">
+      <svg-icon [src]="'assets/icons/' + playerIcon"></svg-icon>
+    </button>
+
+    <div
+      class="bass-icon"
+      [ngClass]="{
+        'bass-icon--active': state.playing === PlayingStateEnum.play
+      }"
+    >
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </ng-container>
+</div>

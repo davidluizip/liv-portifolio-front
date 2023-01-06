@@ -1,0 +1,20 @@
+<div class="intro-page-container">
+  <header class="intro-page-header">
+    <liv-title-badge name="Introdução"></liv-title-badge>
+  </header>
+
+  <main class="intro-page-hero">
+    <strong> Olá, <br />Família LIV! </strong>
+
+    <article
+      class="intro-article"
+      [ngStyle]="{
+        background: (colors$ | async)?.brand_light
+      }"
+    >
+      <div class="intro-article__description">
+        <div [innerHTML]="description$ | async | markdown"></div>
+      </div>
+    </article>
+  </main>
+</div>

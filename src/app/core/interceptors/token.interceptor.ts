@@ -2,10 +2,11 @@ import {
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
-  HttpRequest,
+  HttpRequest
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 export const urisNoNeedsAuthToken = ['/assets/'];
 
@@ -28,6 +29,13 @@ export class TokenInterceptor implements HttpInterceptor {
     ) {
       return next.handle(request);
     }
+    return next.handle(
+      request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${environment.tokenStrapi}`
+        }
+      })
+    );
 
     // if (auth?.token && requestNeedsAuthToken(request))
     //   return next.handle(
@@ -38,6 +46,6 @@ export class TokenInterceptor implements HttpInterceptor {
     //     })
     //   );
 
-    return next.handle(request);
+    //return next.handle(request);
   }
 }
