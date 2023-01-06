@@ -1,7 +1,7 @@
 FROM node:16.14.0 as build
 
 WORKDIR /source
-COPY package.json ./
+COPY package.json /source/dist
 RUN npm ci
 COPY . .
 RUN npm run build --prod
