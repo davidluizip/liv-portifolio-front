@@ -1,14 +1,17 @@
 FROM node:16.14.0 as build
 
 WORKDIR /source
-COPY package*.json ./
-RUN npm ci
-COPY . .
-RUN npm run build –prod
 
-FROM nginx:latest
-COPY /docker/config/nginx.conf /etc/config/nginx.conf
-EXPOSE 80 443
-ENTRYPOINT ["nginx"]
-# Parametros extras para o entrypoint#
-CMD ["-g", "daemon off;"]
+# Copy the package lock file into the container
+COPY package*.json ./
+# Run ci only for the production dependencies
+RUN npm ci
+
+# Copy the rest of the files into the container and build
+COPY . .
+RUN npm run build --prod
+
+FROM nginx:alpine
+COPY –from=build /source/dist/liv-portfolio /usr/share/nginx/html
+COPY –from=build /source/docker/config/nginx.conf /etc/nginx/conf.d/
+EXPOSE 8080
