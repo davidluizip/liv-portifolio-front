@@ -1,9 +1,15 @@
 steps:
-- name: "gcr.io/cloud-builders/docker"
-args: ["build", "-t", "gcr.io/$PROJECT_ID/liv-portifolio", "."]
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      [
+        'build',
+        '-t',
+        'gcr.io/$PROJECT_ID/front-ci/$SHORT_SHA',
+        './Dockerfile'
+      ]
 # push the container image to Container Registry
 - name: "gcr.io/cloud-builders/docker"
-args: ["push", "gcr.io/$PROJECT_ID/liv-portifolio"]
+args: ["push", "gcr.io/$PROJECT_ID/front-ci"]
 # Deploy container image to Cloud Run
 - name: "gcr.io/cloud-builders/gcloud"
 args:
@@ -14,7 +20,7 @@ args:
 "--allow-unauthenticated",
 "$PROJECT_ID",
 "--image",
-"gcr.io/$PROJECT_ID/liv-portifolio",
+"gcr.io/$PROJECT_ID/front-ci",
 "--region",
 "us-central1",
 "--platform",
@@ -23,4 +29,4 @@ args:
 "128Mi"
 ]
 images:
-- "gcr.io/$PROJECT_ID/liv-portifolio"
+- "gcr.io/$PROJECT_ID/front-ci"
