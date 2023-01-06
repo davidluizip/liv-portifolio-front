@@ -1,4 +1,4 @@
-### Build the strapi image
+# Build the strapi image
 steps:
   - name: 'gcr.io/cloud-builders/docker'
     args:
