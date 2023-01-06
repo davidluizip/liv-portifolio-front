@@ -1,5 +1,5 @@
 FROM node as build
-WORKDIR /usr/app/
+WORKDIR /usr/ng-app/
 COPY package.json ./
 RUN npm ci && mkdir /ng-app && mv ./node_modules ./ng-app
 RUN npm install -g npm@9.1.3 @angular/cli
