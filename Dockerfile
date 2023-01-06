@@ -2,7 +2,7 @@ FROM node as build
 WORKDIR /usr/app/
 COPY package.json ./
 ## Storing node modules on a separate layer will prevent unnecessary npm installs at each build
-RUN npm install -g npm@9.1.3
+RUN npm install -g npm@9.1.3 @angular/cli
 RUN npm run build --prod
 
 FROM nginx:latest
