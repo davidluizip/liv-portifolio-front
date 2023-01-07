@@ -27,7 +27,7 @@ export class IntroductionComponent implements OnInit {
     this.description$ = this.pageControllerService.currentPage$.pipe(
       filter(page => EPages.class === page),
       switchMap(() => this.introService.get().pipe(take(1))),
-      map(({ attributes }) => attributes.introducao.descricao)
+      map(({ attributes }) => attributes.introducao?.descricao)
     );
   }
 }

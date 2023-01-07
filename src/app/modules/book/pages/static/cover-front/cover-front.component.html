@@ -46,8 +46,10 @@
   <footer class="cover-front-footer">
     <div class="cover-front-footer-content">
       <article class="cover-front-footer-content__wrapper">
-        <strong>{{ book.content?.attributes.serie }}</strong>
-        <h3>{{ book.content?.attributes.escola }}</h3>
+        <strong>{{ book.content?.attributes.serie?.nome }}</strong>
+        <h3 *ngIf="book.content?.attributes.escola">
+          {{ book.content.attributes.escola }}
+        </h3>
         <span
           >Professor(a)
           {{
