@@ -125,8 +125,8 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
         )
       ),
       tap(({ attributes }) => {
-        if (attributes.pagina_turma.midia?.data) {
-          this.fileId = attributes.pagina_turma.midia?.data.id;
+        if (attributes.pagina_turma?.midia?.data) {
+          this.fileId = attributes.pagina_turma.midia.data.id;
           this.photoControl.patchValue(
             attributes.pagina_turma.midia.data.attributes.url,
             {
@@ -136,9 +136,9 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
           );
         }
 
-        if (attributes.pagina_turma.descricao) {
+        if (attributes.pagina_turma?.descricao) {
           this.descriptionControl.patchValue(
-            attributes.pagina_turma.descricao,
+            attributes.pagina_turma?.descricao,
             { emitEvent: false }
           );
           this.isEnabledEdit = false;
@@ -147,7 +147,7 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
       map(({ attributes }) => {
         return {
           turma: attributes.turma,
-          serie: attributes.serie,
+          serie: attributes.serie.nome,
           professor: attributes.professor?.data?.attributes.apelido,
           escola: attributes.escola,
         };
