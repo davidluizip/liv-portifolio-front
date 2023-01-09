@@ -6,7 +6,6 @@ COPY . .
 RUN npm run build
 
 FROM nginx:latest
-EXPOSE 80
 RUN rm -rf /usr/share/nginx/html/*
 COPY /nginx/nginx.conf /etc/nginx/conf.d/
 COPY --from=build /app/dist/liv-portfolio /usr/share/nginx/html
