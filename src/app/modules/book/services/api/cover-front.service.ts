@@ -37,6 +37,7 @@ export class CoverFrontService {
   getClassData(
     bookTeacherId: number,
     populate: ETypesComponentStrapi[] = [
+      ETypesComponentStrapi.serie,
       ETypesComponentStrapi.class,
       ETypesComponentStrapi.professor,
     ]

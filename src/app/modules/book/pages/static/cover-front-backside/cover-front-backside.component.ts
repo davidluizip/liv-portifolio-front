@@ -147,7 +147,7 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
       map(({ attributes }) => {
         return {
           turma: attributes.turma,
-          serie: attributes.serie,
+          serie: attributes.serie.nome,
           professor: attributes.professor?.data?.attributes.apelido,
           escola: attributes.escola,
         };

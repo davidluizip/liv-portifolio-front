@@ -4,11 +4,12 @@ import {
   DataPut,
 } from 'src/app/core/models/liv-response-protocol.model';
 import { MediaModel } from './media.model';
+import { SeriesModel } from './series.model';
 import { TeacherModel } from './teacher.model';
 
 export interface TeacherBookModel {
   turma: string;
-  serie: string;
+  serie: SeriesModel;
   escola: string;
   pagina_turma?: ClassPage;
   registros?: Register;

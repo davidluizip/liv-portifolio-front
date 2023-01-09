@@ -10,6 +10,7 @@ export enum ETypesComponentStrapi {
   paginas_footer = 'paginas.footer',
   professor = 'professor',
   photo = 'foto',
+  serie = 'serie',
   series = 'series',
   professor_book = 'livro_professors',
 }
