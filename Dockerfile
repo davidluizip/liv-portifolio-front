@@ -9,4 +9,4 @@ FROM nginx:latest
 RUN rm -rf /usr/share/nginx/html/*
 COPY /nginx/nginx.conf /etc/nginx/conf.d/
 COPY --from=build /app/dist/liv-portfolio /usr/share/nginx/html
-#CMD ["nginx", "-g", "daemon off;"]
+CMD ["nginx", "-g", "daemon off;"]
