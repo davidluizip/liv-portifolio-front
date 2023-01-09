@@ -64,7 +64,6 @@ $book-width: #{rem(1108px)};
   &__footer {
     margin-top: rem(16px);
     display: flex;
-    justify-content: space-between;
     align-items: flex-end;
 
     &--background {
@@ -96,10 +95,18 @@ $book-width: #{rem(1108px)};
       width: fit-content;
     }
   }
-}
 
-.page:nth-child(even) {
-  clear: both;
+  &:nth-child(even) {
+    .page__footer {
+      justify-content: flex-start;
+    }
+  }
+
+  &:nth-child(odd) {
+    .page__footer {
+      justify-content: flex-end;
+    }
+  }
 }
 
 .book .pages {

@@ -1,5 +1,7 @@
+import { SerieEnum } from './enums/serie.enum';
+
 export default {
-  ['1º-ano']: {
+  [SerieEnum.fundamental_1_ano]: {
     mascot: {
       src: 'assets/images/mascots/1-ano.png',
       alt: 'Imagem do mascote do 1º ano',
@@ -12,20 +14,20 @@ export default {
       tertiary: '#FFDECD',
     },
   },
-  ['2º-ano']: {
+  [SerieEnum.fundamental_2_ano]: {
     mascot: {
       src: 'assets/images/mascots/2-ano.png',
       alt: 'Imagem do mascote do 2º ano',
     },
     colors: {
       brand: '#FF7C39',
-      brand_light: '##B8ACD3',
+      brand_light: '#B8ACD3',
       primary: '#4E2F92',
       secondary: '#F7D2E1',
       tertiary: '#F6F4F9',
     },
   },
-  ['3º-ano']: {
+  [SerieEnum.fundamental_3_ano]: {
     mascot: {
       src: 'assets/images/mascots/3-ano.png',
       alt: 'Imagem do mascote do 3º ano',
@@ -38,20 +40,7 @@ export default {
       tertiary: '#F6F4F9',
     },
   },
-  ['4º-ano']: {
-    mascot: {
-      src: 'assets/images/mascots/4-anos.png',
-      alt: 'Imagem do mascote do 4º ano',
-    },
-    colors: {
-      brand: '#4E2F92',
-      brand_light: '#FFBE12',
-      primary: '#B8ACD3',
-      secondary: '#40A299',
-      tertiary: '#F6F4F9',
-    },
-  },
-  ['3-anos']: {
+  [SerieEnum.infantil_3_anos]: {
     mascot: {
       src: 'assets/images/mascots/3-anos.png',
       alt: 'Imagem do mascote do 3 anos',
@@ -64,7 +53,7 @@ export default {
       tertiary: '#FFDECD',
     },
   },
-  ['4-anos']: {
+  [SerieEnum.infantil_4_anos]: {
     mascot: {
       src: 'assets/images/mascots/4-anos.png',
       alt: 'Imagem do mascote do 4 anos',
@@ -77,7 +66,7 @@ export default {
       tertiary: '#FFDECD',
     },
   },
-  ['5-anos']: {
+  [SerieEnum.infantil_5_anos]: {
     mascot: {
       src: 'assets/images/mascots/5-anos.png',
       alt: 'Imagem do mascote do 5 anos',
