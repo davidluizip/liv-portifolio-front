@@ -1,6 +1,6 @@
 FROM node:latest as build
 WORKDIR /app
-COPY package*.json /app
+COPY package.json /app
 RUN npm ci
 RUN npm install --silent
 COPY . .
