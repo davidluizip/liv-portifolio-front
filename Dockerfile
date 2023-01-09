@@ -1,8 +1,9 @@
 FROM node:latest as build
 WORKDIR /app
-COPY package.json /app
+COPY package.json  /app
+COPY package-lock.json  /app
 RUN npm ci
-RUN npm install --silent
+#RUN npm install --silent
 COPY . .
 RUN npm run build
 
