@@ -9,17 +9,17 @@
 
   <main class="lesson-track-hero" *ngIf="pageData$ | async; let page">
     <picture class="lesson-track-hero__picture" *ngIf="page.imagem">
-      <img [src]="page.imagem.url" [alt]="page.imagem.caption || ''" />
+      <img [src]="page.imagem?.url" [alt]="page.imagem?.caption || ''" />
     </picture>
 
     <article
       class="lesson-track-article"
       *ngFor="let lesson of page?.aulas; let i = index"
     >
-      <span class="lesson-track-article__tag">{{ lesson.titulo }}</span>
-      <h1 class="lesson-track-article__title">{{ lesson.subtitulo }}</h1>
+      <span class="lesson-track-article__tag">{{ lesson?.titulo }}</span>
+      <h1 class="lesson-track-article__title">{{ lesson?.subtitulo }}</h1>
       <p class="lesson-track-article__description">
-        {{ lesson.descricao }}
+        {{ lesson?.descricao }}
       </p>
     </article>
   </main>

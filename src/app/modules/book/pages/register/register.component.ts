@@ -48,7 +48,7 @@ export class RegisterComponent implements OnInit {
         if (attributes.registros.texto?.length > 0) {
           this.populateTexts(attributes.registros.texto);
         }
-        if (attributes.registros.midia.data)
+        if (attributes.registros.midia?.data)
           this.populateMedias(attributes.registros.midia.data);
       });
   }

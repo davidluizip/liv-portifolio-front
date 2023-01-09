@@ -39,6 +39,7 @@ export class CoverFrontService {
     populate: ETypesComponentStrapi[] = [
       ETypesComponentStrapi.serie,
       ETypesComponentStrapi.class,
+      ETypesComponentStrapi.serie,
       ETypesComponentStrapi.professor,
     ]
   ): Observable<Model<TeacherBookModel>> {

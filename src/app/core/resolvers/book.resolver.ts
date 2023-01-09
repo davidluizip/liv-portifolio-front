@@ -47,7 +47,8 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
       take(2),
       tap(data => {
         if (data.attributes) {
-          const {id_externo_strapi} = data.attributes.serie;
+          const { id_externo_strapi } = data.attributes.serie;
+
           const { colors, mascot } = bookConfig[id_externo_strapi];
 
           this.pageControllerService.saveContent(data);

@@ -7,13 +7,14 @@
     <strong> Olá, <br />Família LIV! </strong>
 
     <article
+      *ngIf="description$ | async; let description"
       class="intro-article"
       [ngStyle]="{
         background: (colors$ | async)?.brand_light
       }"
     >
       <div class="intro-article__description">
-        <div [innerHTML]="description$ | async | markdown"></div>
+        <div [innerHTML]="description | markdown"></div>
       </div>
     </article>
   </main>

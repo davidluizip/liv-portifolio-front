@@ -1,4 +1,4 @@
-import { SerieEnum } from "./enums/serie.enum";
+import { SerieEnum } from './enums/serie.enum';
 
 export default {
   [SerieEnum.fundamental_1_ano]: {
@@ -21,7 +21,7 @@ export default {
     },
     colors: {
       brand: '#FF7C39',
-      brand_light: '##B8ACD3',
+      brand_light: '#B8ACD3',
       primary: '#4E2F92',
       secondary: '#F7D2E1',
       tertiary: '#F6F4F9',
@@ -31,19 +31,6 @@ export default {
     mascot: {
       src: 'assets/images/mascots/3-ano.png',
       alt: 'Imagem do mascote do 3º ano',
-    },
-    colors: {
-      brand: '#4E2F92',
-      brand_light: '#FFBE12',
-      primary: '#B8ACD3',
-      secondary: '#40A299',
-      tertiary: '#F6F4F9',
-    },
-  },
-  [SerieEnum.fundamental_4_ano]: {
-    mascot: {
-      src: 'assets/images/mascots/4-anos.png',
-      alt: 'Imagem do mascote do 4º ano',
     },
     colors: {
       brand: '#4E2F92',
