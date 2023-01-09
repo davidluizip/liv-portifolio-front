@@ -8,6 +8,7 @@ RUN npm run build
 FROM nginx:latest
 RUN rm -rf /usr/share/nginx/html/*
 COPY /nginx/nginx.conf /etc/nginx/conf.d/
+WORKDIR /app
 COPY --from=build /app/dist/liv-portfolio/ /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
