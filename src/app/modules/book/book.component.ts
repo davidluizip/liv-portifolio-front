@@ -116,6 +116,7 @@ export class BookComponent implements AfterViewInit, OnDestroy {
     frontCover?.classList.remove('main-cover--active');
 
     this.currentPage = 0;
+    this.currentIsCoverBackPage = false;
   }
 
   handlePreviousPage() {
