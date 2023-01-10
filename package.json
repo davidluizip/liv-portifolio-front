@@ -9,6 +9,7 @@
     "start:homolog": "ng serve -c=homologation",
     "start:prod": "ng serve -c=production",
     "build": "ng build --configuration production",
+    "build:ssr": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
