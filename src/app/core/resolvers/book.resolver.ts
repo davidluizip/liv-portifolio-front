@@ -68,11 +68,11 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
     );
   }
 
-  private buildPages(attributes: ResumeRegisterModel) {
-    Array.from({ length: attributes.count }).forEach(() => {
-      if (attributes.pagina_aula_registro)
+  private buildPages(resume: ResumeRegisterModel) {
+    resume.paginas.forEach(page => {
+      if (page.pagina_aula_registro) {
         this.pageControllerService.savePage(EPages.lesson_track_register);
-      else this.pageControllerService.savePage(EPages.lesson_track);
+      } else this.pageControllerService.savePage(EPages.lesson_track);
     });
     this.pageControllerService.savePage(EPages.register);
   }
