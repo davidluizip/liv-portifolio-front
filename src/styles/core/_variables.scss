@@ -61,50 +61,53 @@ $neutral-low-pure-light: #9da0ab;
 $neutral-low-pure-medium: #60636e;
 $neutral-low-pure-dark: #2d2a34;
 
-$brand-primary-pure: #4c338a;
-$brand-primary-pure-light: #dcd5e9;
-$brand-primary-pure-medium: #7159a8;
-$brand-primary-pure-dark: #020046;
+$brand-primary-pure: #4e2f92;
+$brand-primary-lightest: #dcd5e9;
+$brand-primary-lighter: #b8acd3;
+$brand-primary-light: #7159a8;
+$brand-primary-dark: #020046;
 
-$brand-secondary-pure: #3aa098;
-$brand-secondary-pure-light: #b3dad6;
-$brand-secondary-pure-medium: #277e77;
-$brand-secondary-pure-dark: #003c33;
+$brand-secondary-pure: #40a299;
+$brand-secondary-lightest: #d9eceb;
+$brand-secondary-lighter: #b3dad6;
+$brand-secondary-light: #66b5ad;
+$brand-secondary-dark: #003c33;
 
 $brand-tertiary-pure: #d81d6a;
-$brand-tertiary-pure-light: #efa5c3;
-$brand-tertiary-pure-medium: #b60d53;
+$brand-tertiary-lightest: #f7d2e1;
+$brand-tertiary-lighter: #efa5c3;
+$brand-tertiary-light: #e04a88;
 $brand-tertiary-pure-dark: #590000;
 
-$brand-quaternary-pure: #fabb1e;
-$brand-quaternary-pure-light: #ffe5a0;
-$brand-quaternary-pure-medium: #c79006;
-$brand-quaternary-pure-dark: #662500;
+$brand-quaternary-pure: #ffbe12;
+$brand-quaternary-lightest: #fff2d0;
+$brand-quaternary-lighter: #ffe5a0;
+$brand-quaternary-light: #ffd871;
+$brand-quaternary-dark: #662500;
 
-$brand-quintenary-pure: #e85d1f;
-$brand-quintenary-pure-light: #ffbd9c;
-$brand-quintenary-pure-medium: #c6470e;
+$brand-quintenary-pure: #ff5b07;
+$brand-quintenary-lightest: #ffdecd;
+$brand-quintenary-lighter: #ffbd9c;
+$brand-quintenary-light: #ff7c39;
 $brand-quintenary-pure-dark: #800000;
 
-$brand-sextenary-pure: #4f88c7;
-$brand-sextenary-pure-light: #d4e8ff;
-$brand-sextenary-pure-medium: #3a6da5;
-$brand-sextenary-pure-dark: #002362;
+$brand-sextenary-pure: #4f89c8;
+$brand-sextenary-lightest: #dce7f4;
+$brand-sextenary-lighter: #b9d0e9;
+$brand-sextenary-light: #72a1d3;
+$brand-sextenary-dark: #002362;
 
-$feedback-danger-pure: #f03738;
-$feedback-danger-pure-light: #ffbfbf;
-$feedback-danger-pure-medium: #8a0a0a;
-$feedback-danger-pure-dark: #460000;
+$feedback-warning-pure: #ff5b07;
+$feedback-warning-light: #ffbfbf;
+$feedback-warning-medium: #8a0a0a;
 
-$feedback-warning-pure: #ffb800;
-$feedback-warning-pure-light: #ffebb7;
-$feedback-warning-pure-medium: #d69b00;
-$feedback-warning-pure-dark: #856000;
+$feedback-helper-pure: #ffb800;
+$feedback-helper-light: #ffebb7;
+$feedback-helper-medium: #d69b00;
 
 $feedback-success-pure: #42d38b;
-$feedback-success-pure-light: #caffe5;
-$feedback-success-pure-medium: #1e8f57;
-$feedback-success-pure-dark: #084b2a;
+$feedback-success-light: #caffe5;
+$feedback-success-medium: #1e8f57;
 
 $colors: (
   'neutral-hight-pure': $neutral-hight-pure,
@@ -116,41 +119,44 @@ $colors: (
   'neutral-low-pure-medium': $neutral-low-pure-medium,
   'neutral-low-pure-dark': $neutral-low-pure-dark,
   'brand-primary-pure': $brand-primary-pure,
-  'brand-primary-pure-light': $brand-primary-pure-light,
-  'brand-primary-pure-medium': $brand-primary-pure-medium,
-  'brand-primary-pure-dark': $brand-primary-pure-dark,
+  'brand-primary-lightest': $brand-primary-lightest,
+  'brand-primary-lighter': $brand-primary-lighter,
+  'brand-primary-light': $brand-primary-light,
+  'brand-primary-dark': $brand-primary-dark,
   'brand-secondary-pure': $brand-secondary-pure,
-  'brand-secondary-pure-light': $brand-secondary-pure-light,
-  'brand-secondary-pure-medium': $brand-secondary-pure-medium,
-  'brand-secondary-pure-dark': $brand-secondary-pure-dark,
+  'brand-secondary-lightest':$brand-secondary-lightest,
+  'brand-secondary-lighter': $brand-secondary-lighter,
+  'brand-secondary-light': $brand-secondary-light,
+  'brand-secondary-dark': $brand-secondary-dark,
   'brand-tertiary-pure': $brand-tertiary-pure,
-  'brand-tertiary-pure-light': $brand-tertiary-pure-light,
-  'brand-tertiary-pure-medium': $brand-tertiary-pure-medium,
+  'brand-tertiary-lightest': $brand-tertiary-lightest,
+  'brand-tertiary-lighter': $brand-tertiary-lighter,
+  'brand-tertiary-light': $brand-tertiary-light,
   'brand-tertiary-pure-dark': $brand-tertiary-pure-dark,
   'brand-quaternary-pure': $brand-quaternary-pure,
-  'brand-quaternary-pure-light': $brand-quaternary-pure-light,
-  'brand-quaternary-pure-medium': $brand-quaternary-pure-medium,
-  'brand-quaternary-pure-dark': $brand-quaternary-pure-dark,
+  'brand-quaternary-lightest':$brand-quaternary-lightest,
+  'brand-quaternary-lighter': $brand-quaternary-lighter,
+  'brand-quaternary-light': $brand-quaternary-light,
+  'brand-quaternary-dark': $brand-quaternary-dark,
   'brand-quintenary-pure': $brand-quintenary-pure,
-  'brand-quintenary-pure-light': $brand-quintenary-pure-light,
-  'brand-quintenary-pure-medium': $brand-quintenary-pure-medium,
+  'brand-quintenary-lightest': $brand-quintenary-lightest,
+  'brand-quintenary-lighter': $brand-quintenary-lighter,
+  'brand-quintenary-light': $brand-quintenary-light,
   'brand-quintenary-pure-dark': $brand-quintenary-pure-dark,
   'brand-sextenary-pure': $brand-sextenary-pure,
-  'brand-sextenary-pure-light': $brand-sextenary-pure-light,
-  'brand-sextenary-pure-medium': $brand-sextenary-pure-medium,
-  'brand-sextenary-pure-dark': $brand-sextenary-pure-dark,
-  'feedback-danger-pure': $feedback-danger-pure,
-  'feedback-danger-pure-light': $feedback-danger-pure-light,
-  'feedback-danger-pure-medium': $feedback-danger-pure-medium,
-  'feedback-danger-pure-dark': $feedback-danger-pure-dark,
+  'brand-sextenary-lightest': $brand-sextenary-lightest,
+  'brand-sextenary-lighter': $brand-sextenary-lighter,
+  'brand-sextenary-light': $brand-sextenary-light,
+  'brand-sextenary-dark': $brand-sextenary-dark,
   'feedback-warning-pure': $feedback-warning-pure,
-  'feedback-warning-pure-light': $feedback-warning-pure-light,
-  'feedback-warning-pure-medium': $feedback-warning-pure-medium,
-  'feedback-warning-pure-dark': $feedback-warning-pure-dark,
+  'feedback-warning-light': $feedback-warning-light,
+  'feedback-warning-medium': $feedback-warning-medium,  
+  'feedback-helper-pure': $feedback-helper-pure,
+  'feedback-helper-light': $feedback-helper-light,
+  'feedback-helper-medium': $feedback-helper-medium,  
   'feedback-success-pure': $feedback-success-pure,
-  'feedback-success-pure-light': $feedback-success-pure-light,
-  'feedback-success-pure-medium': $feedback-success-pure-medium,
-  'feedback-success-pure-dark': $feedback-success-pure-dark,
+  'feedback-success-light': $feedback-success-light,
+  'feedback-success-medium': $feedback-success-medium,  
 );
 
 /** Shadows */

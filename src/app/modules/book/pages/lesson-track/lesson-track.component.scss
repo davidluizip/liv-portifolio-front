@@ -26,7 +26,7 @@
     padding: rem(8px);
     margin-bottom: rem(16px);
 
-    @include paragraph(700);
+    @include paragraph(500);
     color: color(neutral-hight-pure);
     background-color: var(--color-brand);
     border-radius: border-radius(lg);

@@ -2,19 +2,19 @@
   @include paragraph();
   border-radius: border-radius('md') !important;
   &.custom-toast-error {
-    color: color('feedback-danger-pure-dark') !important;
-    background-color: color('feedback-danger-pure-light') !important;
+    color: color('feedback-warning-medium') !important;
+    background-color: color('feedback-warning-light') !important;
   }
   &.custom-toast-info {
-    color: color('brand-sextenary-pure-dark') !important;
-    background-color: color('brand-sextenary-pure-light') !important;
+    color: color('brand-sextenary-dark') !important;
+    background-color: color('brand-sextenary-lighter') !important;
   }
   &.custom-toast-success {
-    color: color('feedback-success-pure-dark') !important;
-    background-color: color('feedback-success-pure-light') !important;
+    color: color('feedback-success-medium') !important;
+    background-color: color('feedback-success-light') !important;
   }
   &.custom-toast-warning {
-    color: color('feedback-warning-pure-dark') !important;
-    background-color: color('feedback-warning-pure-light') !important;
+    color: color('feedback-helper-medium') !important;
+    background-color: color('feedback-helper-light') !important;
   }
 }
