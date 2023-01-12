@@ -32,7 +32,8 @@ export class BookComponent implements AfterViewInit, OnDestroy {
 
   public bookColors$ = this.pageControllerService.colors$;
   public pages$ = this.pageControllerService.pages$.pipe(
-    tap(pages => (this.totalPages = pages.length))
+    tap(pages => (this.totalPages = pages.length)),
+    tap(console.log)
   );
 
   private destroy$ = new Subject<boolean>();
@@ -116,6 +117,7 @@ export class BookComponent implements AfterViewInit, OnDestroy {
     frontCover?.classList.remove('main-cover--active');
 
     this.currentPage = 0;
+    this.currentIsCoverBackPage = false;
   }
 
   handlePreviousPage() {
