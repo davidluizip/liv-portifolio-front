@@ -3,7 +3,7 @@ import {
   Resolve,
   RouterStateSnapshot,
   ActivatedRouteSnapshot,
-  Router,
+  Router
 } from '@angular/router';
 import { catchError, EMPTY, switchMap, take, tap } from 'rxjs';
 import bookConfig from 'src/app/modules/book/book-config';
@@ -17,7 +17,7 @@ import { Model } from '../models/liv-response-protocol.model';
 import { ToastService } from '../services/toast.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
   constructor(
@@ -52,11 +52,16 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
           const { colors, mascot } = bookConfig[id_externo_strapi];
 
           this.pageControllerService.saveContent(data);
+          this.pageControllerService.saveExternalIdStrapi(id_externo_strapi);
           this.pageControllerService.saveColors(colors);
           this.pageControllerService.saveMascot(mascot);
         }
       }),
-      switchMap(() => this.lessonTrackService.getResumeRegister()),
+      switchMap(() =>
+        this.lessonTrackService.getResumeRegister(
+          this.pageControllerService.snapshot.externalIdStrapi
+        )
+      ),
       catchError(() => {
         this.toastService.error(
           'Houve um erro ao carregar o livro, por favor, tente novamente!'
@@ -69,11 +74,14 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
   }
 
   private buildPages(attributes: ResumeRegisterModel) {
-    Array.from({ length: attributes.count }).forEach(() => {
-      if (attributes.pagina_aula_registro)
-        this.pageControllerService.savePage(EPages.lesson_track_register);
-      else this.pageControllerService.savePage(EPages.lesson_track);
-    });
+    for (const page of attributes.paginas) {
+      if (page.pagina_aula_registro)
+        this.pageControllerService.savePage(
+          EPages.lesson_track_register,
+          page.id
+        );
+      else this.pageControllerService.savePage(EPages.lesson_track, page.id);
+    }
     this.pageControllerService.savePage(EPages.register);
   }
 }

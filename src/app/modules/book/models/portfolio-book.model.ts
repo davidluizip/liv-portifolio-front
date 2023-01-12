@@ -31,6 +31,10 @@ export class ClassModel {
 
 export interface ResumeRegisterModel {
   count: number;
+  paginas: PagesResumeModel[];
+}
+export interface PagesResumeModel {
+  id: number;
   imagem: boolean;
   footer: boolean;
   pagina_aula_registro: boolean;

@@ -7,18 +7,22 @@ import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strap
 import { PortfolioBookModel } from '../../models/portfolio-book.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class IntroService {
   constructor(private _apiGatewayService: ApiGatewayService) {}
 
   get(
+    externalIdStrapi: number,
     typeComponent = ETypesComponentStrapi.intro
   ): Observable<Model<PortfolioBookModel>> {
     const params = new HttpParams().set('populate', typeComponent);
 
     return this._apiGatewayService
-      .get<PortfolioBookModel>(`/livro-portifolio`, { params })
+      .get<PortfolioBookModel>(
+        `/portifolios/introduction/${externalIdStrapi}`,
+        { params }
+      )
       .pipe(map(res => res.data));
   }
 }

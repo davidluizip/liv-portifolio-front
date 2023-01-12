@@ -6,13 +6,13 @@ import { PortfolioBookModel } from '../../models/portfolio-book.model';
 import { IntroService } from '../../services/api/intro.service';
 import {
   Colors,
-  PageControllerService,
+  PageControllerService
 } from '../../services/page-controller.service';
 
 @Component({
   selector: 'liv-introduction',
   templateUrl: './introduction.component.html',
-  styleUrls: ['./introduction.component.scss'],
+  styleUrls: ['./introduction.component.scss']
 })
 export class IntroductionComponent implements OnInit {
   readonly colors$: Observable<Colors> = this.pageControllerService.colors$;
@@ -26,7 +26,11 @@ export class IntroductionComponent implements OnInit {
   ngOnInit(): void {
     this.description$ = this.pageControllerService.currentPage$.pipe(
       filter(page => EPages.class === page),
-      switchMap(() => this.introService.get().pipe(take(1))),
+      switchMap(() =>
+        this.introService
+          .get(this.pageControllerService.snapshot.externalIdStrapi)
+          .pipe(take(1))
+      ),
       map(({ attributes }) => attributes.introducao?.descricao)
     );
   }
