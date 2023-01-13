@@ -24,19 +24,22 @@
           <liv-cover-front-backside></liv-cover-front-backside>
         </div>
         <ng-container *ngIf="pages$ | async; let pages">
-          <div class="page" *ngFor="let page of pages; let i = index">
+          <div class="page" *ngFor="let pageConfig of pages; let i = index">
             <article class="page__content">
               <liv-introduction
-                *ngIf="page === PageEnum.intro"
+                *ngIf="pageConfig.page === PageEnum.intro"
               ></liv-introduction>
               <liv-lesson-track
-                *ngIf="page === PageEnum.lesson_track"
-                [lessonTrackPage]="i"
+                *ngIf="pageConfig.page === PageEnum.lesson_track"
+                [pageId]="pageConfig.pageId"
               ></liv-lesson-track>
               <liv-lesson-track-register
-                *ngIf="page === PageEnum.lesson_track_register"
+                *ngIf="pageConfig.page === PageEnum.lesson_track_register"
+                [pageId]="pageConfig.pageId"
               ></liv-lesson-track-register>
-              <liv-register *ngIf="page === PageEnum.register"></liv-register>
+              <liv-register
+                *ngIf="pageConfig.page === PageEnum.register"
+              ></liv-register>
             </article>
 
             <footer

@@ -6,8 +6,8 @@
   <header class="lesson-track-register-header">
     <liv-title-badge name="Empatia"></liv-title-badge>
 
-    <div class="lesson-track-register-tag">
-      <strong> Aula 21 </strong>
+    <div class="lesson-track-register-tag" *ngIf="pageData$ | async; let page">
+      <!-- <strong> {{ page.titulo }} </strong> -->
       <span> Por dentro da sala </span>
     </div>
   </header>

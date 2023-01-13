@@ -22,18 +22,26 @@ export interface BookState {
   colors: Colors;
   content: Model<TeacherBookModel>;
 }
+export interface PagesConfig {
+  page: EPages;
+  pageId: number;
+}
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class PageControllerService {
-  private _pages = new BehaviorSubject<EPages[]>([EPages.intro]);
+  private _pages = new BehaviorSubject<PagesConfig[]>([
+    { page: EPages.intro, pageId: 0 }
+  ]);
   public pages$ = this._pages.asObservable();
 
   private _currentPage = new BehaviorSubject<number>(null);
   public currentPage$ = this._currentPage.asObservable();
   private _bookId = new BehaviorSubject<number>(null);
   public bookId$ = this._bookId.asObservable();
+  private _externalIdStrapi = new BehaviorSubject<number>(null);
+  public externalIdStrapi$ = this._bookId.asObservable();
   private _state = new BehaviorSubject<BookState>(null);
   public state$ = this._state.asObservable();
 
@@ -50,44 +58,46 @@ export class PageControllerService {
     return {
       currentPage: this._currentPage.getValue(),
       bookId: this._bookId.getValue(),
+      externalIdStrapi: this._externalIdStrapi.getValue(),
       mascot: this._state.getValue()?.mascot,
       colors: this._state.getValue()?.colors,
-      content: this._state.getValue()?.content,
+      content: this._state.getValue()?.content
     };
   }
 
-  savePage(page: EPages): void {
-    this._pages.next([...this._pages.getValue(), page]);
+  savePage(page: EPages, pageId?: number): void {
+    this._pages.next([...this._pages.getValue(), { page, pageId }]);
   }
 
   saveColors(colors: Colors) {
     this._state.next({
       ...this.state,
-      colors,
+      colors
     });
   }
 
   saveMascot(mascot: Mascot) {
     this._state.next({
       ...this.state,
-      mascot,
+      mascot
     });
   }
 
   saveContent(content: Model<TeacherBookModel>) {
     this._state.next({
       ...this.state,
-      content,
+      content
     });
   }
-
   saveBookId(bookId: number) {
     this._bookId.next(bookId);
+  }
+  saveExternalIdStrapi(externalIdStrapi: number) {
+    this._externalIdStrapi.next(externalIdStrapi);
   }
   saveCurrentPage(page: number) {
     this._currentPage.next(page);
   }
-
   reset() {
     this._state.next(null);
   }

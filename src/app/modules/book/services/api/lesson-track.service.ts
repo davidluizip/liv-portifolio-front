@@ -8,15 +8,15 @@ import { filterResponse } from 'src/app/shared/rxjs/custom-operators';
 import { MediaModel } from '../../models/media.model';
 import {
   PortfolioBookModel,
-  ResumeRegisterModel,
+  ResumeRegisterModel
 } from '../../models/portfolio-book.model';
 import {
   SaveClassPageDescription,
-  TeacherBookModel,
+  TeacherBookModel
 } from '../../models/teacher-book.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class LessonTrackService {
   constructor(private apiGatewayService: ApiGatewayService) {}
@@ -26,7 +26,7 @@ export class LessonTrackService {
     populate: ETypesComponentStrapi[] = [
       ETypesComponentStrapi.paginas_aulas,
       ETypesComponentStrapi.paginas_footer,
-      ETypesComponentStrapi.paginas_imagem,
+      ETypesComponentStrapi.paginas_imagem
     ]
   ): Observable<Model<PortfolioBookModel>> {
     let params = new HttpParams();
@@ -36,17 +36,18 @@ export class LessonTrackService {
     }
 
     return this.apiGatewayService
-      .get<PortfolioBookModel>(`/livro-portifolio/next-page/${idPage}`, {
-        params,
+      .get<PortfolioBookModel>(`/portifolios/next-page/${idPage}`, {
+        params
       })
       .pipe(map(res => res.data));
   }
 
   getResumeRegister(
+    externalIdStrapi: number,
     populate: ETypesComponentStrapi[] = [
       ETypesComponentStrapi.paginas_aulas,
       ETypesComponentStrapi.paginas_footer,
-      ETypesComponentStrapi.paginas_imagem,
+      ETypesComponentStrapi.paginas_imagem
     ]
   ): Observable<Model<ResumeRegisterModel>> {
     let params = new HttpParams();
@@ -56,9 +57,12 @@ export class LessonTrackService {
     }
 
     return this.apiGatewayService
-      .get<ResumeRegisterModel>('/livro-portifolio/registro/resumo', {
-        params,
-      })
+      .get<ResumeRegisterModel>(
+        `/portifolios/register/summary/${externalIdStrapi}`,
+        {
+          params
+        }
+      )
       .pipe(map(res => res.data));
   }
 }

@@ -119,6 +119,12 @@
               "buildOptimizer": true
             },
             "development": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
@@ -126,16 +132,18 @@
                 }
               ],
               "optimization": {
-                "scripts": true,
+                "scripts": false,
                 "styles": {
                   "minify": true,
                   "inlineCritical": false
                 }
               },
-              "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "preserveSymlinks": true,
+              "serviceWorker": true
             }
           },
           "defaultConfiguration": "production"
