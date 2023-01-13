@@ -47,7 +47,7 @@ export default {
     },
     colors: {
       brand: '#72A1D3',
-      brand_light: '#B9D0E9',
+      brand_light: '#dce7f4',
       primary: '#B8ACD3',
       secondary: '#FFBE12',
       tertiary: '#FFDECD',
