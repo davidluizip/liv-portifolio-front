@@ -117,8 +117,8 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
   }
 
   getClassData(): void {
-    this.data$ = this.pageControllerService.currentPage$.pipe(
-      filter(page => EPages.class === page),
+    this.data$ = this.pageControllerService.dynamicCurrentPage$.pipe(
+      filter(({ previous }) => previous?.page === EPages.class),
       switchMap(() =>
         this.coverFrontService.getClassData(
           this.pageControllerService.snapshot.bookId

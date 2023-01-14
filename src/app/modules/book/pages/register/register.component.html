@@ -22,13 +22,13 @@
               <strong>{{ field.content['name'] }}</strong>
             </div>
 
-            <div class="register-card__audio" *ngSwitchCase="'video'">
+            <div class="register-card__audio" *ngSwitchCase="'audio'">
               <liv-audio-player
                 [src]="field.content['src'] | safeTransform : 'RESOURCE'"
               ></liv-audio-player>
             </div>
 
-            <div class="register-card__video" *ngSwitchCase="'audio'">
+            <div class="register-card__video" *ngSwitchCase="'video'">
               <liv-video-player
                 [src]="field.content['src'] | safeTransform : 'RESOURCE'"
               ></liv-video-player>

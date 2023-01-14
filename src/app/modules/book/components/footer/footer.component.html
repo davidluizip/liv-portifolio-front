@@ -1,0 +1,13 @@
+<footer
+  class="book-page-footer"
+  [ngStyle]="{
+    'background-image': 'url(' + background + ')'
+  }"
+  [ngClass]="{
+    'book-page-footer--background': !!background
+  }"
+>
+  <span class="book-page-footer__pageNum"
+    >{{ currentPage }} / {{ totalPages }}</span
+  >
+</footer>

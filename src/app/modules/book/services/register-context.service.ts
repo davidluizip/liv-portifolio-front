@@ -6,6 +6,7 @@ import {
   EMPTY,
   finalize,
   Observable,
+  pipe,
   take,
 } from 'rxjs';
 import { ToastService } from 'src/app/core/services/toast.service';
@@ -92,9 +93,7 @@ export class RegisterContextService {
     }
   ) {
     const registerFields = this._registerFields.getValue();
-    const fieldIndex = this._registerFields
-      .getValue()
-      .findIndex(field => field.id === data.id);
+    const fieldIndex = registerFields.findIndex(field => field.id === data.id);
 
     registerFields[fieldIndex].type = type;
     registerFields[fieldIndex].content = data.content;
@@ -102,19 +101,9 @@ export class RegisterContextService {
     this._registerFields.next(registerFields);
   }
 
-  setSelectedRegisterField(id: number) {
-    this._selectedRegisterFieldId.next(id);
-  }
-
-  resetSelectedRegisterField() {
-    this._selectedRegisterFieldId.next(null);
-  }
-
   resetFieldValue(id: number) {
     const registerFields = this._registerFields.getValue();
-    const fieldIndex = this._registerFields
-      .getValue()
-      .findIndex(field => field.id === id);
+    const fieldIndex = registerFields.findIndex(field => field.id === id);
 
     registerFields[fieldIndex].type = null;
     registerFields[fieldIndex].content = null;
@@ -124,10 +113,14 @@ export class RegisterContextService {
 
   openRegisterTypeModal(fieldId: number) {
     this._selectedRegisterFieldId.next(fieldId);
-    this.ngbModal.open(RegisterSelectModalComponent, {
+    const modalRef = this.ngbModal.open(RegisterSelectModalComponent, {
       centered: true,
       modalDialogClass: 'register-select-modal',
     });
+
+    modalRef.closed
+      .pipe(take(1))
+      .subscribe(() => this._selectedRegisterFieldId.next(null));
   }
 
   saveTextRegister(id: number, content: TextContent) {
@@ -159,7 +152,6 @@ export class RegisterContextService {
           return EMPTY;
         }),
         finalize(() => {
-          this.resetSelectedRegisterField();
           this.loadingOverlayService.remove();
         })
       )
@@ -193,7 +185,6 @@ export class RegisterContextService {
           return EMPTY;
         }),
         finalize(() => {
-          this.resetSelectedRegisterField();
           this.loadingOverlayService.remove();
         })
       )

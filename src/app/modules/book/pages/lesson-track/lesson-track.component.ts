@@ -5,13 +5,13 @@ import { PagesModel } from '../../models/portfolio-book.model';
 import { LessonTrackService } from '../../services/api/lesson-track.service';
 import {
   Colors,
-  PageControllerService
+  PageControllerService,
 } from '../../services/page-controller.service';
 
 @Component({
   selector: 'liv-lesson-track',
   templateUrl: './lesson-track.component.html',
-  styleUrls: ['./lesson-track.component.scss']
+  styleUrls: ['./lesson-track.component.scss'],
 })
 export class LessonTrackComponent implements OnInit {
   readonly colors$: Observable<Colors> = this.pageControllerService.colors$;
@@ -29,8 +29,12 @@ export class LessonTrackComponent implements OnInit {
   }
 
   getLessonTrack(): void {
-    this.pageData$ = this.pageControllerService.currentPage$.pipe(
-      filter(page => EPages.lesson_track === page),
+    this.pageData$ = this.pageControllerService.dynamicCurrentPage$.pipe(
+      filter(
+        ({ previous, current }) =>
+          previous.page === EPages.lesson_track ||
+          current.page === EPages.lesson_track
+      ),
       switchMap(() =>
         this.lessonTrackService.getTrailActivities(this.pageId).pipe(take(1))
       ),
