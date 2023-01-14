@@ -7,29 +7,33 @@ import { populateStrapiFilters } from 'src/app/shared/helpers/populate-strapi-fi
 
 import {
   PortfolioBookModel,
-  ResumeRegisterModel,
+  ResumeRegisterModel
 } from '../../models/portfolio-book.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class LessonTrackService {
   constructor(private apiGatewayService: ApiGatewayService) {}
 
   getTrailActivities(
-    idPage,
+    externalStrapiId: number,
+    pageId: number,
     populate: ETypesComponentStrapi[] = [
       ETypesComponentStrapi.paginas_aulas,
       ETypesComponentStrapi.paginas_footer,
-      ETypesComponentStrapi.paginas_imagem,
+      ETypesComponentStrapi.paginas_imagem
     ]
   ): Observable<Model<PortfolioBookModel>> {
     const params = populateStrapiFilters(populate);
 
     return this.apiGatewayService
-      .get<PortfolioBookModel>(`/portifolios/next-page/${idPage}`, {
-        params,
-      })
+      .get<PortfolioBookModel>(
+        `/portifolios/next-page/${externalStrapiId}/${pageId}`,
+        {
+          params
+        }
+      )
       .pipe(map(res => res.data));
   }
 
@@ -38,7 +42,7 @@ export class LessonTrackService {
     populate: ETypesComponentStrapi[] = [
       ETypesComponentStrapi.paginas_aulas,
       ETypesComponentStrapi.paginas_footer,
-      ETypesComponentStrapi.paginas_imagem,
+      ETypesComponentStrapi.paginas_imagem
     ]
   ): Observable<Model<ResumeRegisterModel>> {
     const params = populateStrapiFilters(populate);
@@ -47,7 +51,7 @@ export class LessonTrackService {
       .get<ResumeRegisterModel>(
         `/portifolios/register/summary/${externalIdStrapi}`,
         {
-          params,
+          params
         }
       )
       .pipe(map(res => res.data));
