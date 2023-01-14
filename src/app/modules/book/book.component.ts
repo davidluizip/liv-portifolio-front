@@ -33,9 +33,8 @@ export class BookComponent implements AfterViewInit, OnDestroy {
 
   public bookColors$ = this.pageControllerService.colors$;
   public pages$ = this.pageControllerService.dynamicPages$.pipe(
-    tap(pages => (this.totalPages = pages.length + 2))
+    tap(pages => (this.totalPages = pages.length + 1))
   );
-  public footer$ = this.pageControllerService.footer$;
 
   private destroy$ = new Subject<boolean>();
 
@@ -63,11 +62,7 @@ export class BookComponent implements AfterViewInit, OnDestroy {
   }
 
   get showNextButton() {
-    return (
-      this.currentPage <= this.totalPages &&
-      (!this.currentIsCoverBackPage ||
-        this.coverBackPage['page-number'] % 2 === 0)
-    );
+    return !this.currentIsCoverBackPage;
   }
 
   get showCloseButton() {
@@ -86,27 +81,6 @@ export class BookComponent implements AfterViewInit, OnDestroy {
       .pipe(filter(data => !!data['book']))
       .subscribe(() => this.startConfigPages());
   }
-
-  // private buildPages(attributes: ResumeRegisterModel, totalPages: number) {
-  //   Array.from<number>({length: totalPages }).forEach((pageNum) => {
-  //     attributes.paginas.forEach((page, index) => {
-  //       if (page.pagina_aula_registro) {
-  //         this.pageControllerService.savePage({
-  //           page:  EPages.lesson_track_register,
-  //           pageNum,
-  //           pageId: page.id
-  //         }
-  //         );
-  //       } else {
-  //         this.pageControllerService.savePage({
-  //           page:  EPages.lesson_track,
-  //           pageNum,
-  //           pageId: page.id
-  //         });
-  //       }
-  //     })
-  //   })
-  // }
 
   startConfigPages(resume?: ResumeRegisterModel) {
     const pages = Array.from(
@@ -209,8 +183,6 @@ export class BookComponent implements AfterViewInit, OnDestroy {
 
     nextPageToFlip?.classList.add('flipped');
     nextPageToFlip.nextElementSibling?.classList.add('flipped');
-
-    console.log(nextPageToFlip['page-number']);
 
     if (nextPageToFlip['page-number'] === 1) {
       const frontCover = this.document.getElementById('main-front-cover');

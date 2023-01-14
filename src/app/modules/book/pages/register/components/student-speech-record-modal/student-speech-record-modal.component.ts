@@ -34,11 +34,7 @@ export class StudentSpeechRecordModalComponent
       ),
       name: new FormControl(
         '',
-        Validators.compose([
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(24),
-        ])
+        Validators.compose([Validators.minLength(3), Validators.maxLength(24)])
       ),
     });
   }

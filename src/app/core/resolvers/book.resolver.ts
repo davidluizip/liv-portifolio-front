@@ -37,7 +37,7 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
 
     return this.getMainBookContent(Number(bookId)).pipe(
       tap(({ attributes }) => {
-        this.buildPages(attributes);
+        this.buildDynamicPages(attributes);
       })
     );
   }
@@ -73,38 +73,42 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
     );
   }
 
-  private buildPages(attributes: ResumeRegisterModel) {
+  private buildDynamicPages(attributes: ResumeRegisterModel) {
     if (attributes.count > 0) {
+      let pageEnum: EPages;
+
       for (const page of attributes.paginas) {
         if (page.pagina_aula_registro) {
-          this.pageControllerService.savePage({
-            pageId: page.id,
-            page: EPages.lesson_track_register,
-          });
+          pageEnum = EPages.lesson_track_register;
         } else {
-          this.pageControllerService.savePage({
-            pageId: page.id,
-            page: EPages.lesson_track,
-          });
+          pageEnum = EPages.lesson_track_register;
         }
+
+        this.pageControllerService.saveDynamicPage({
+          pageId: page.id,
+          page: pageEnum,
+        });
       }
-      this.pageControllerService.savePage({
+
+      this.pageControllerService.saveDynamicPage({
         page: EPages.register,
       });
     }
 
-    const pages = this.pageControllerService.snapshot.dynamicPages;
+    this.buildPages();
+  }
+
+  private buildPages() {
+    const { dynamicPages } = this.pageControllerService.snapshot;
 
     let start: number;
     let end: number;
 
-    for (let index = 0; index < pages.length; index += 2) {
+    for (let index = 2; index < dynamicPages.length; index += 2) {
       start = index;
       end = start + 2;
 
-      this.pageControllerService.saveDynamicPagesTemp(pages.slice(start, end));
+      this.pageControllerService.savePages(dynamicPages.slice(start, end));
     }
-
-    console.log(this.pageControllerService.snapshot.dynamicPagesTemp);
   }
 }

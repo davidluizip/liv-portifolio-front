@@ -27,38 +27,21 @@ export interface PagesConfig {
   pageId?: number;
 }
 
-interface FooterState {
-  pageId: number;
-  background: string;
-}
-
 @Injectable({
   providedIn: 'root',
 })
 export class PageControllerService {
-  private dynamicPagesTemp: PagesConfig[][] = [];
+  private pages: PagesConfig[][] = [];
 
-  saveDynamicPagesTemp(data: any) {
-    this.dynamicPagesTemp.push(data);
-  }
-
-  private _dynamicPages = new BehaviorSubject<PagesConfig[]>([
-    { page: EPages.class },
-    { page: EPages.intro },
-  ]);
+  private _dynamicPages = new BehaviorSubject<PagesConfig[]>([]);
   public dynamicPages$ = this._dynamicPages.asObservable();
 
   private _currentPage = new BehaviorSubject<number>(null);
   public currentPage$ = this._currentPage.asObservable();
 
   public dynamicCurrentPage$ = this.currentPage$.pipe(
-    switchMap(() => of(this.dynamicPagesTemp)),
+    switchMap(() => of(this.pages)),
     map(pages => {
-      console.log({
-        pages,
-        currentPage: this.snapshot.currentPage,
-      });
-
       const book: Record<'previous' | 'current', any> = {
         previous: {},
         current: {},
@@ -71,23 +54,25 @@ export class PageControllerService {
         return pos === this.snapshot.currentPage;
       });
 
-      if (currentPageIndex > -1)
-        Object.assign(book, {
-          previous: this.dynamicPagesTemp[currentPageIndex][0],
-          current: this.dynamicPagesTemp[currentPageIndex][1],
-        });
+      if (currentPageIndex > -1 && this.pages.length > 0) {
+        const [previous, current] = this.pages[currentPageIndex];
+        book.previous = previous;
+
+        if (current) {
+          book.current = current;
+        }
+      }
 
       return book;
     })
   );
 
-  private _footer = new BehaviorSubject<FooterState | null>(null);
-  public footer$ = this._footer.asObservable();
-
   private _bookId = new BehaviorSubject<number>(null);
   public bookId$ = this._bookId.asObservable();
+
   private _externalIdStrapi = new BehaviorSubject<number>(null);
   public externalIdStrapi$ = this._bookId.asObservable();
+
   private _state = new BehaviorSubject<BookState>(null);
   public state$ = this._state.asObservable();
 
@@ -96,13 +81,19 @@ export class PageControllerService {
     map(({ colors }) => colors)
   );
 
+  constructor() {
+    const initialPages = [{ page: EPages.class }, { page: EPages.intro }];
+
+    this._dynamicPages.next(initialPages);
+    this.pages.push(initialPages);
+  }
+
   private get state() {
     return this._state.getValue();
   }
 
   get snapshot() {
     return {
-      dynamicPagesTemp: this.dynamicPagesTemp,
       dynamicPages: this._dynamicPages.getValue(),
       currentPage: this._currentPage.getValue(),
       bookId: this._bookId.getValue(),
@@ -113,15 +104,15 @@ export class PageControllerService {
     };
   }
 
-  savePage({ page, pageId }: PagesConfig): void {
+  savePages(pages: PagesConfig[]): void {
+    this.pages.push(pages);
+  }
+
+  saveDynamicPage({ page, pageId }: PagesConfig): void {
     this._dynamicPages.next([
       ...this._dynamicPages.getValue(),
       { page, pageId },
     ]);
-  }
-
-  saveFooter(footer: FooterState): void {
-    this._footer.next(footer);
   }
 
   saveColors(colors: Colors) {

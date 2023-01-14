@@ -20,33 +20,42 @@
         <div class="page cover-front">
           <liv-cover-front (seePortfolio)="handleNextPage()"></liv-cover-front>
         </div>
-        <div class="page cover-front cover-front--backside">
-          <liv-cover-front-backside></liv-cover-front-backside>
-        </div>
+
         <ng-container *ngIf="pages$ | async; let pages">
           <ng-container *ngFor="let pageConfig of pages; let i = index">
-            <div class="page" *ngIf="pageConfig.page !== PageEnum.class">
-              <article class="page__content">
-                <liv-introduction
-                  *ngIf="pageConfig.page === PageEnum.intro"
-                ></liv-introduction>
-                <liv-lesson-track
-                  *ngIf="pageConfig.page === PageEnum.lesson_track"
-                  [pageId]="pageConfig.pageId"
-                ></liv-lesson-track>
-                <liv-lesson-track-register
-                  *ngIf="pageConfig.page === PageEnum.lesson_track_register"
-                  [pageId]="pageConfig.pageId"
-                ></liv-lesson-track-register>
-                <liv-register
-                  *ngIf="pageConfig.page === PageEnum.register"
-                ></liv-register>
-              </article>
+            <div
+              class="page"
+              [ngClass]="{
+                'cover-front cover-front--backside':
+                  pageConfig.page === PageEnum.class
+              }"
+            >
+              <liv-cover-front-backside
+                *ngIf="pageConfig.page === PageEnum.class"
+              ></liv-cover-front-backside>
 
-              <ng-container *ngIf="footer$ | async">
+              <ng-container *ngIf="pageConfig.page !== PageEnum.class">
+                <article class="page__content">
+                  <liv-introduction
+                    *ngIf="pageConfig.page === PageEnum.intro"
+                  ></liv-introduction>
+                  <liv-lesson-track
+                    *ngIf="pageConfig.page === PageEnum.lesson_track"
+                    [pageId]="pageConfig.pageId"
+                  ></liv-lesson-track>
+                  <liv-lesson-track-register
+                    *ngIf="pageConfig.page === PageEnum.lesson_track_register"
+                    [pageId]="pageConfig.pageId"
+                  ></liv-lesson-track-register>
+                  <liv-register
+                    *ngIf="pageConfig.page === PageEnum.register"
+                  ></liv-register>
+                </article>
+
                 <liv-footer
                   [currentPage]="i"
-                  [totalPages]="totalPages"
+                  [totalPages]="totalPages - 2"
+                  [placement]="i % 2 === 0 ? 'left' : 'right'"
                 ></liv-footer>
               </ng-container>
             </div>

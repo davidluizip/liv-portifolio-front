@@ -10,6 +10,8 @@ export class FooterComponent implements OnInit {
   @Input() currentPage = 0;
   @Input() background: string;
 
+  @Input() placement: 'right' | 'left' = 'left';
+
   constructor() {}
 
   ngOnInit(): void {}

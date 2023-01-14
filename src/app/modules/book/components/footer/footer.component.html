@@ -4,7 +4,9 @@
     'background-image': 'url(' + background + ')'
   }"
   [ngClass]="{
-    'book-page-footer--background': !!background
+    'book-page-footer--background': !!background,
+    'book-page-footer--leftPagePlacement': placement === 'left',
+    'book-page-footer--rightPagePlacement': placement === 'right'
   }"
 >
   <span class="book-page-footer__pageNum"

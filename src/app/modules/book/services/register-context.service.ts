@@ -3,9 +3,11 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   BehaviorSubject,
   catchError,
+  delay,
   EMPTY,
   finalize,
   Observable,
+  of,
   pipe,
   take,
 } from 'rxjs';
@@ -47,7 +49,7 @@ export type FieldContent = {
 export type KeyFieldContent = keyof FieldContent;
 export type KeyValueFieldContent = FieldContent[KeyFieldContent];
 
-interface RegisterField {
+export interface RegisterField {
   id: number;
   type: KeyFieldContent;
   content: KeyValueFieldContent;
@@ -101,7 +103,7 @@ export class RegisterContextService {
     this._registerFields.next(registerFields);
   }
 
-  resetFieldValue(id: number) {
+  resetRegisterField(id: number) {
     const registerFields = this._registerFields.getValue();
     const fieldIndex = registerFields.findIndex(field => field.id === id);
 
@@ -113,6 +115,7 @@ export class RegisterContextService {
 
   openRegisterTypeModal(fieldId: number) {
     this._selectedRegisterFieldId.next(fieldId);
+
     const modalRef = this.ngbModal.open(RegisterSelectModalComponent, {
       centered: true,
       modalDialogClass: 'register-select-modal',
@@ -226,10 +229,19 @@ export class RegisterContextService {
       });
   }
 
-  saveRegisterDescription(
-    bookTeacherId: number,
-    data: SaveRegisterPageDescription
-  ) {
-    this.registerService.saveRegisterDescription(bookTeacherId, data);
+  removeRegisterField(fieldId: number) {
+    this.loadingOverlayService.open();
+
+    // TO-DO
+
+    of(true)
+      .pipe(
+        take(1),
+        delay(700),
+        finalize(() => this.loadingOverlayService.remove())
+      )
+      .subscribe(() => {
+        this.resetRegisterField(fieldId);
+      });
   }
 }

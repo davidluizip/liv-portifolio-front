@@ -24,12 +24,14 @@
 
   <ng-template #showAvatar>
     <div class="picture-content">
-      <button class="picture-content__trashButton" (click)="removePicture()">
-        <svg-icon
-          src="assets/icons/trash.svg"
-          svgClass="picture-content__trashButton__icon"
-        ></svg-icon>
-      </button>
+      <div class="picture-content__backdrop">
+        <button
+          class="icon-button-trash picture-content__trashButton"
+          (click)="removePicture()"
+        >
+          <svg-icon src="assets/icons/trash.svg" svgClass="icon"></svg-icon>
+        </button>
+      </div>
       <img [src]="url | safeTransform : 'RESOURCE'" alt="" />
     </div>
   </ng-template>

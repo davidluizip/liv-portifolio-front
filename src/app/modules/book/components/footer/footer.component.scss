@@ -20,6 +20,14 @@
     }
   }
 
+  &--leftPagePlacement {
+    justify-content: flex-start;
+  }
+
+  &--rightPagePlacement {
+    justify-content: flex-end;
+  }
+
   &__pageNum {
     display: flex;
     align-items: flex-end;

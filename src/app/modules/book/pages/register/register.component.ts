@@ -10,7 +10,10 @@ import {
 import { RegisterService } from '../../services/api/register.service';
 import { PageControllerService } from '../../services/page-controller.service';
 
-import { RegisterContextService } from '../../services/register-context.service';
+import {
+  RegisterContextService,
+  RegisterField,
+} from '../../services/register-context.service';
 
 @Component({
   selector: 'liv-register',
@@ -108,7 +111,16 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  handleOpenRegisterTypeModal(fieldId: number): void {
-    this.registerContextService.openRegisterTypeModal(fieldId);
+  handleOpenRegisterTypeModal(field: RegisterField): void {
+    if (field.content) {
+      return;
+    }
+
+    this.registerContextService.openRegisterTypeModal(field.id);
+  }
+
+  handleRemoveRegister(event: Event, fieldId: number): void {
+    event.stopPropagation();
+    this.registerContextService.removeRegisterField(fieldId);
   }
 }
