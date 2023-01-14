@@ -18,6 +18,7 @@ import { LessonTrackRegisterComponent } from './pages/lesson-track-register/less
 import { LessonTrackComponent } from './pages/lesson-track/lesson-track.component';
 import { AudioPlayerComponent } from './pages/register/components/audio-player/audio-player.component';
 import { VideoPlayerComponent } from './pages/register/components/video-player/video-player.component';
+import { FooterComponent } from './components/footer/footer.component';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { VideoPlayerComponent } from './pages/register/components/video-player/v
     TitleBadgeComponent,
     AudioPlayerComponent,
     VideoPlayerComponent,
+    FooterComponent,
   ],
   imports: [
     ReactiveFormsModule,

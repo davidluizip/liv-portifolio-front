@@ -100,14 +100,12 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
           .saveMediaRegister(id, data, type)
           .add(() => {
             this.fileInput.nativeElement.value = null;
-            this.registerContextService.resetSelectedRegisterField();
             this.ngbActiveModal.close();
           });
       });
   }
 
   handleCloseModal() {
-    this.registerContextService.resetSelectedRegisterField();
     this.ngbActiveModal.close();
   }
 

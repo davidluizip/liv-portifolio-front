@@ -10,7 +10,10 @@ import {
 import { RegisterService } from '../../services/api/register.service';
 import { PageControllerService } from '../../services/page-controller.service';
 
-import { RegisterContextService } from '../../services/register-context.service';
+import {
+  RegisterContextService,
+  RegisterField,
+} from '../../services/register-context.service';
 
 @Component({
   selector: 'liv-register',
@@ -19,8 +22,6 @@ import { RegisterContextService } from '../../services/register-context.service'
 })
 export class RegisterComponent implements OnInit {
   readonly registerFields$ = this.registerContextService.registerFields$;
-
-  public registers$: Observable<Model<TeacherBookModel>>;
 
   constructor(
     private registerContextService: RegisterContextService,
@@ -33,9 +34,13 @@ export class RegisterComponent implements OnInit {
   }
 
   getRegisters(): void {
-    this.pageControllerService.currentPage$
+    this.pageControllerService.dynamicCurrentPage$
       .pipe(
-        filter(page => EPages.register === page),
+        filter(
+          ({ previous, current }) =>
+            previous.page === EPages.register ||
+            current?.page === EPages.register
+        ),
         switchMap(() =>
           this.registerService
             .get(this.pageControllerService.snapshot.bookId)
@@ -44,12 +49,12 @@ export class RegisterComponent implements OnInit {
         filter(({ attributes }) => !!attributes.registros)
       )
       .subscribe(({ attributes }) => {
-        this.registerContextService.resetSelectedRegisterField();
         if (attributes.registros.texto?.length > 0) {
           this.populateTexts(attributes.registros.texto);
         }
-        if (attributes.registros.midia?.data)
+        if (attributes.registros.midia?.data) {
           this.populateMedias(attributes.registros.midia.data);
+        }
       });
   }
 
@@ -106,7 +111,16 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  handleOpenRegisterTypeModal(fieldId: number): void {
-    this.registerContextService.openRegisterTypeModal(fieldId);
+  handleOpenRegisterTypeModal(field: RegisterField): void {
+    if (field.content) {
+      return;
+    }
+
+    this.registerContextService.openRegisterTypeModal(field.id);
+  }
+
+  handleRemoveRegister(event: Event, fieldId: number): void {
+    event.stopPropagation();
+    this.registerContextService.removeRegisterField(fieldId);
   }
 }

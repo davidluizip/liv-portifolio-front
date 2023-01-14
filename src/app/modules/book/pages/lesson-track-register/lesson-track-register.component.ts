@@ -5,13 +5,13 @@ import { PagesModel } from '../../models/portfolio-book.model';
 import { LessonTrackService } from '../../services/api/lesson-track.service';
 import {
   Colors,
-  PageControllerService
+  PageControllerService,
 } from '../../services/page-controller.service';
 
 @Component({
   selector: 'liv-lesson-track-register',
   templateUrl: './lesson-track-register.component.html',
-  styleUrls: ['./lesson-track-register.component.scss']
+  styleUrls: ['./lesson-track-register.component.scss'],
 })
 export class LessonTrackRegisterComponent {
   readonly colors$: Observable<Colors> = this.pageControllerService.colors$;
@@ -23,14 +23,18 @@ export class LessonTrackRegisterComponent {
     private pageControllerService: PageControllerService,
     private lessonTrackService: LessonTrackService
   ) {}
+
   getLessonTrack(): void {
-    this.pageData$ = this.pageControllerService.currentPage$.pipe(
-      filter(page => EPages.lesson_track_register === page),
+    this.pageData$ = this.pageControllerService.dynamicCurrentPage$.pipe(
+      filter(
+        ({ previous, current }) =>
+          previous.page === EPages.lesson_track_register ||
+          current.page === EPages.lesson_track_register
+      ),
       switchMap(() =>
         this.lessonTrackService.getTrailActivities(this.pageId).pipe(take(1))
       ),
-      map(({ attributes }) => attributes.paginas),
-      tap(console.log)
+      map(({ attributes }) => attributes.paginas)
     );
   }
 }

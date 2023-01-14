@@ -3,9 +3,12 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   BehaviorSubject,
   catchError,
+  delay,
   EMPTY,
   finalize,
   Observable,
+  of,
+  pipe,
   take,
 } from 'rxjs';
 import { ToastService } from 'src/app/core/services/toast.service';
@@ -46,7 +49,7 @@ export type FieldContent = {
 export type KeyFieldContent = keyof FieldContent;
 export type KeyValueFieldContent = FieldContent[KeyFieldContent];
 
-interface RegisterField {
+export interface RegisterField {
   id: number;
   type: KeyFieldContent;
   content: KeyValueFieldContent;
@@ -92,9 +95,7 @@ export class RegisterContextService {
     }
   ) {
     const registerFields = this._registerFields.getValue();
-    const fieldIndex = this._registerFields
-      .getValue()
-      .findIndex(field => field.id === data.id);
+    const fieldIndex = registerFields.findIndex(field => field.id === data.id);
 
     registerFields[fieldIndex].type = type;
     registerFields[fieldIndex].content = data.content;
@@ -102,19 +103,9 @@ export class RegisterContextService {
     this._registerFields.next(registerFields);
   }
 
-  setSelectedRegisterField(id: number) {
-    this._selectedRegisterFieldId.next(id);
-  }
-
-  resetSelectedRegisterField() {
-    this._selectedRegisterFieldId.next(null);
-  }
-
-  resetFieldValue(id: number) {
+  resetRegisterField(id: number) {
     const registerFields = this._registerFields.getValue();
-    const fieldIndex = this._registerFields
-      .getValue()
-      .findIndex(field => field.id === id);
+    const fieldIndex = registerFields.findIndex(field => field.id === id);
 
     registerFields[fieldIndex].type = null;
     registerFields[fieldIndex].content = null;
@@ -124,10 +115,15 @@ export class RegisterContextService {
 
   openRegisterTypeModal(fieldId: number) {
     this._selectedRegisterFieldId.next(fieldId);
-    this.ngbModal.open(RegisterSelectModalComponent, {
+
+    const modalRef = this.ngbModal.open(RegisterSelectModalComponent, {
       centered: true,
       modalDialogClass: 'register-select-modal',
     });
+
+    modalRef.closed
+      .pipe(take(1))
+      .subscribe(() => this._selectedRegisterFieldId.next(null));
   }
 
   saveTextRegister(id: number, content: TextContent) {
@@ -159,7 +155,6 @@ export class RegisterContextService {
           return EMPTY;
         }),
         finalize(() => {
-          this.resetSelectedRegisterField();
           this.loadingOverlayService.remove();
         })
       )
@@ -193,7 +188,6 @@ export class RegisterContextService {
           return EMPTY;
         }),
         finalize(() => {
-          this.resetSelectedRegisterField();
           this.loadingOverlayService.remove();
         })
       )
@@ -235,10 +229,19 @@ export class RegisterContextService {
       });
   }
 
-  saveRegisterDescription(
-    bookTeacherId: number,
-    data: SaveRegisterPageDescription
-  ) {
-    this.registerService.saveRegisterDescription(bookTeacherId, data);
+  removeRegisterField(fieldId: number) {
+    this.loadingOverlayService.open();
+
+    // TO-DO
+
+    of(true)
+      .pipe(
+        take(1),
+        delay(700),
+        finalize(() => this.loadingOverlayService.remove())
+      )
+      .subscribe(() => {
+        this.resetRegisterField(fieldId);
+      });
   }
 }

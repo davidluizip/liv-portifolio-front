@@ -3,7 +3,7 @@ import {
   Resolve,
   RouterStateSnapshot,
   ActivatedRouteSnapshot,
-  Router
+  Router,
 } from '@angular/router';
 import { catchError, EMPTY, switchMap, take, tap } from 'rxjs';
 import bookConfig from 'src/app/modules/book/book-config';
@@ -17,7 +17,7 @@ import { Model } from '../models/liv-response-protocol.model';
 import { ToastService } from '../services/toast.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
   constructor(
@@ -37,7 +37,7 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
 
     return this.getMainBookContent(Number(bookId)).pipe(
       tap(({ attributes }) => {
-        this.buildPages(attributes);
+        this.buildDynamicPages(attributes);
       })
     );
   }
@@ -73,15 +73,42 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
     );
   }
 
-  private buildPages(attributes: ResumeRegisterModel) {
-    for (const page of attributes.paginas) {
-      if (page.pagina_aula_registro)
-        this.pageControllerService.savePage(
-          EPages.lesson_track_register,
-          page.id
-        );
-      else this.pageControllerService.savePage(EPages.lesson_track, page.id);
+  private buildDynamicPages(attributes: ResumeRegisterModel) {
+    if (attributes.count > 0) {
+      let pageEnum: EPages;
+
+      for (const page of attributes.paginas) {
+        if (page.pagina_aula_registro) {
+          pageEnum = EPages.lesson_track_register;
+        } else {
+          pageEnum = EPages.lesson_track_register;
+        }
+
+        this.pageControllerService.saveDynamicPage({
+          pageId: page.id,
+          page: pageEnum,
+        });
+      }
+
+      this.pageControllerService.saveDynamicPage({
+        page: EPages.register,
+      });
     }
-    this.pageControllerService.savePage(EPages.register);
+
+    this.buildPages();
+  }
+
+  private buildPages() {
+    const { dynamicPages } = this.pageControllerService.snapshot;
+
+    let start: number;
+    let end: number;
+
+    for (let index = 2; index < dynamicPages.length; index += 2) {
+      start = index;
+      end = start + 2;
+
+      this.pageControllerService.savePages(dynamicPages.slice(start, end));
+    }
   }
 }
