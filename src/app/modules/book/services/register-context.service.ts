@@ -6,10 +6,11 @@ import {
   delay,
   EMPTY,
   finalize,
+  iif,
   Observable,
   of,
   pipe,
-  take,
+  take
 } from 'rxjs';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { LoadingOverlayService } from 'src/app/shared/components/loading-overlay/loading-overlay.service';
@@ -49,21 +50,28 @@ export type FieldContent = {
 export type KeyFieldContent = keyof FieldContent;
 export type KeyValueFieldContent = FieldContent[KeyFieldContent];
 
+export interface RemoveRegisterField {
+  type: KeyFieldContent;
+  midiaId: number;
+  fieldId: number;
+}
 export interface RegisterField {
   id: number;
+  midiaId: number;
   type: KeyFieldContent;
   content: KeyValueFieldContent;
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class RegisterContextService {
   private _registerFields = new BehaviorSubject<RegisterField[]>(
     Array.from({ length: 4 }, (_, index) => ({
       id: index + 1,
+      midiaId: null,
       type: null,
-      content: null,
+      content: null
     }))
   );
 
@@ -83,7 +91,7 @@ export class RegisterContextService {
   get snapshot() {
     return {
       registerFields: this._registerFields.getValue(),
-      selectedRegisterFieldId: this._selectedRegisterFieldId.getValue(),
+      selectedRegisterFieldId: this._selectedRegisterFieldId.getValue()
     };
   }
 
@@ -91,6 +99,7 @@ export class RegisterContextService {
     type: Type,
     data: {
       id: number;
+      midiaId: number;
       content: FieldContent[Type];
     }
   ) {
@@ -98,6 +107,7 @@ export class RegisterContextService {
     const fieldIndex = registerFields.findIndex(field => field.id === data.id);
 
     registerFields[fieldIndex].type = type;
+    registerFields[fieldIndex].midiaId = data.midiaId;
     registerFields[fieldIndex].content = data.content;
 
     this._registerFields.next(registerFields);
@@ -118,7 +128,7 @@ export class RegisterContextService {
 
     const modalRef = this.ngbModal.open(RegisterSelectModalComponent, {
       centered: true,
-      modalDialogClass: 'register-select-modal',
+      modalDialogClass: 'register-select-modal'
     });
 
     modalRef.closed
@@ -126,7 +136,7 @@ export class RegisterContextService {
       .subscribe(() => this._selectedRegisterFieldId.next(null));
   }
 
-  saveTextRegister(id: number, content: TextContent) {
+  saveTextRegister(id: number, textId: number, content: TextContent) {
     this.loadingOverlayService.open();
 
     const requestPayload: SaveRegisterPageDescription = {
@@ -135,10 +145,10 @@ export class RegisterContextService {
           texto: {
             alternativeText: id,
             descricao: content.about,
-            nome: content.name,
-          },
-        },
-      },
+            nome: content.name
+          }
+        }
+      }
     };
 
     this.registerService
@@ -161,7 +171,8 @@ export class RegisterContextService {
       .subscribe(() => {
         this.setFieldValue('text', {
           id,
-          content,
+          midiaId: textId,
+          content
         });
       });
   }
@@ -196,30 +207,33 @@ export class RegisterContextService {
           case 'image':
             this.setFieldValue(type, {
               id,
+              midiaId: attributes.id,
               content: {
                 src: attributes.url,
-                alt: '',
-              },
+                alt: ''
+              }
             });
             break;
 
           case 'video':
             this.setFieldValue(type, {
               id,
+              midiaId: attributes.id,
               content: {
                 src: attributes.url,
-                type: attributes.mime,
-              },
+                type: attributes.mime
+              }
             });
             break;
 
           case 'audio':
             this.setFieldValue(type, {
               id,
+              midiaId: attributes.id,
               content: {
                 src: attributes.url,
-                type: attributes.mime,
-              },
+                type: attributes.mime
+              }
             });
             break;
 
@@ -229,15 +243,24 @@ export class RegisterContextService {
       });
   }
 
-  removeRegisterField(fieldId: number) {
+  validateRemoveMidia({ type, midiaId }: Omit<RemoveRegisterField, 'fieldId'>) {
+    const { bookId } = this.pageControllerService.snapshot;
+
+    return iif(
+      () => type === 'text',
+      this.registerService.deleteText(bookId, midiaId),
+      this.registerService.deleteMidia(midiaId)
+    );
+  }
+
+  removeRegisterField({ type, midiaId, fieldId }: RemoveRegisterField) {
     this.loadingOverlayService.open();
 
-    // TO-DO
+    this.registerService.deleteMidia;
 
-    of(true)
+    this.validateRemoveMidia({ type, midiaId })
       .pipe(
         take(1),
-        delay(700),
         finalize(() => this.loadingOverlayService.remove())
       )
       .subscribe(() => {
