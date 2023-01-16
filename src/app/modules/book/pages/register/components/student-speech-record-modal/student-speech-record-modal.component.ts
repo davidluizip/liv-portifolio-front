@@ -3,7 +3,7 @@ import {
   Component,
   ElementRef,
   OnInit,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -12,7 +12,7 @@ import { RegisterContextService } from 'src/app/modules/book/services/register-c
 @Component({
   selector: 'liv-student-speech-record-modal',
   templateUrl: './student-speech-record-modal.component.html',
-  styleUrls: ['./student-speech-record-modal.component.scss'],
+  styleUrls: ['./student-speech-record-modal.component.scss']
 })
 export class StudentSpeechRecordModalComponent
   implements OnInit, AfterViewInit
@@ -35,7 +35,7 @@ export class StudentSpeechRecordModalComponent
       name: new FormControl(
         '',
         Validators.compose([Validators.minLength(3), Validators.maxLength(24)])
-      ),
+      )
     });
   }
 
@@ -53,9 +53,9 @@ export class StudentSpeechRecordModalComponent
 
     const { about, name } = this.form.value;
 
-    this.registerContextService.saveTextRegister(id, {
+    this.registerContextService.saveTextRegister(id, 1, {
       about,
-      name,
+      name
     });
 
     this.ngbModal.dismissAll();

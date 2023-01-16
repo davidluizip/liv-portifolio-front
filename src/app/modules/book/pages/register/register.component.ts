@@ -5,20 +5,20 @@ import { EPages } from 'src/app/shared/enum/pages.enum';
 import { MediaModel } from '../../models/media.model';
 import {
   RegisterText,
-  TeacherBookModel,
+  TeacherBookModel
 } from '../../models/teacher-book.model';
 import { RegisterService } from '../../services/api/register.service';
 import { PageControllerService } from '../../services/page-controller.service';
 
 import {
   RegisterContextService,
-  RegisterField,
+  RegisterField
 } from '../../services/register-context.service';
 
 @Component({
   selector: 'liv-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss'],
+  styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
   readonly registerFields$ = this.registerContextService.registerFields$;
@@ -62,10 +62,11 @@ export class RegisterComponent implements OnInit {
     for (const text of texts) {
       this.registerContextService.setFieldValue('text', {
         id: text.alternativeText,
+        midiaId: text.id,
         content: {
           about: text.descricao,
-          name: text.nome,
-        },
+          name: text.nome
+        }
       });
     }
   }
@@ -73,36 +74,40 @@ export class RegisterComponent implements OnInit {
   populateMedias(midias: Model<MediaModel>[]) {
     for (const midia of midias) {
       const [type] = midia.attributes.mime.split('/');
-      this.setMedia(type, midia.attributes);
+      this.setMedia(type, midia);
     }
   }
 
-  setMedia(type: string, data: MediaModel) {
+  setMedia(type: string, midia: Model<MediaModel>) {
+    const { id, attributes } = midia;
     switch (type) {
       case 'audio':
         this.registerContextService.setFieldValue('audio', {
-          id: data.alternativeText,
+          id: +attributes.alternativeText,
+          midiaId: id,
           content: {
-            src: data.url,
-          },
+            src: attributes.url
+          }
         });
         break;
       case 'video':
         this.registerContextService.setFieldValue('video', {
-          id: data.alternativeText,
+          id: +attributes.alternativeText,
+          midiaId: id,
           content: {
-            src: data.url,
-            type,
-          },
+            src: attributes.url,
+            type
+          }
         });
         break;
       case 'image':
         this.registerContextService.setFieldValue('image', {
-          id: data.alternativeText,
+          id: +attributes.alternativeText,
+          midiaId: id,
           content: {
-            src: data.url,
-            alt: data.caption,
-          },
+            src: attributes.url,
+            alt: attributes.caption
+          }
         });
         break;
 
@@ -119,8 +124,12 @@ export class RegisterComponent implements OnInit {
     this.registerContextService.openRegisterTypeModal(field.id);
   }
 
-  handleRemoveRegister(event: Event, fieldId: number): void {
+  handleRemoveRegister(event: Event, field: RegisterField): void {
     event.stopPropagation();
-    this.registerContextService.removeRegisterField(fieldId);
+    this.registerContextService.removeRegisterField({
+      type: field.type,
+      midiaId: field.midiaId,
+      fieldId: field.id
+    });
   }
 }

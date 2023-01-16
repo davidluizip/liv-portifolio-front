@@ -1,7 +1,7 @@
 import {
   Data,
   DataArray,
-  DataPut,
+  DataPut
 } from 'src/app/core/models/liv-response-protocol.model';
 import { MediaModel } from './media.model';
 import { SerieModel } from './serie.model';
@@ -40,6 +40,7 @@ export interface ClassPage {
 }
 
 export interface RegisterText {
+  id: number;
   alternativeText: number;
   descricao: string;
   nome: string;

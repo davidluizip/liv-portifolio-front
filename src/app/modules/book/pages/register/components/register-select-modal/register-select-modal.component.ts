@@ -3,7 +3,7 @@ import {
   Component,
   ElementRef,
   OnDestroy,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { filter, fromEvent, map, Subject, takeUntil } from 'rxjs';
@@ -21,7 +21,7 @@ interface RegisterAction {
 @Component({
   selector: 'liv-register-select-modal',
   templateUrl: './register-select-modal.component.html',
-  styleUrls: ['./register-select-modal.component.scss'],
+  styleUrls: ['./register-select-modal.component.scss']
 })
 export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
   @ViewChild('fileInput') fileInput: ElementRef<HTMLInputElement>;
@@ -30,23 +30,23 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
     {
       icon: 'gallery',
       type: 'image',
-      name: 'Imagem',
+      name: 'Imagem'
     },
     {
       icon: 'typography',
       type: 'text',
-      name: 'Fala do aluno',
+      name: 'Fala do aluno'
     },
     {
       icon: 'video-camera',
       type: 'video',
-      name: 'Vídeo',
+      name: 'Vídeo'
     },
     {
       icon: 'microphone',
       type: 'audio',
-      name: 'Áudio do aluno',
-    },
+      name: 'Áudio do aluno'
+    }
   ];
 
   private selectedInputType: RegisterAction['type'];
@@ -88,7 +88,7 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
           return {
             type,
             file: target.files[0],
-            id: this.registerContextService.snapshot.selectedRegisterFieldId,
+            id: this.registerContextService.snapshot.selectedRegisterFieldId
           };
         })
       )
@@ -96,6 +96,7 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
         const data = new FormData();
 
         data.append('files', file);
+        data.append('position', String(id));
         this.registerContextService
           .saveMediaRegister(id, data, type)
           .add(() => {
@@ -116,7 +117,7 @@ export class RegisterSelectModalComponent implements AfterViewInit, OnDestroy {
       case 'text':
         this.ngbModal.open(StudentSpeechRecordModalComponent, {
           centered: true,
-          modalDialogClass: 'register-select-modal',
+          modalDialogClass: 'register-select-modal'
         });
         break;
       case 'image':

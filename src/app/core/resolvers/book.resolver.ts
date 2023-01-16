@@ -3,7 +3,7 @@ import {
   Resolve,
   RouterStateSnapshot,
   ActivatedRouteSnapshot,
-  Router,
+  Router
 } from '@angular/router';
 import { catchError, EMPTY, switchMap, take, tap } from 'rxjs';
 import bookConfig from 'src/app/modules/book/book-config';
@@ -17,7 +17,7 @@ import { Model } from '../models/liv-response-protocol.model';
 import { ToastService } from '../services/toast.service';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
   constructor(
@@ -81,17 +81,17 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
         if (page.pagina_aula_registro) {
           pageEnum = EPages.lesson_track_register;
         } else {
-          pageEnum = EPages.lesson_track_register;
+          pageEnum = EPages.lesson_track;
         }
 
         this.pageControllerService.saveDynamicPage({
           pageId: page.id,
-          page: pageEnum,
+          page: pageEnum
         });
       }
 
       this.pageControllerService.saveDynamicPage({
-        page: EPages.register,
+        page: EPages.register
       });
     }
 

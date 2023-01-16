@@ -1,18 +1,18 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, take, tap } from 'rxjs';
-import { Model } from 'src/app/core/models/liv-response-protocol.model';
+import { Data, Model } from 'src/app/core/models/liv-response-protocol.model';
 import { ApiGatewayService } from 'src/app/core/services/api/api-gateway.service';
 import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
 import { filterResponse } from 'src/app/shared/rxjs/custom-operators';
 import { MediaModel } from '../../models/media.model';
 import {
   SaveRegisterPageDescription,
-  TeacherBookModel,
+  TeacherBookModel
 } from '../../models/teacher-book.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class RegisterService {
   constructor(private apiGatewayService: ApiGatewayService) {}
@@ -27,7 +27,7 @@ export class RegisterService {
     bookTeacherId: number,
     populate: ETypesComponentStrapi[] = [
       ETypesComponentStrapi.registers,
-      ETypesComponentStrapi.registersText,
+      ETypesComponentStrapi.registersText
     ]
   ): Observable<Model<TeacherBookModel>> {
     let params = new HttpParams();
@@ -39,6 +39,18 @@ export class RegisterService {
     return this.apiGatewayService
       .get<TeacherBookModel>(`/livros/${bookTeacherId}`, { params })
       .pipe(map(res => res.data));
+  }
+
+  deleteMidia(midiaId: number): Observable<void> {
+    return this.apiGatewayService.delete<void>(
+      `/livros/registro/midia/${midiaId}`
+    );
+  }
+
+  deleteText(bookId: number, midiaId: number): Observable<void> {
+    return this.apiGatewayService.delete<void>(
+      `/livros/registro/texto/${bookId}/${midiaId}`
+    );
   }
 
   saveRegisterDescription(
