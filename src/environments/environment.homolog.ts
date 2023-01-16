@@ -1,8 +1,8 @@
 export const environment = {
   production: false,
   cypher_secret: '3595670729e25c22710796962d3cc7c8',
-  /* baseUserStrapi: 'https://strapi-ci-e4be4tejsa-uc.a.run.app/api/', */
-  baseUserStrapi: 'http://localhost:4000/api',
+  baseUserStrapi: 'https://strapi-ci-e4be4tejsa-uc.a.run.app/api/',
   tokenStrapi:
-    'c721a7821f7b850364cfd2fde3d23b56fe1b4373a34eb24afe712c5828d351ef79d5b23490a8cb026b78d5e4c5a625c3b5b06b41860cff70e7f4fdd987b4c1e54b130479f43e403c612d2992c362a8a17cc60bca6123efdaf699f585348d8bd481fd6217e1cd1bfda6fb2ec92acb0687375a4d24d18c3eb12fa1764fdfc4d641',
+    '659dcdcff121d9c1001cff46a0d15dc2f77d951a64c65637f998984091e432fa555673c965f51fe0439e446570498bfb497cd6fd6694032678e3731627da154ef88c5bd40594e88ca0785eb585fc9f7572179b39aee06771c67171868b37d625789fb106eaa963d3d3bc2faeda154b372a9a78590f096e8e46f9fcea84ad55be'
 };
+
