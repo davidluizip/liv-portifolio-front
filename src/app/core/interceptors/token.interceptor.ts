@@ -23,6 +23,7 @@ export class TokenInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     // const auth = this.authStore.authSnapshot;
+    return next.handle(request);
     if (
       request.url.includes('openid-configuration') ||
       request.url.includes('googleapi')
