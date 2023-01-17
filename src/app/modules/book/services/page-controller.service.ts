@@ -109,8 +109,8 @@ export class PageControllerService {
 
   constructor() {
     const initialPages = [
-      { page: EPages.class, indexPage: 0 },
-      { page: EPages.intro, indexPage: 1 }
+      { page: EPages.class, indexPage: 1 },
+      { page: EPages.intro, indexPage: 2 }
     ];
     this.dynamicPage$.subscribe();
     this._dynamicPages.next(initialPages);

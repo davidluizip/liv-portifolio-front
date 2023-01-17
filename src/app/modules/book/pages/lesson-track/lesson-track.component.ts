@@ -17,9 +17,7 @@ export class LessonTrackComponent {
 
   public readonly colors$: Observable<Colors> =
     this.pageControllerService.colors$;
-  public lessonTrack$ = this.lessonTrackContextService.lessonTrack$.pipe(
-    tap((data) => console.log('lessonTrack$', data))
-  );
+  public lessonTrack$ = this.lessonTrackContextService.lessonTrack$;
 
   constructor(
     private pageControllerService: PageControllerService,

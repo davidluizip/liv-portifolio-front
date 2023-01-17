@@ -34,14 +34,5 @@ export class IntroductionComponent implements OnInit {
       ),
       map(({ attributes }) => attributes.introducao?.descricao)
     );
-    this.description$ = this.pageControllerService.dynamicPreviousPage$.pipe(
-      filter((previous) => previous?.page === EPages.intro),
-      switchMap(() =>
-        this.introService
-          .get(this.pageControllerService.snapshot.externalIdStrapi)
-          .pipe(take(1))
-      ),
-      map(({ attributes }) => attributes.introducao?.descricao)
-    );
   }
 }

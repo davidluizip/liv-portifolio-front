@@ -75,7 +75,8 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
 
   private buildDynamicPages(attributes: ResumeRegisterModel) {
     if (attributes.count > 0) {
-      let pageCount = this.pageControllerService.snapshot.dynamicPages.length;
+      let pageCount =
+        this.pageControllerService.snapshot.dynamicPages.length + 1;
 
       let pageType: EPages;
 
@@ -97,10 +98,12 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
         page: EPages.register,
         indexPage: pageCount
       });
+
+      this.pageControllerService.saveDynamicPage({
+        page: EPages.teacher_register,
+        indexPage: pageCount++
+      });
     }
-
-    console.log(this.pageControllerService.snapshot.dynamicPages);
-
     this.buildPages();
   }
 
