@@ -1,11 +1,22 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { filter, map, Observable, switchMap, take, tap } from 'rxjs';
+import {
+  BehaviorSubject,
+  filter,
+  first,
+  map,
+  merge,
+  Observable,
+  switchMap,
+  take,
+  tap
+} from 'rxjs';
 import { EPages } from 'src/app/shared/enum/pages.enum';
 import { PagesModel } from '../../models/portfolio-book.model';
 import { LessonTrackService } from '../../services/api/lesson-track.service';
 import {
   Colors,
-  PageControllerService
+  PageControllerService,
+  PagesConfig
 } from '../../services/page-controller.service';
 
 @Component({
@@ -15,8 +26,14 @@ import {
 })
 export class LessonTrackComponent implements OnInit {
   readonly colors$: Observable<Colors> = this.pageControllerService.colors$;
-  pageData$: Observable<PagesModel>;
 
+  currentPage: string;
+  _pageData = new BehaviorSubject<
+    Record<'currentPage', Observable<PagesModel>>
+  >(null);
+  pageData$ = this._pageData.asObservable();
+  pageDataPrevious$: Observable<PagesModel>;
+  pageDataCurrent$: Observable<PagesModel>;
   @Input() pageId = 1;
 
   constructor(
@@ -27,23 +44,52 @@ export class LessonTrackComponent implements OnInit {
   ngOnInit(): void {
     this.getLessonTrack();
   }
-
   getLessonTrack(): void {
-    this.pageData$ = this.pageControllerService.dynamicCurrentPage$.pipe(
+    const { currentPage } = this.pageControllerService.snapshot;
+    this.pageDataCurrent$ = this.pageControllerService.dynamicCurrentPage$.pipe(
+      tap(d => console.log('lessontrack:current', d)),
       filter(
-        ({ previous, current }) =>
-          previous.page === EPages.lesson_track ||
-          current.page === EPages.lesson_track
+        current =>
+          current.page === EPages.lesson_track &&
+          current.indexPage === this.pageControllerService.snapshot.currentPage
       ),
-      switchMap(() =>
+      tap(({ indexPage }) => (this.currentPage = String(indexPage))),
+      switchMap((current: PagesConfig) =>
         this.lessonTrackService
           .getTrailActivities(
             this.pageControllerService.snapshot.externalIdStrapi,
-            this.pageId
+            current.pageId
           )
           .pipe(take(1))
       ),
       map(({ attributes }) => attributes.paginas)
     );
+    this.pageDataPrevious$ =
+      this.pageControllerService.dynamicPreviousPage$.pipe(
+        tap(d => console.log('lessontrack:previous', d)),
+        filter(
+          previous =>
+            previous.page === EPages.lesson_track &&
+            previous.indexPage ===
+              this.pageControllerService.snapshot.currentPage - 1
+        ),
+        tap(({ indexPage }) => (this.currentPage = String(indexPage))),
+        switchMap(previous =>
+          this.lessonTrackService
+            .getTrailActivities(
+              this.pageControllerService.snapshot.externalIdStrapi,
+              previous.pageId
+            )
+            .pipe(take(1))
+        ),
+        map(({ attributes }) => attributes.paginas)
+      );
+    const configPage = {
+      ...this._pageData.getValue(),
+      [this.currentPage]: merge(this.pageDataCurrent$, this.pageDataPrevious$)
+    };
+
+    this._pageData.next(configPage);
+    //this.pageData$ = configPage;
   }
 }

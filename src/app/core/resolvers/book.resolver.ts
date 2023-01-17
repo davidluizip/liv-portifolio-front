@@ -76,7 +76,7 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
   private buildDynamicPages(attributes: ResumeRegisterModel) {
     if (attributes.count > 0) {
       let pageEnum: EPages;
-
+      console.log('buildDynamicPages', attributes.paginas);
       for (const page of attributes.paginas) {
         if (page.pagina_aula_registro) {
           pageEnum = EPages.lesson_track_register;
@@ -107,7 +107,9 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
     for (let index = 2; index < dynamicPages.length; index += 2) {
       start = index;
       end = start + 2;
-
+      console.log('dynamicPages ', dynamicPages);
+      console.log('start', start);
+      console.log('end', end);
       this.pageControllerService.savePages(dynamicPages.slice(start, end));
     }
   }

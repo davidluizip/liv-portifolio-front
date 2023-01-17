@@ -25,26 +25,28 @@ export interface BookState {
 export interface PagesConfig {
   page: EPages;
   pageId?: number;
+  indexPage?: number;
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class PageControllerService {
   private pages: PagesConfig[][] = [];
 
   private _dynamicPages = new BehaviorSubject<PagesConfig[]>([]);
+
   public dynamicPages$ = this._dynamicPages.asObservable();
 
   private _currentPage = new BehaviorSubject<number>(null);
   public currentPage$ = this._currentPage.asObservable();
 
-  public dynamicCurrentPage$ = this.currentPage$.pipe(
+  private dynamicPage$ = this.currentPage$.pipe(
     switchMap(() => of(this.pages)),
     map(pages => {
-      const book: Record<'previous' | 'current', any> = {
-        previous: {},
-        current: {},
+      const book: Record<'previous' | 'current', PagesConfig> = {
+        previous: {} as PagesConfig,
+        current: {} as PagesConfig
       };
 
       let count = 0;
@@ -56,16 +58,31 @@ export class PageControllerService {
 
       if (currentPageIndex > -1 && this.pages.length > 0) {
         const [previous, current] = this.pages[currentPageIndex];
-        book.previous = previous;
+        book.previous = {
+          ...previous,
+          indexPage: this.snapshot.currentPage - 1
+        };
+        this._dynamicPreviousPage.next(book.previous);
 
         if (current) {
-          book.current = current;
+          book.current = { ...current, indexPage: this.snapshot.currentPage };
+          this._dynamicCurrentPage.next(book.current);
         }
       }
 
       return book;
     })
   );
+
+  private _dynamicCurrentPage = new BehaviorSubject<PagesConfig>(
+    {} as PagesConfig
+  );
+  public dynamicCurrentPage$ = this._dynamicCurrentPage.asObservable();
+
+  private _dynamicPreviousPage = new BehaviorSubject<PagesConfig>(
+    {} as PagesConfig
+  );
+  public dynamicPreviousPage$ = this._dynamicPreviousPage.asObservable();
 
   private _bookId = new BehaviorSubject<number>(null);
   public bookId$ = this._bookId.asObservable();
@@ -82,8 +99,11 @@ export class PageControllerService {
   );
 
   constructor() {
-    const initialPages = [{ page: EPages.class }, { page: EPages.intro }];
-
+    const initialPages = [
+      { page: EPages.class, indexPage: 0 },
+      { page: EPages.intro, indexPage: 1 }
+    ];
+    this.dynamicPage$.subscribe();
     this._dynamicPages.next(initialPages);
     this.pages.push(initialPages);
   }
@@ -100,7 +120,7 @@ export class PageControllerService {
       externalIdStrapi: this._externalIdStrapi.getValue(),
       mascot: this._state.getValue()?.mascot,
       colors: this._state.getValue()?.colors,
-      content: this._state.getValue()?.content,
+      content: this._state.getValue()?.content
     };
   }
 
@@ -111,28 +131,28 @@ export class PageControllerService {
   saveDynamicPage({ page, pageId }: PagesConfig): void {
     this._dynamicPages.next([
       ...this._dynamicPages.getValue(),
-      { page, pageId },
+      { page, pageId }
     ]);
   }
 
   saveColors(colors: Colors) {
     this._state.next({
       ...this.state,
-      colors,
+      colors
     });
   }
 
   saveMascot(mascot: Mascot) {
     this._state.next({
       ...this.state,
-      mascot,
+      mascot
     });
   }
 
   saveContent(content: Model<TeacherBookModel>) {
     this._state.next({
       ...this.state,
-      content,
+      content
     });
   }
 

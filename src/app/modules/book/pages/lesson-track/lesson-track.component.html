@@ -6,21 +6,24 @@
   <header class="lesson-track-header">
     <liv-title-badge name="Empatia"></liv-title-badge>
   </header>
+  <ng-container *ngIf="pageData$ | async; let page">
+    <ng-container *ngFor="let item of page | keyvalue">
+      <main class="lesson-track-hero" *ngIf="item.value | async as value">
+        <picture class="lesson-track-hero__picture" *ngIf="value.imagem">
+          <img [src]="value.imagem?.url" [alt]="value.imagem?.caption || ''" />
+        </picture>
 
-  <main class="lesson-track-hero" *ngIf="pageData$ | async; let page">
-    <picture class="lesson-track-hero__picture" *ngIf="page.imagem">
-      <img [src]="page.imagem?.url" [alt]="page.imagem?.caption || ''" />
-    </picture>
-
-    <article
-      class="lesson-track-article"
-      *ngFor="let lesson of page?.aulas; let i = index"
-    >
-      <span class="lesson-track-article__tag">{{ lesson?.titulo }}</span>
-      <h1 class="lesson-track-article__title">{{ lesson?.subtitulo }}</h1>
-      <p class="lesson-track-article__description">
-        {{ lesson?.descricao }}
-      </p>
-    </article>
-  </main>
+        <article
+          class="lesson-track-article"
+          *ngFor="let lesson of value?.aulas; let i = index"
+        >
+          <span class="lesson-track-article__tag">{{ lesson?.titulo }}</span>
+          <h1 class="lesson-track-article__title">{{ lesson?.subtitulo }}</h1>
+          <p class="lesson-track-article__description">
+            {{ lesson?.descricao }}
+          </p>
+        </article>
+      </main>
+    </ng-container>
+  </ng-container>
 </div>

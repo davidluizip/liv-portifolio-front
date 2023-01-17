@@ -27,6 +27,9 @@ export class ClassModel {
   cor: string;
   registro: boolean;
   descricao: string;
+  titulo_registro: string;
+  subtitulo_registro: string;
+  objetivo_registro: string;
 }
 
 export interface ResumeRegisterModel {
