@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, filter, map, of, switchMap, tap } from 'rxjs';
+import {
+  AsyncSubject,
+  BehaviorSubject,
+  filter,
+  map,
+  of,
+  ReplaySubject,
+  switchMap,
+  tap
+} from 'rxjs';
 import { Model } from 'src/app/core/models/liv-response-protocol.model';
 import { EPages } from 'src/app/shared/enum/pages.enum';
 import { TeacherBookModel } from '../models/teacher-book.model';
@@ -43,7 +52,7 @@ export class PageControllerService {
 
   private dynamicPage$ = this.currentPage$.pipe(
     switchMap(() => of(this.pages)),
-    map(pages => {
+    map((pages) => {
       const book: Record<'previous' | 'current', PagesConfig> = {
         previous: {} as PagesConfig,
         current: {} as PagesConfig
@@ -94,7 +103,7 @@ export class PageControllerService {
   public state$ = this._state.asObservable();
 
   public colors$ = this._state.asObservable().pipe(
-    filter(state => !!state?.colors),
+    filter((state) => !!state?.colors),
     map(({ colors }) => colors)
   );
 
@@ -128,10 +137,10 @@ export class PageControllerService {
     this.pages.push(pages);
   }
 
-  saveDynamicPage({ page, pageId }: PagesConfig): void {
+  saveDynamicPage({ page, pageId, indexPage }: PagesConfig): void {
     this._dynamicPages.next([
       ...this._dynamicPages.getValue(),
-      { page, pageId }
+      { page, pageId, indexPage }
     ]);
   }
 

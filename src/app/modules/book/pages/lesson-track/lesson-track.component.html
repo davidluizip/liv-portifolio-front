@@ -1,21 +1,29 @@
-<div
-  class="lesson-track-container"
-  [style.--color-brand]="(colors$ | async)?.brand"
-  [style.--color-brand_light]="(colors$ | async)?.brand_light"
->
-  <header class="lesson-track-header">
-    <liv-title-badge name="Empatia"></liv-title-badge>
-  </header>
-  <ng-container *ngIf="pageData$ | async; let page">
-    <ng-container *ngFor="let item of page | keyvalue">
-      <main class="lesson-track-hero" *ngIf="item.value | async as value">
-        <picture class="lesson-track-hero__picture" *ngIf="value.imagem">
-          <img [src]="value.imagem?.url" [alt]="value.imagem?.caption || ''" />
+<ng-container *ngIf="lessonTrack$ | async; let lessonTrack">
+  <ng-container *ngFor="let item of lessonTrack | keyvalue">
+    <div
+      *ngIf="lessonTrackPageId === item.value.content?.id"
+      class="lesson-track-container"
+      [style.--color-brand]="(colors$ | async)?.brand"
+      [style.--color-brand_light]="(colors$ | async)?.brand_light"
+    >
+      <header class="lesson-track-header">
+        <liv-title-badge name="Empatia"></liv-title-badge>
+      </header>
+
+      <main class="lesson-track-hero">
+        <picture
+          class="lesson-track-hero__picture"
+          *ngIf="item.value.content.imagem"
+        >
+          <img
+            [src]="item.value.content.imagem?.url"
+            [alt]="item.value.content.imagem?.caption || ''"
+          />
         </picture>
 
         <article
           class="lesson-track-article"
-          *ngFor="let lesson of value?.aulas; let i = index"
+          *ngFor="let lesson of item.value.content?.aulas; let i = index"
         >
           <span class="lesson-track-article__tag">{{ lesson?.titulo }}</span>
           <h1 class="lesson-track-article__title">{{ lesson?.subtitulo }}</h1>
@@ -24,6 +32,6 @@
           </p>
         </article>
       </main>
-    </ng-container>
+    </div>
   </ng-container>
-</div>
+</ng-container>

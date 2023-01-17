@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { map, Observable } from 'rxjs';
+import { map, MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { Model } from 'src/app/core/models/liv-response-protocol.model';
 import { ApiGatewayService } from 'src/app/core/services/api/api-gateway.service';
 import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
@@ -14,6 +14,9 @@ import {
   providedIn: 'root'
 })
 export class LessonTrackService {
+  pipe(arg0: MonoTypeOperatorFunction<unknown>) {
+    throw new Error('Method not implemented.');
+  }
   constructor(private apiGatewayService: ApiGatewayService) {}
 
   getTrailActivities(
@@ -34,7 +37,7 @@ export class LessonTrackService {
           params
         }
       )
-      .pipe(map(res => res.data));
+      .pipe(map((res) => res.data));
   }
 
   getResumeRegister(
@@ -54,6 +57,6 @@ export class LessonTrackService {
           params
         }
       )
-      .pipe(map(res => res.data));
+      .pipe(map((res) => res.data));
   }
 }

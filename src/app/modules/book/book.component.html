@@ -27,28 +27,28 @@
               class="page"
               [ngClass]="{
                 'cover-front cover-front--backside':
-                  pageConfig.page === PageEnum.class
+                  pageConfig.page === pageType.class
               }"
             >
               <liv-cover-front-backside
-                *ngIf="pageConfig.page === PageEnum.class"
+                *ngIf="pageConfig.page === pageType.class"
               ></liv-cover-front-backside>
 
-              <ng-container *ngIf="pageConfig.page !== PageEnum.class">
+              <ng-container *ngIf="pageConfig.page !== pageType.class">
                 <article class="page__content">
                   <liv-introduction
-                    *ngIf="pageConfig.page === PageEnum.intro"
+                    *ngIf="pageConfig.page === pageType.intro"
                   ></liv-introduction>
                   <liv-lesson-track
-                    *ngIf="pageConfig.page === PageEnum.lesson_track"
-                    [pageId]="pageConfig.pageId"
+                    *ngIf="pageConfig.page === pageType.lesson_track"
+                    [lessonTrackPageId]="pageConfig.pageId"
                   ></liv-lesson-track>
                   <liv-lesson-track-register
-                    *ngIf="pageConfig.page === PageEnum.lesson_track_register"
-                    [pageId]="pageConfig.pageId"
+                    *ngIf="pageConfig.page === pageType.lesson_track_register"
+                    [lessonTrackPageId]="pageConfig.pageId"
                   ></liv-lesson-track-register>
                   <liv-register
-                    *ngIf="pageConfig.page === PageEnum.register"
+                    *ngIf="pageConfig.page === pageType.register"
                   ></liv-register>
                 </article>
 

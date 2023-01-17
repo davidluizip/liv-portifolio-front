@@ -45,7 +45,7 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
   private getMainBookContent(bookId: number) {
     return this.coverFrontService.getClassData(bookId).pipe(
       take(2),
-      tap(data => {
+      tap((data) => {
         if (data.attributes) {
           const { id_externo_strapi } = data.attributes.serie;
 
@@ -75,25 +75,31 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
 
   private buildDynamicPages(attributes: ResumeRegisterModel) {
     if (attributes.count > 0) {
-      let pageEnum: EPages;
-      console.log('buildDynamicPages', attributes.paginas);
+      let pageCount = this.pageControllerService.snapshot.dynamicPages.length;
+
+      let pageType: EPages;
+
       for (const page of attributes.paginas) {
         if (page.pagina_aula_registro) {
-          pageEnum = EPages.lesson_track_register;
+          pageType = EPages.lesson_track_register;
         } else {
-          pageEnum = EPages.lesson_track;
+          pageType = EPages.lesson_track;
         }
 
         this.pageControllerService.saveDynamicPage({
           pageId: page.id,
-          page: pageEnum
+          page: pageType,
+          indexPage: pageCount++
         });
       }
 
       this.pageControllerService.saveDynamicPage({
-        page: EPages.register
+        page: EPages.register,
+        indexPage: pageCount
       });
     }
+
+    console.log(this.pageControllerService.snapshot.dynamicPages);
 
     this.buildPages();
   }
@@ -107,9 +113,7 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
     for (let index = 2; index < dynamicPages.length; index += 2) {
       start = index;
       end = start + 2;
-      console.log('dynamicPages ', dynamicPages);
-      console.log('start', start);
-      console.log('end', end);
+
       this.pageControllerService.savePages(dynamicPages.slice(start, end));
     }
   }

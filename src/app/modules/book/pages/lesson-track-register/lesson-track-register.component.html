@@ -1,44 +1,71 @@
-<div
-  class="lesson-track-register-container"
-  [style.--color-brand]="(colors$ | async)?.brand"
-  [style.--color-brand_light]="(colors$ | async)?.brand_light"
->
-  <header class="lesson-track-register-header">
-    <liv-title-badge name="Empatia"></liv-title-badge>
+<ng-container *ngIf="lessonTrackRegister$ | async; let lessonTrackRegister">
+  <ng-container *ngFor="let item of lessonTrackRegister | keyvalue">
+    <div
+      *ngIf="lessonTrackPageId === item.value.content?.id"
+      class="lesson-track-register-container"
+      [style.--color-brand]="(colors$ | async)?.brand"
+      [style.--color-brand_light]="(colors$ | async)?.brand_light"
+    >
+      <header class="lesson-track-register-header">
+        <liv-title-badge name="Empatia"></liv-title-badge>
+      </header>
 
-    <div class="lesson-track-register-tag" *ngIf="pageData$ | async; let page">
-      <!-- <strong> {{ page.titulo }} </strong> -->
-      <span> Por dentro da sala </span>
-    </div>
-  </header>
-
-  <main class="lesson-track-register-hero">
-    <h1 class="lesson-track-register-hero__title">
-      Como expresso meu carinho?
-    </h1>
-    <p class="lesson-track-register-hero__description">
-      Nessa aula trabalhamos diferentes maneiras de expressar afeto pelas
-      pessoas que são importantes para nós
-    </p>
-
-    <div class="purpose-card">
-      <div class="purpose-card__tag">
-        <i class="purpose-card__tag__iconContent"
-          ><svg-icon src="assets/icons/star-outline.svg"></svg-icon
-        ></i>
-        <span> 3ªAtividade da aula </span>
-      </div>
-      <article class="purpose-card__article">
-        <strong class="purpose-card__article__title"
-          >Atividade de relações</strong
+      <main class="lesson-track-register-hero">
+        <ng-container
+          *ngFor="let lesson of item.value.content?.aulas; let i = index"
         >
-        <p class="purpose-card__article__description">
-          Objetivo: Com quem nos relacionamos em nossa vida? Nos relacionamos
-          somente com pessoas?Como se dão essas relações? Nossa turma refletiu
-          sobre essas e mais questões a partir do significado que cada um deu à
-          palavra “relações” numa dinâmica bem divertida. Quer conferir?
-        </p>
-      </article>
+          <div
+            class="lesson-track-register-tag"
+            *ngIf="
+              lesson.titulo | substring : [8] as lessonRightTitle;
+              else minimalTag
+            "
+          >
+            <span class="lesson-track-register-tag__badge">
+              {{ lesson.titulo | substring : [0, 7] }}
+            </span>
+            <span
+              class="lesson-track-register-tag__rightText"
+              *ngIf="lesson.titulo | substring : [8] as lessonRightTitle"
+            >
+              {{ lessonRightTitle }}
+            </span>
+          </div>
+          <ng-template #minimalTag>
+            <div
+              class="lesson-track-register-tag lesson-track-register-tag--minimal"
+            >
+              <span class="lesson-track-register-tag__badge">{{
+                lesson.titulo
+              }}</span>
+            </div>
+          </ng-template>
+
+          <h1 class="lesson-track-register-hero__title">
+            {{ lesson.subtitulo }}
+          </h1>
+          <p class="lesson-track-register-hero__description">
+            {{ lesson.descricao }}
+          </p>
+
+          <div class="purpose-card">
+            <div class="purpose-card__tag">
+              <i class="purpose-card__tag__iconContent"
+                ><svg-icon src="assets/icons/star-outline.svg"></svg-icon
+              ></i>
+              <span> {{ lesson.titulo_registro }} </span>
+            </div>
+            <article class="purpose-card__article">
+              <strong class="purpose-card__article__title">{{
+                lesson.subtitulo_registro
+              }}</strong>
+              <p class="purpose-card__article__description">
+                {{ lesson.objetivo_registro }}
+              </p>
+            </article>
+          </div>
+        </ng-container>
+      </main>
     </div>
-  </main>
-</div>
+  </ng-container>
+</ng-container>

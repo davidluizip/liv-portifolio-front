@@ -26,8 +26,7 @@ export class IntroductionComponent implements OnInit {
 
   ngOnInit(): void {
     this.description$ = this.pageControllerService.dynamicCurrentPage$.pipe(
-      tap(console.log),
-      filter(current => current?.page === EPages.intro),
+      filter((current) => current?.page === EPages.intro),
       switchMap(() =>
         this.introService
           .get(this.pageControllerService.snapshot.externalIdStrapi)
@@ -36,8 +35,7 @@ export class IntroductionComponent implements OnInit {
       map(({ attributes }) => attributes.introducao?.descricao)
     );
     this.description$ = this.pageControllerService.dynamicPreviousPage$.pipe(
-      tap(console.log),
-      filter(previous => previous?.page === EPages.intro),
+      filter((previous) => previous?.page === EPages.intro),
       switchMap(() =>
         this.introService
           .get(this.pageControllerService.snapshot.externalIdStrapi)

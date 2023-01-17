@@ -6,6 +6,8 @@
 }
 
 .lesson-track-hero {
+  margin-top: rem(16px);
+
   &__picture img {
     width: 100%;
     max-height: 290px;
@@ -19,7 +21,6 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-top: rem(16px);
 
   &__tag {
     display: block;
@@ -40,6 +41,10 @@
   &__description {
     @include paragraph(400);
     margin-block: rem(16px) rem(32px);
+  }
+
+  & + .lesson-track-article {
+    margin-top: rem(16px);
   }
 }
 
