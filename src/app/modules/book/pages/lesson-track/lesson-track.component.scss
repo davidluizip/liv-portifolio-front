@@ -10,7 +10,7 @@
 
   &__picture img {
     width: 100%;
-    max-height: 290px;
+    max-height: 200px;
     aspect-ratio: 16/8;
     border-radius: border-radius('2xl');
     object-fit: cover;
@@ -27,7 +27,7 @@
     padding: rem(8px);
     margin-bottom: rem(16px);
 
-    @include paragraph(700);
+    @include paragraph(500);
     color: color(neutral-hight-pure);
     background-color: var(--color-brand);
     border-radius: border-radius(lg);
@@ -40,7 +40,7 @@
 
   &__description {
     @include paragraph(400);
-    margin-block: rem(16px) rem(32px);
+    margin-block: rem(8px) rem(32px);
   }
 
   & + .lesson-track-article {

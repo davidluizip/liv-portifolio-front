@@ -100,14 +100,14 @@
     // transition: 0.2s ease;
 
     // &__icon {
-    //   fill: color('feedback-danger-pure');
+    //   fill: color('feedback-warning-pure');
     //   width: 16px;
     //   height: 16px;
     //   transition: inherit;
     // }
 
     // &:not(:active):hover {
-    //   background-color: color('feedback-danger-pure');
+    //   background-color: color('feedback-warning-pure');
 
     //   .picture-content__trashButton__icon {
     //     fill: color('neutral-hight-pure');
@@ -116,7 +116,7 @@
 
     // &:active {
     //   transform: scale(0.9);
-    //   border-color: color('feedback-danger-pure-medium');
+    //   border-color: color('feedback-warning-medium');
     // }
   }
 
