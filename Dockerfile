@@ -4,7 +4,7 @@ COPY package.json /app
 RUN npm cache clean --force
 RUN npm install --silent
 COPY . .
-RUN npm run build
+RUN npm run build:gcp
 
 FROM nginx:latest
 RUN rm -rf /usr/share/nginx/html/*

@@ -9,10 +9,10 @@
   color: color(neutral-hight-pure);
   display: inline-flex;
   align-items: center;
-  margin-top: rem(24px);
+  margin-bottom: rem(16px);
 
-  & > strong {
-    display: block;
+  &__badge {
+    width: fit-content;
     background: var(--color-brand);
     padding-inline: rem(8px);
     padding-block: rem(8px);
@@ -21,7 +21,7 @@
     border-bottom-left-radius: border-radius(lg);
   }
 
-  & > span {
+  &__rightText {
     border-top-right-radius: border-radius(lg);
     border-bottom-right-radius: border-radius(lg);
     display: block;
@@ -29,9 +29,17 @@
     padding-block: rem(8px);
     background: var(--color-brand_light);
   }
+
+  &--minimal {
+    .lesson-track-register-tag__badge {
+      border-radius: border-radius(lg);
+    }
+  }
 }
 
 .lesson-track-register-hero {
+  margin-top: rem(16px);
+
   &__title {
     @include headline-h3(400);
     color: var(--color-brand);

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { filter, map, Observable, switchMap, take } from 'rxjs';
+import { filter, map, Observable, switchMap, take, tap } from 'rxjs';
 import { Model } from 'src/app/core/models/liv-response-protocol.model';
 import { EPages } from 'src/app/shared/enum/pages.enum';
 import { PortfolioBookModel } from '../../models/portfolio-book.model';
@@ -15,7 +15,8 @@ import {
   styleUrls: ['./introduction.component.scss']
 })
 export class IntroductionComponent implements OnInit {
-  readonly colors$: Observable<Colors> = this.pageControllerService.colors$;
+  public readonly colors$: Observable<Colors> =
+    this.pageControllerService.colors$;
   public description$: Observable<string>;
 
   constructor(
@@ -24,8 +25,8 @@ export class IntroductionComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.description$ = this.pageControllerService.currentPage$.pipe(
-      filter(page => EPages.class === page),
+    this.description$ = this.pageControllerService.dynamicCurrentPage$.pipe(
+      filter((current) => current?.page === EPages.intro),
       switchMap(() =>
         this.introService
           .get(this.pageControllerService.snapshot.externalIdStrapi)

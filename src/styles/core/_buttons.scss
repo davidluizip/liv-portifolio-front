@@ -1,0 +1,35 @@
+.icon-button {
+  &-trash {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-end;
+    padding: rem(8px);
+    line-height: 0;
+    border-radius: border-radius('full');
+    background-color: color('neutral-hight-pure');
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.15);
+    border: 1px solid transparent;
+    transition: 0.2s ease;
+
+    .icon {
+      fill: color('feedback-danger-pure');
+      width: 16px;
+      height: 16px;
+      transition: inherit;
+    }
+
+    &:not(:active):hover {
+      background-color: color('feedback-danger-pure');
+
+      .icon {
+        fill: color('neutral-hight-pure');
+      }
+    }
+
+    &:active {
+      transform: scale(0.9);
+      border-color: color('feedback-danger-pure-medium');
+    }
+  }
+}

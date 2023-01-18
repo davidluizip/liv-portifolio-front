@@ -1,26 +1,37 @@
-<div
-  class="lesson-track-container"
-  [style.--color-brand]="(colors$ | async)?.brand"
-  [style.--color-brand_light]="(colors$ | async)?.brand_light"
->
-  <header class="lesson-track-header">
-    <liv-title-badge name="Empatia"></liv-title-badge>
-  </header>
-
-  <main class="lesson-track-hero" *ngIf="pageData$ | async; let page">
-    <picture class="lesson-track-hero__picture" *ngIf="page.imagem">
-      <img [src]="page.imagem?.url" [alt]="page.imagem?.caption || ''" />
-    </picture>
-
-    <article
-      class="lesson-track-article"
-      *ngFor="let lesson of page?.aulas; let i = index"
+<ng-container *ngIf="lessonTrack$ | async; let lessonTrack">
+  <ng-container *ngFor="let item of lessonTrack | keyvalue">
+    <div
+      *ngIf="lessonTrackPageId === item.value.content?.id"
+      class="lesson-track-container"
+      [style.--color-brand]="(colors$ | async)?.brand"
+      [style.--color-brand_light]="(colors$ | async)?.brand_light"
     >
-      <span class="lesson-track-article__tag">{{ lesson?.titulo }}</span>
-      <h1 class="lesson-track-article__title">{{ lesson?.subtitulo }}</h1>
-      <p class="lesson-track-article__description">
-        {{ lesson?.descricao }}
-      </p>
-    </article>
-  </main>
-</div>
+      <header class="lesson-track-header">
+        <liv-title-badge name="Empatia"></liv-title-badge>
+      </header>
+
+      <main class="lesson-track-hero">
+        <picture
+          class="lesson-track-hero__picture"
+          *ngIf="item.value.content.imagem"
+        >
+          <img
+            [src]="item.value.content.imagem?.url"
+            [alt]="item.value.content.imagem?.caption || ''"
+          />
+        </picture>
+
+        <article
+          class="lesson-track-article"
+          *ngFor="let lesson of item.value.content?.aulas; let i = index"
+        >
+          <span class="lesson-track-article__tag">{{ lesson?.titulo }}</span>
+          <h1 class="lesson-track-article__title">{{ lesson?.subtitulo }}</h1>
+          <p class="lesson-track-article__description">
+            {{ lesson?.descricao }}
+          </p>
+        </article>
+      </main>
+    </div>
+  </ng-container>
+</ng-container>

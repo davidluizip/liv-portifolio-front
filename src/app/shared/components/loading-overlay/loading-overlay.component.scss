@@ -11,8 +11,7 @@
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  z-index: 999;
-  pointer-events: none;
+  z-index: 9999;
 
   .contents {
     margin-top: rem(24px);

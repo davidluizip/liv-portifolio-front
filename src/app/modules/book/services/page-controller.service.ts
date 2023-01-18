@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, filter, map } from 'rxjs';
+import {
+  AsyncSubject,
+  BehaviorSubject,
+  filter,
+  map,
+  of,
+  ReplaySubject,
+  switchMap,
+  tap
+} from 'rxjs';
 import { Model } from 'src/app/core/models/liv-response-protocol.model';
 import { EPages } from 'src/app/shared/enum/pages.enum';
 import { TeacherBookModel } from '../models/teacher-book.model';
@@ -24,31 +33,89 @@ export interface BookState {
 }
 export interface PagesConfig {
   page: EPages;
-  pageId: number;
+  pageId?: number;
+  indexPage?: number;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class PageControllerService {
-  private _pages = new BehaviorSubject<PagesConfig[]>([
-    { page: EPages.intro, pageId: 0 }
-  ]);
-  public pages$ = this._pages.asObservable();
+  private pages: PagesConfig[][] = [];
+
+  private _dynamicPages = new BehaviorSubject<PagesConfig[]>([]);
+
+  public dynamicPages$ = this._dynamicPages.asObservable();
 
   private _currentPage = new BehaviorSubject<number>(null);
   public currentPage$ = this._currentPage.asObservable();
+
+  private dynamicPage$ = this.currentPage$.pipe(
+    switchMap(() => of(this.pages)),
+    map((pages) => {
+      const book: Record<'previous' | 'current', PagesConfig> = {
+        previous: {} as PagesConfig,
+        current: {} as PagesConfig
+      };
+
+      let count = 0;
+
+      const currentPageIndex = pages.findIndex(() => {
+        const pos = (count += 2);
+        return pos === this.snapshot.currentPage;
+      });
+
+      if (currentPageIndex > -1 && this.pages.length > 0) {
+        const [previous, current] = this.pages[currentPageIndex];
+        book.previous = {
+          ...previous,
+          indexPage: this.snapshot.currentPage - 1
+        };
+        this._dynamicPreviousPage.next(book.previous);
+
+        if (current) {
+          book.current = { ...current, indexPage: this.snapshot.currentPage };
+          this._dynamicCurrentPage.next(book.current);
+        }
+      }
+
+      return book;
+    })
+  );
+
+  private _dynamicCurrentPage = new BehaviorSubject<PagesConfig>(
+    {} as PagesConfig
+  );
+  public dynamicCurrentPage$ = this._dynamicCurrentPage.asObservable();
+
+  private _dynamicPreviousPage = new BehaviorSubject<PagesConfig>(
+    {} as PagesConfig
+  );
+  public dynamicPreviousPage$ = this._dynamicPreviousPage.asObservable();
+
   private _bookId = new BehaviorSubject<number>(null);
   public bookId$ = this._bookId.asObservable();
+
   private _externalIdStrapi = new BehaviorSubject<number>(null);
   public externalIdStrapi$ = this._bookId.asObservable();
+
   private _state = new BehaviorSubject<BookState>(null);
   public state$ = this._state.asObservable();
 
   public colors$ = this._state.asObservable().pipe(
-    filter(state => !!state?.colors),
+    filter((state) => !!state?.colors),
     map(({ colors }) => colors)
   );
+
+  constructor() {
+    const initialPages = [
+      { page: EPages.class, indexPage: 1 },
+      { page: EPages.intro, indexPage: 2 }
+    ];
+    this.dynamicPage$.subscribe();
+    this._dynamicPages.next(initialPages);
+    this.pages.push(initialPages);
+  }
 
   private get state() {
     return this._state.getValue();
@@ -56,6 +123,7 @@ export class PageControllerService {
 
   get snapshot() {
     return {
+      dynamicPages: this._dynamicPages.getValue(),
       currentPage: this._currentPage.getValue(),
       bookId: this._bookId.getValue(),
       externalIdStrapi: this._externalIdStrapi.getValue(),
@@ -65,8 +133,15 @@ export class PageControllerService {
     };
   }
 
-  savePage(page: EPages, pageId?: number): void {
-    this._pages.next([...this._pages.getValue(), { page, pageId }]);
+  savePages(pages: PagesConfig[]): void {
+    this.pages.push(pages);
+  }
+
+  saveDynamicPage({ page, pageId, indexPage }: PagesConfig): void {
+    this._dynamicPages.next([
+      ...this._dynamicPages.getValue(),
+      { page, pageId, indexPage }
+    ]);
   }
 
   saveColors(colors: Colors) {
@@ -89,15 +164,19 @@ export class PageControllerService {
       content
     });
   }
+
   saveBookId(bookId: number) {
     this._bookId.next(bookId);
   }
+
   saveExternalIdStrapi(externalIdStrapi: number) {
     this._externalIdStrapi.next(externalIdStrapi);
   }
+
   saveCurrentPage(page: number) {
     this._currentPage.next(page);
   }
+
   reset() {
     this._state.next(null);
   }

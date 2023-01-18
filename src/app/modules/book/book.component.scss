@@ -35,7 +35,7 @@ $book-width: #{rem(1108px)};
   justify-content: center;
   align-items: center;
   gap: rem(48px);
-  padding: rem(64px) 0 rem(24px);
+  padding: rem(48px) 0 rem(24px);
 }
 
 .book {
@@ -59,41 +59,6 @@ $book-width: #{rem(1108px)};
     flex: 1;
     display: flex;
     flex-direction: column;
-  }
-
-  &__footer {
-    margin-top: rem(16px);
-    display: flex;
-    align-items: flex-end;
-
-    &--background {
-      background-repeat: no-repeat;
-      background-size: cover;
-      width: calc(100% + rem(48px));
-      min-height: rem(112px);
-      margin-left: rem(-24px);
-      margin-bottom: rem(-24px);
-
-      .page__footer__pageNum {
-        margin-left: rem(24px);
-        margin-bottom: rem(24px);
-      }
-    }
-
-    &__pageNum {
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding: rem(4px) rem(12px);
-      background: rgba(255, 255, 255, 0.61);
-      backdrop-filter: blur(15px);
-
-      @include small(600);
-      border: 1px solid #60636e;
-
-      border-radius: 30px;
-      width: fit-content;
-    }
   }
 
   &:nth-child(even) {

@@ -9,6 +9,7 @@ import { UploadMediaInputComponent } from './components/upload-media-input/uploa
 import { DragDropFileUploadDirective } from './directives/drag-drop-file-upload.directive';
 import { MarkdownPipe } from './pipes/markdown.pipe';
 import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
+import { SubstringPipe } from './pipes/substring.pipe';
 
 @NgModule({
   declarations: [
@@ -20,18 +21,20 @@ import { LoadingOverlayComponent } from './components/loading-overlay/loading-ov
     DragDropFileUploadDirective,
     UploadMediaInputComponent,
     LoadingOverlayComponent,
+    SubstringPipe
   ],
   imports: [CommonModule, AngularSvgIconModule],
   exports: [
     OverlayDirective,
     ImagePreloadDirective,
     SafeTransformPipe,
+    SubstringPipe,
     MarkdownPipe,
     IfLoadedDirective,
     DragDropFileUploadDirective,
     UploadMediaInputComponent,
-    LoadingOverlayComponent,
+    LoadingOverlayComponent
   ],
-  providers: [],
+  providers: []
 })
 export class SharedModule {}

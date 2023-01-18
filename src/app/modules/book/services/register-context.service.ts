@@ -3,10 +3,14 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   BehaviorSubject,
   catchError,
+  delay,
   EMPTY,
   finalize,
+  iif,
   Observable,
-  take,
+  of,
+  pipe,
+  take
 } from 'rxjs';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { LoadingOverlayService } from 'src/app/shared/components/loading-overlay/loading-overlay.service';
@@ -46,21 +50,28 @@ export type FieldContent = {
 export type KeyFieldContent = keyof FieldContent;
 export type KeyValueFieldContent = FieldContent[KeyFieldContent];
 
-interface RegisterField {
+export interface RemoveRegisterField {
+  type: KeyFieldContent;
+  midiaId: number;
+  fieldId: number;
+}
+export interface RegisterField {
   id: number;
+  midiaId: number;
   type: KeyFieldContent;
   content: KeyValueFieldContent;
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class RegisterContextService {
   private _registerFields = new BehaviorSubject<RegisterField[]>(
     Array.from({ length: 4 }, (_, index) => ({
       id: index + 1,
+      midiaId: null,
       type: null,
-      content: null,
+      content: null
     }))
   );
 
@@ -80,7 +91,7 @@ export class RegisterContextService {
   get snapshot() {
     return {
       registerFields: this._registerFields.getValue(),
-      selectedRegisterFieldId: this._selectedRegisterFieldId.getValue(),
+      selectedRegisterFieldId: this._selectedRegisterFieldId.getValue()
     };
   }
 
@@ -88,33 +99,23 @@ export class RegisterContextService {
     type: Type,
     data: {
       id: number;
+      midiaId: number;
       content: FieldContent[Type];
     }
   ) {
     const registerFields = this._registerFields.getValue();
-    const fieldIndex = this._registerFields
-      .getValue()
-      .findIndex(field => field.id === data.id);
+    const fieldIndex = registerFields.findIndex(field => field.id === data.id);
 
     registerFields[fieldIndex].type = type;
+    registerFields[fieldIndex].midiaId = data.midiaId;
     registerFields[fieldIndex].content = data.content;
 
     this._registerFields.next(registerFields);
   }
 
-  setSelectedRegisterField(id: number) {
-    this._selectedRegisterFieldId.next(id);
-  }
-
-  resetSelectedRegisterField() {
-    this._selectedRegisterFieldId.next(null);
-  }
-
-  resetFieldValue(id: number) {
+  resetRegisterField(id: number) {
     const registerFields = this._registerFields.getValue();
-    const fieldIndex = this._registerFields
-      .getValue()
-      .findIndex(field => field.id === id);
+    const fieldIndex = registerFields.findIndex(field => field.id === id);
 
     registerFields[fieldIndex].type = null;
     registerFields[fieldIndex].content = null;
@@ -124,13 +125,18 @@ export class RegisterContextService {
 
   openRegisterTypeModal(fieldId: number) {
     this._selectedRegisterFieldId.next(fieldId);
-    this.ngbModal.open(RegisterSelectModalComponent, {
+
+    const modalRef = this.ngbModal.open(RegisterSelectModalComponent, {
       centered: true,
-      modalDialogClass: 'register-select-modal',
+      modalDialogClass: 'register-select-modal'
     });
+
+    modalRef.closed
+      .pipe(take(1))
+      .subscribe(() => this._selectedRegisterFieldId.next(null));
   }
 
-  saveTextRegister(id: number, content: TextContent) {
+  saveTextRegister(id: number, textId: number, content: TextContent) {
     this.loadingOverlayService.open();
 
     const requestPayload: SaveRegisterPageDescription = {
@@ -139,10 +145,10 @@ export class RegisterContextService {
           texto: {
             alternativeText: id,
             descricao: content.about,
-            nome: content.name,
-          },
-        },
-      },
+            nome: content.name
+          }
+        }
+      }
     };
 
     this.registerService
@@ -159,14 +165,14 @@ export class RegisterContextService {
           return EMPTY;
         }),
         finalize(() => {
-          this.resetSelectedRegisterField();
           this.loadingOverlayService.remove();
         })
       )
       .subscribe(() => {
         this.setFieldValue('text', {
           id,
-          content,
+          midiaId: textId,
+          content
         });
       });
   }
@@ -193,7 +199,6 @@ export class RegisterContextService {
           return EMPTY;
         }),
         finalize(() => {
-          this.resetSelectedRegisterField();
           this.loadingOverlayService.remove();
         })
       )
@@ -202,30 +207,33 @@ export class RegisterContextService {
           case 'image':
             this.setFieldValue(type, {
               id,
+              midiaId: attributes.id,
               content: {
                 src: attributes.url,
-                alt: '',
-              },
+                alt: ''
+              }
             });
             break;
 
           case 'video':
             this.setFieldValue(type, {
               id,
+              midiaId: attributes.id,
               content: {
                 src: attributes.url,
-                type: attributes.mime,
-              },
+                type: attributes.mime
+              }
             });
             break;
 
           case 'audio':
             this.setFieldValue(type, {
               id,
+              midiaId: attributes.id,
               content: {
                 src: attributes.url,
-                type: attributes.mime,
-              },
+                type: attributes.mime
+              }
             });
             break;
 
@@ -235,10 +243,28 @@ export class RegisterContextService {
       });
   }
 
-  saveRegisterDescription(
-    bookTeacherId: number,
-    data: SaveRegisterPageDescription
-  ) {
-    this.registerService.saveRegisterDescription(bookTeacherId, data);
+  validateRemoveMidia({ type, midiaId }: Omit<RemoveRegisterField, 'fieldId'>) {
+    const { bookId } = this.pageControllerService.snapshot;
+
+    return iif(
+      () => type === 'text',
+      this.registerService.deleteText(bookId, midiaId),
+      this.registerService.deleteMidia(midiaId)
+    );
+  }
+
+  removeRegisterField({ type, midiaId, fieldId }: RemoveRegisterField) {
+    this.loadingOverlayService.open();
+
+    this.registerService.deleteMidia;
+
+    this.validateRemoveMidia({ type, midiaId })
+      .pipe(
+        take(1),
+        finalize(() => this.loadingOverlayService.remove())
+      )
+      .subscribe(() => {
+        this.resetRegisterField(fieldId);
+      });
   }
 }

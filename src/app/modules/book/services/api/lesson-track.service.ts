@@ -1,45 +1,43 @@
-import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, take, tap } from 'rxjs';
+import { map, MonoTypeOperatorFunction, Observable } from 'rxjs';
 import { Model } from 'src/app/core/models/liv-response-protocol.model';
 import { ApiGatewayService } from 'src/app/core/services/api/api-gateway.service';
 import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
-import { filterResponse } from 'src/app/shared/rxjs/custom-operators';
-import { MediaModel } from '../../models/media.model';
+import { populateStrapiFilters } from 'src/app/shared/helpers/populate-strapi-filters';
+
 import {
   PortfolioBookModel,
   ResumeRegisterModel
 } from '../../models/portfolio-book.model';
-import {
-  SaveClassPageDescription,
-  TeacherBookModel
-} from '../../models/teacher-book.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LessonTrackService {
+  pipe(arg0: MonoTypeOperatorFunction<unknown>) {
+    throw new Error('Method not implemented.');
+  }
   constructor(private apiGatewayService: ApiGatewayService) {}
 
   getTrailActivities(
-    idPage = 1,
+    externalStrapiId: number,
+    pageId: number,
     populate: ETypesComponentStrapi[] = [
       ETypesComponentStrapi.paginas_aulas,
       ETypesComponentStrapi.paginas_footer,
       ETypesComponentStrapi.paginas_imagem
     ]
   ): Observable<Model<PortfolioBookModel>> {
-    let params = new HttpParams();
-    if (populate.length > 0) {
-      const filters = populate.join(',');
-      params = params.set('populate', filters);
-    }
+    const params = populateStrapiFilters(populate);
 
     return this.apiGatewayService
-      .get<PortfolioBookModel>(`/portifolios/next-page/${idPage}`, {
-        params
-      })
-      .pipe(map(res => res.data));
+      .get<PortfolioBookModel>(
+        `/portifolios/next-page/${externalStrapiId}/${pageId}`,
+        {
+          params
+        }
+      )
+      .pipe(map((res) => res.data));
   }
 
   getResumeRegister(
@@ -50,11 +48,7 @@ export class LessonTrackService {
       ETypesComponentStrapi.paginas_imagem
     ]
   ): Observable<Model<ResumeRegisterModel>> {
-    let params = new HttpParams();
-    if (populate.length > 0) {
-      const filters = populate.join(',');
-      params = params.set('populate', filters);
-    }
+    const params = populateStrapiFilters(populate);
 
     return this.apiGatewayService
       .get<ResumeRegisterModel>(
@@ -63,6 +57,6 @@ export class LessonTrackService {
           params
         }
       )
-      .pipe(map(res => res.data));
+      .pipe(map((res) => res.data));
   }
 }

@@ -2,7 +2,7 @@ import {
   HttpClient,
   HttpEvent,
   HttpHeaders,
-  HttpParams,
+  HttpParams
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -43,7 +43,7 @@ export class ApiGatewayService {
     return this.httpClient.request<LivSuccessResponse<T>>('post', url, {
       params,
       observe: 'events',
-      body: data,
+      body: data
     });
   }
 
@@ -54,7 +54,7 @@ export class ApiGatewayService {
     const url = encodeURI(this.service + endpoint);
     return this.httpClient.get<LivSuccessResponse<T>>(url, {
       ...options,
-      responseType: 'blob' as 'json',
+      responseType: 'blob' as 'json'
     });
   }
 
@@ -85,12 +85,9 @@ export class ApiGatewayService {
     return this.httpClient.patch<LivSuccessResponse<T>>(url, body, options);
   }
 
-  delete<T>(
-    endpoint: string,
-    options: IRequestOptions = {}
-  ): Observable<LivSuccessResponse<T>> {
+  delete<T>(endpoint: string, options: IRequestOptions = {}): Observable<void> {
     const url = encodeURI(this.service + endpoint);
-    return this.httpClient.delete<LivSuccessResponse<T>>(url, options);
+    return this.httpClient.delete<void>(url, options);
   }
 
   graphql<T>(

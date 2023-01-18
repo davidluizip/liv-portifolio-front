@@ -1,8 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { filter, map, Observable, switchMap, take, tap } from 'rxjs';
-import { EPages } from 'src/app/shared/enum/pages.enum';
-import { PagesModel } from '../../models/portfolio-book.model';
-import { LessonTrackService } from '../../services/api/lesson-track.service';
+import { Component, Input } from '@angular/core';
+import { Observable, tap } from 'rxjs';
+
+import { LessonTrackContextService } from '../../services/lesson-track-context.service';
 import {
   Colors,
   PageControllerService
@@ -13,28 +12,15 @@ import {
   templateUrl: './lesson-track.component.html',
   styleUrls: ['./lesson-track.component.scss']
 })
-export class LessonTrackComponent implements OnInit {
-  readonly colors$: Observable<Colors> = this.pageControllerService.colors$;
-  pageData$: Observable<PagesModel>;
+export class LessonTrackComponent {
+  @Input() lessonTrackPageId: number;
 
-  @Input() pageId = 1;
+  public readonly colors$: Observable<Colors> =
+    this.pageControllerService.colors$;
+  public lessonTrack$ = this.lessonTrackContextService.lessonTrack$;
 
   constructor(
     private pageControllerService: PageControllerService,
-    private lessonTrackService: LessonTrackService
+    private lessonTrackContextService: LessonTrackContextService
   ) {}
-
-  ngOnInit(): void {
-    this.getLessonTrack();
-  }
-
-  getLessonTrack(): void {
-    this.pageData$ = this.pageControllerService.currentPage$.pipe(
-      filter(page => EPages.lesson_track === page),
-      switchMap(() =>
-        this.lessonTrackService.getTrailActivities(this.pageId).pipe(take(1))
-      ),
-      map(({ attributes }) => attributes.paginas)
-    );
-  }
 }

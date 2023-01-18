@@ -6,12 +6,14 @@ import {
   OnDestroy,
   OnInit,
   Renderer2,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { filter, from, mergeMap, of, Subject, take, tap } from 'rxjs';
 import { LoadingOverlayService } from 'src/app/shared/components/loading-overlay/loading-overlay.service';
 import { EPages } from 'src/app/shared/enum/pages.enum';
+import { ResumeRegisterModel } from './models/portfolio-book.model';
+import { LessonTrackContextService } from './services/lesson-track-context.service';
 import { PageControllerService } from './services/page-controller.service';
 
 interface HTMLDivElementPage extends HTMLDivElement {
@@ -22,18 +24,17 @@ interface HTMLDivElementPage extends HTMLDivElement {
   selector: 'liv-book',
   templateUrl: './book.component.html',
   styleUrls: ['./book.component.scss'],
-  encapsulation: ViewEncapsulation.None,
+  encapsulation: ViewEncapsulation.None
 })
 export class BookComponent implements AfterViewInit, OnDestroy {
-  readonly PageEnum = EPages;
+  readonly pageType = EPages;
 
   public currentPage = 0;
   public totalPages = 0;
 
   public bookColors$ = this.pageControllerService.colors$;
-  public pages$ = this.pageControllerService.pages$.pipe(
-    tap(pages => (this.totalPages = pages.length)),
-    tap(console.log)
+  public pages$ = this.pageControllerService.dynamicPages$.pipe(
+    tap((pages) => (this.totalPages = pages.length + 1))
   );
 
   private destroy$ = new Subject<boolean>();
@@ -54,7 +55,8 @@ export class BookComponent implements AfterViewInit, OnDestroy {
     private renderer: Renderer2,
     private route: ActivatedRoute,
     private pageControllerService: PageControllerService,
-    private loadingOverlayService: LoadingOverlayService
+    private loadingOverlayService: LoadingOverlayService,
+    private lessonTrackContextService: LessonTrackContextService
   ) {}
 
   get showPreviousButton() {
@@ -62,11 +64,7 @@ export class BookComponent implements AfterViewInit, OnDestroy {
   }
 
   get showNextButton() {
-    return (
-      this.currentPage <= this.totalPages + 1 &&
-      (!this.currentIsCoverBackPage ||
-        this.coverBackPage['page-number'] % 2 === 0)
-    );
+    return !this.currentIsCoverBackPage;
   }
 
   get showCloseButton() {
@@ -82,11 +80,11 @@ export class BookComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.route.data
-      .pipe(filter(data => !!data['book']))
+      .pipe(filter((data) => !!data['book']))
       .subscribe(() => this.startConfigPages());
   }
 
-  startConfigPages() {
+  startConfigPages(resume?: ResumeRegisterModel) {
     const pages = Array.from(
       this.document.getElementsByClassName('page')
     ) as HTMLDivElementPage[];
@@ -103,6 +101,10 @@ export class BookComponent implements AfterViewInit, OnDestroy {
         if (index % 2 === 0) {
           this.renderer.setStyle(page, 'z-index', pages.length - index);
         }
+      })
+      .add(() => {
+        this.lessonTrackContextService.listenLessonTrack();
+        this.lessonTrackContextService.listenLessonTrackRegister();
         this.awaitTimeout(() => this.loadingOverlayService.remove());
       });
   }
@@ -111,7 +113,9 @@ export class BookComponent implements AfterViewInit, OnDestroy {
     if (this.currentPage === 0) return;
 
     const flippedPages = this.document.getElementsByClassName('flipped');
-    Array.from(flippedPages).forEach(page => page.classList.remove('flipped'));
+    Array.from(flippedPages).forEach((page) =>
+      page.classList.remove('flipped')
+    );
 
     const frontCover = this.document.getElementById('main-front-cover');
     frontCover?.classList.remove('main-cover--active');
@@ -129,7 +133,7 @@ export class BookComponent implements AfterViewInit, OnDestroy {
 
     this.switchingPage = true;
 
-    const flippedPages = this.pagesElement.filter(page =>
+    const flippedPages = this.pagesElement.filter((page) =>
       page.classList.contains('flipped')
     );
 
@@ -138,7 +142,7 @@ export class BookComponent implements AfterViewInit, OnDestroy {
 
     const lastFlippedPageNum = lastFlippedPage['page-number'];
     const previousPageToFlip = this.pagesElement.find(
-      page => page['page-number'] === lastFlippedPageNum
+      (page) => page['page-number'] === lastFlippedPageNum
     );
 
     previousPageToFlip?.classList.remove('flipped');
@@ -151,7 +155,7 @@ export class BookComponent implements AfterViewInit, OnDestroy {
       }
     }
 
-    this.currentPage = lastFlippedPageNum - 2;
+    this.currentPage = lastFlippedPageNum - 3;
     this.pageControllerService.saveCurrentPage(this.currentPage);
 
     this.awaitTimeout(() => (this.switchingPage = false));
@@ -169,7 +173,7 @@ export class BookComponent implements AfterViewInit, OnDestroy {
 
     let nextPageToFlip = this.pagesElement[0];
 
-    const flippedPages = this.pagesElement.filter(page =>
+    const flippedPages = this.pagesElement.filter((page) =>
       page.classList.contains('flipped')
     );
 
@@ -180,7 +184,7 @@ export class BookComponent implements AfterViewInit, OnDestroy {
       const lastFlippedPageNum = lastFlippedPage['page-number'];
 
       nextPageToFlip = this.pagesElement.find(
-        page => page['page-number'] === lastFlippedPageNum + 1
+        (page) => page['page-number'] === lastFlippedPageNum + 1
       )!;
     }
 
@@ -192,12 +196,12 @@ export class BookComponent implements AfterViewInit, OnDestroy {
       frontCover?.classList.add('main-cover--active');
     }
 
-    this.currentPage = nextPageToFlip['page-number'];
+    this.currentPage = nextPageToFlip['page-number'] + 1;
     this.pageControllerService.saveCurrentPage(this.currentPage);
 
     this.currentIsCoverBackPage =
       this.currentPage >= this.totalPages ||
-      this.pagesElement[this.currentPage + 1]?.classList.contains('cover-back');
+      this.pagesElement[this.currentPage]?.classList.contains('cover-back');
 
     this.awaitTimeout(() => (this.switchingPage = false));
   }
