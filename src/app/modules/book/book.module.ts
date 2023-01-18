@@ -20,6 +20,7 @@ import { AudioPlayerComponent } from './pages/register/components/audio-player/a
 import { VideoPlayerComponent } from './pages/register/components/video-player/video-player.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ProfessorAnalisysComponent } from './components/professor-analysis/professor-analisys.component';
+import { RegisterAnalysisComponent } from './pages/register-analysis/register-analysis.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { ProfessorAnalisysComponent } from './components/professor-analysis/prof
     VideoPlayerComponent,
     FooterComponent,
     ProfessorAnalisysComponent,
+    RegisterAnalysisComponent,
   ],
   imports: [
     ReactiveFormsModule,
