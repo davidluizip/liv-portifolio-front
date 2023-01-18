@@ -19,7 +19,7 @@ import { LessonTrackComponent } from './pages/lesson-track/lesson-track.componen
 import { AudioPlayerComponent } from './pages/register/components/audio-player/audio-player.component';
 import { VideoPlayerComponent } from './pages/register/components/video-player/video-player.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { ProfessorAnalisysComponent } from './components/professor-analisys/professor-analisys.component';
+import { ProfessorAnalisysComponent } from './components/professor-analysis/professor-analisys.component';
 
 @NgModule({
   declarations: [
