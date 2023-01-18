@@ -21,7 +21,7 @@ export default {
     },
     colors: {
       brand: '#FF7C39',
-      brand_light: '#B8ACD3',
+      brand_light: '#FFBB9C',
       primary: '#4E2F92',
       secondary: '#F7D2E1',
       tertiary: '#F6F4F9',
@@ -33,10 +33,10 @@ export default {
       alt: 'Imagem do mascote do 3º ano',
     },
     colors: {
-      brand: '#4E2F92',
-      brand_light: '#FFBE12',
-      primary: '#B8ACD3',
-      secondary: '#40A299',
+      brand: '#7159A8',
+      brand_light: '#DCD5E9',
+      primary: '#E04A88',
+      secondary: '#E04A88',
       tertiary: '#F6F4F9',
     },
   },
@@ -47,7 +47,7 @@ export default {
     },
     colors: {
       brand: '#72A1D3',
-      brand_light: '#B9D0E9',
+      brand_light: '#dce7f4',
       primary: '#B8ACD3',
       secondary: '#FFBE12',
       tertiary: '#FFDECD',
@@ -61,7 +61,7 @@ export default {
     colors: {
       brand: '#FFBE12',
       brand_light: '#FFD871',
-      primary: '#EFA5C3',
+      primary: '#FFD871',
       secondary: '#FF7C39',
       tertiary: '#FFDECD',
     },
@@ -72,11 +72,11 @@ export default {
       alt: 'Imagem do mascote do 5 anos',
     },
     colors: {
-      brand: '#B8ACD3',
-      brand_light: '#B8ACD3',
-      primary: '#FFD871',
-      secondary: '#E04A88',
-      tertiary: '#FFDECD',
+      brand: '#E04A88',
+      brand_light: '#EFA5C3',
+      primary: '#B8ACD3',
+      secondary: '#B8ACD3',
+      tertiary: '#F6F4F9',
     },
   },
 } as const;
