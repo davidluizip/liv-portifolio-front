@@ -170,6 +170,28 @@ $book-width: #{rem(1108px)};
   background: var(--color-brand) !important;
 }
 
+.cover-back{
+  align-items: center;
+  justify-content: center;
+}
+
+.end-text{
+  width: rem(288px);
+  height: rem(141px);
+}
+
+.end-text h1{
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: rem(16px);
+  line-height: rem(19px);
+  text-align: center;
+  padding-bottom: rem(20px);
+
+  color: #000000;
+}
+
 .main-cover {
   clear: none;
   margin: 0;
