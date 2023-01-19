@@ -36,10 +36,13 @@ export class RegisterComponent implements OnInit {
   getRegisters(): void {
     this.pageControllerService.dynamicCurrentPage$
       .pipe(
-        filter(current => current?.page === EPages.register),
+        filter((current) => current?.page === EPages.register),
         switchMap(() =>
           this.registerService
-            .get(this.pageControllerService.snapshot.bookId)
+            .get(
+              this.pageControllerService.snapshot.bookId,
+              this.pageControllerService.snapshot.currentPage
+            )
             .pipe(take(1))
         ),
         filter(({ attributes }) => !!attributes.registros)
@@ -54,10 +57,13 @@ export class RegisterComponent implements OnInit {
       });
     this.pageControllerService.dynamicPreviousPage$
       .pipe(
-        filter(previous => previous?.page === EPages.register),
+        filter((previous) => previous?.page === EPages.register),
         switchMap(() =>
           this.registerService
-            .get(this.pageControllerService.snapshot.bookId)
+            .get(
+              this.pageControllerService.snapshot.bookId,
+              this.pageControllerService.snapshot.currentPage
+            )
             .pipe(take(1))
         ),
         filter(({ attributes }) => !!attributes.registros)

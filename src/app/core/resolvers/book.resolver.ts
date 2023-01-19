@@ -83,26 +83,31 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
       for (const page of attributes.paginas) {
         if (page.pagina_aula_registro) {
           pageType = EPages.lesson_track_register;
+
+          this.pageControllerService.saveDynamicPage({
+            pageId: page.id,
+            page: pageType,
+            indexPage: pageCount++
+          });
+
+          this.pageControllerService.saveDynamicPage({
+            page: EPages.register,
+            indexPage: pageCount
+          });
+
+          this.pageControllerService.saveDynamicPage({
+            page: EPages.teacher_register,
+            indexPage: pageCount++
+          });
         } else {
           pageType = EPages.lesson_track;
+          this.pageControllerService.saveDynamicPage({
+            pageId: page.id,
+            page: pageType,
+            indexPage: pageCount++
+          });
         }
-
-        this.pageControllerService.saveDynamicPage({
-          pageId: page.id,
-          page: pageType,
-          indexPage: pageCount++
-        });
       }
-
-      this.pageControllerService.saveDynamicPage({
-        page: EPages.register,
-        indexPage: pageCount
-      });
-
-      this.pageControllerService.saveDynamicPage({
-        page: EPages.teacher_register,
-        indexPage: pageCount++
-      });
     }
     this.buildPages();
   }
