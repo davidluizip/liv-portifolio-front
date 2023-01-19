@@ -25,6 +25,7 @@ export class RegisterService {
 
   get(
     bookTeacherId: number,
+    indexPage: number,
     populate: ETypesComponentStrapi[] = [
       ETypesComponentStrapi.registers,
       ETypesComponentStrapi.registersText
@@ -37,8 +38,11 @@ export class RegisterService {
     }
 
     return this.apiGatewayService
-      .get<TeacherBookModel>(`/livros/${bookTeacherId}`, { params })
-      .pipe(map(res => res.data));
+      .get<TeacherBookModel>(
+        `/livros/registro/page/${bookTeacherId}/${indexPage}`,
+        { params }
+      )
+      .pipe(map((res) => res.data));
   }
 
   deleteMidia(midiaId: number): Observable<void> {

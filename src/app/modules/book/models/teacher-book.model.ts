@@ -29,6 +29,7 @@ export type SaveRegisterPageDescription = DataPut<{
       alternativeText: number;
       descricao: string;
       nome: string;
+      index_page: number;
     };
   };
 }>;
