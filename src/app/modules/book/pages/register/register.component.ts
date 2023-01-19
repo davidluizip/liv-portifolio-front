@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { filter, Observable, switchMap, take, tap } from 'rxjs';
+import { filter, map, Observable, switchMap, take, tap } from 'rxjs';
 import { Model } from 'src/app/core/models/liv-response-protocol.model';
 import { EPages } from 'src/app/shared/enum/pages.enum';
 import { MediaModel } from '../../models/media.model';
@@ -21,7 +21,8 @@ import {
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-  readonly registerFields$ = this.registerContextService.registerFields$;
+  readonly registerFields$ = this.registerContextService.registerFields$.pipe(
+    map(registers => registers.slice(0,4)));
 
   constructor(
     private registerContextService: RegisterContextService,

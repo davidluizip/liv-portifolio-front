@@ -21,6 +21,7 @@ import { VideoPlayerComponent } from './pages/register/components/video-player/v
 import { FooterComponent } from './components/footer/footer.component';
 import { ProfessorAnalisysComponent } from './components/professor-analysis/professor-analisys.component';
 import { RegisterAnalysisComponent } from './pages/register-analysis/register-analysis.component';
+import { ProfessorAnalysisModalComponent } from './pages/register-analysis/professor-analysis-modal/professor-analysis-modal.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { RegisterAnalysisComponent } from './pages/register-analysis/register-an
     FooterComponent,
     ProfessorAnalisysComponent,
     RegisterAnalysisComponent,
+    ProfessorAnalysisModalComponent,
   ],
   imports: [
     ReactiveFormsModule,

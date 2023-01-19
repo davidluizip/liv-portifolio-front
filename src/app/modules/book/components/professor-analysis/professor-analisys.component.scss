@@ -10,6 +10,8 @@
 }
 
 .register-card {
+  height: 100%;
+  width: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -135,12 +137,5 @@
     color: color(brand-sextenary-pure);
     text-align: center;
     margin-bottom: rem(18px);
-  }
-
-  .without-register-description {
-    font-size: rem(14px);
-    color: color(neutral-low-pure-light);
-    text-align: center;
-    margin: 0;
   }
 }

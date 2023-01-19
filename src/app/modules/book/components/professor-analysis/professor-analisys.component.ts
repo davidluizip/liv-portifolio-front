@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { filter, switchMap, take } from 'rxjs';
 import { Model } from 'src/app/core/models/liv-response-protocol.model';
 import { EPages } from 'src/app/shared/enum/pages.enum';
@@ -18,7 +18,7 @@ import {
   styleUrls: ['./professor-analisys.component.scss']
 })
 export class ProfessorAnalisysComponent implements OnInit {
-  readonly registerFields$ = this.registerContextService.registerFields$;
+  @Input() field: RegisterField;
 
   constructor(
     private registerContextService: RegisterContextService,
@@ -27,7 +27,8 @@ export class ProfessorAnalisysComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getRegisters();
+/*     this.getRegisters(); */
+    console.log(this.field)
   }
 
   getRegisters(): void {
