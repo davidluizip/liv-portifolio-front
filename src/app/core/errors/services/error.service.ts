@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LivErrorResponse } from '../../models/liv-response-protocol.model';
+import { LivErrorResponse } from '../../models/liv-portfolio-response-protocol.model';
 
 @Injectable({
   providedIn: 'root'

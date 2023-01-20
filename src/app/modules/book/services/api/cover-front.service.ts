@@ -1,18 +1,18 @@
-import { HttpEvent, HttpParams } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { map, Observable, take, tap } from 'rxjs';
-import { Model } from 'src/app/core/models/liv-response-protocol.model';
+import { map, Observable, take } from 'rxjs';
+import { Model } from 'src/app/core/models/liv-portfolio-response-protocol.model';
 import { ApiGatewayService } from 'src/app/core/services/api/api-gateway.service';
 import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
 import { filterResponse } from 'src/app/shared/rxjs/custom-operators';
 import { MediaModel } from '../../models/media.model';
 import {
   SaveClassPageDescription,
-  TeacherBookModel,
+  TeacherBookModel
 } from '../../models/teacher-book.model';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class CoverFrontService {
   constructor(private apiGatewayService: ApiGatewayService) {}
@@ -26,7 +26,7 @@ export class CoverFrontService {
       )
       .pipe(
         filterResponse(),
-        map(res => res.data)
+        map((res) => res.data)
       );
   }
 
@@ -40,7 +40,7 @@ export class CoverFrontService {
       ETypesComponentStrapi.serie,
       ETypesComponentStrapi.class,
       ETypesComponentStrapi.serie,
-      ETypesComponentStrapi.professor,
+      ETypesComponentStrapi.professor
     ]
   ): Observable<Model<TeacherBookModel>> {
     let params = new HttpParams();
@@ -51,7 +51,7 @@ export class CoverFrontService {
 
     return this.apiGatewayService
       .get<TeacherBookModel>(`/livros/${bookTeacherId}`, { params })
-      .pipe(map(res => res.data));
+      .pipe(map((res) => res.data));
   }
 
   saveClassDescription(bookTeacherId: number, data: SaveClassPageDescription) {

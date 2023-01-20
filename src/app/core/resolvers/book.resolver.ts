@@ -13,7 +13,7 @@ import { LessonTrackService } from 'src/app/modules/book/services/api/lesson-tra
 import { PageControllerService } from 'src/app/modules/book/services/page-controller.service';
 import { LoadingOverlayService } from 'src/app/shared/components/loading-overlay/loading-overlay.service';
 import { EPages } from 'src/app/shared/enum/pages.enum';
-import { Model } from '../models/liv-response-protocol.model';
+import { Model } from '../models/liv-portfolio-response-protocol.model';
 import { ToastService } from '../services/toast.service';
 
 @Injectable({
@@ -31,8 +31,8 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
 
   resolve(route: ActivatedRouteSnapshot, _: RouterStateSnapshot) {
     const bookId = route.paramMap.get('id');
-    this.pageControllerService.saveBookId(Number(bookId));
 
+    this.pageControllerService.saveBookId(Number(bookId));
     this.loadingOverlayService.open();
 
     return this.getMainBookContent(Number(bookId)).pipe(

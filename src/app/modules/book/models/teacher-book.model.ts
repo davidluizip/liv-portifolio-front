@@ -1,8 +1,7 @@
 import {
   Data,
-  DataArray,
   DataPut
-} from 'src/app/core/models/liv-response-protocol.model';
+} from 'src/app/core/models/liv-portfolio-response-protocol.model';
 import { MediaModel } from './media.model';
 import { SerieModel } from './serie.model';
 import { TeacherModel } from './teacher.model';

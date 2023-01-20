@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { filter, map, Observable, switchMap, take, tap } from 'rxjs';
-import { Model } from 'src/app/core/models/liv-response-protocol.model';
+import { filter, map, Observable, switchMap, take } from 'rxjs';
 import { EPages } from 'src/app/shared/enum/pages.enum';
-import { PortfolioBookModel } from '../../models/portfolio-book.model';
 import { IntroService } from '../../services/api/intro.service';
 import {
   Colors,
