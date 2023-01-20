@@ -78,18 +78,14 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
       let pageCount =
         this.pageControllerService.snapshot.dynamicPages.length + 1;
 
-      let pageType: EPages;
-
       for (const page of attributes.paginas) {
         if (page.pagina_aula_registro) {
-          pageType = EPages.lesson_track_register;
-
           this.pageControllerService.saveDynamicPage({
             pageId: page.id,
-            page: pageType,
-            indexPage: pageCount++
+            page: EPages.lesson_track_register,
+            indexPage: pageCount
           });
-
+          pageCount++;
           this.pageControllerService.saveDynamicPage({
             page: EPages.register,
             indexPage: pageCount
@@ -97,13 +93,13 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
           pageCount++;
           this.pageControllerService.saveDynamicPage({
             page: EPages.register_teacher,
-            indexPage: pageCount++
+            indexPage: pageCount
           });
+          pageCount++;
         } else {
-          pageType = EPages.lesson_track;
           this.pageControllerService.saveDynamicPage({
             pageId: page.id,
-            page: pageType,
+            page: EPages.lesson_track,
             indexPage: pageCount++
           });
         }
