@@ -10,12 +10,13 @@
 </div>
 
 <ng-container>
-  <div class="register-card">
+  <div class="register-card" #emptyCard>
       <div>
         <p class="register-card__title" >Registro do Professor</p>
       </div>
       <div class="register-card__text">
-        <span class="placeholder-title">Escrever registro</span>
+        <span class="placeholder-title"
+        (click)="handleOpenModal()">Escrever registro</span>
         <p class="placeholder-text">
           Professor, escreva aqui uma análise sobre o desenvolvimento da atividade.</p>
       </div>

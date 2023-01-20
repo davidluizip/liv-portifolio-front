@@ -1,7 +1,7 @@
 <div class="student-speech-record-modal-container">
     <liv-register-base-header-modal
       (close)="handleCloseModal()"
-      title="Fala do aluno"
+      title="Análise do Professor"
     ></liv-register-base-header-modal>
   
     <form
@@ -11,16 +11,11 @@
     >
       <textarea
         #aboutStudent
-        placeholder="Escreva aqui uma frase do seu aluno."
+        placeholder="Professor, escreva aqui uma análise sobre o desenvolvimento da atividade."
         formControlName="about"
         maxlength="120"
       ></textarea>
-      <input
-        type="text"
-        placeholder="Nome do aluno"
-        formControlName="name"
-        maxlength="24"
-      />
+
   
       <button type="submit" [disabled]="form.invalid">Concluir</button>
     </form>
