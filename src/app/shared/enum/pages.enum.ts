@@ -4,5 +4,5 @@ export enum EPages {
   lesson_track = 3,
   lesson_track_register = 4,
   register = 5,
-  teacher_register = 6
+  register_teacher = 6
 }

@@ -94,9 +94,9 @@ export class BookResolver implements Resolve<Model<ResumeRegisterModel>> {
             page: EPages.register,
             indexPage: pageCount
           });
-
+          pageCount++;
           this.pageControllerService.saveDynamicPage({
-            page: EPages.teacher_register,
+            page: EPages.register_teacher,
             indexPage: pageCount++
           });
         } else {

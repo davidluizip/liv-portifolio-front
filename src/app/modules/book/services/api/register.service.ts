@@ -17,9 +17,18 @@ import {
 export class RegisterService {
   constructor(private apiGatewayService: ApiGatewayService) {}
 
-  uploadMedia(data: FormData, bookId: number, type: ETypesComponentStrapi) {
+  uploadMedia(
+    data: FormData,
+    bookId: number,
+    indexPage: number,
+    type: ETypesComponentStrapi
+  ) {
     return this.apiGatewayService
-      .upload<MediaModel>(`/livros/upload/${type}/${bookId}`, data, null)
+      .upload<MediaModel>(
+        `/livros/upload/${type}/${bookId}/${indexPage}`,
+        data,
+        null
+      )
       .pipe(filterResponse());
   }
 

@@ -35,14 +35,14 @@ import { FooterComponent } from './components/footer/footer.component';
     TitleBadgeComponent,
     AudioPlayerComponent,
     VideoPlayerComponent,
-    FooterComponent,
+    FooterComponent
   ],
   imports: [
     ReactiveFormsModule,
     CommonModule,
     BookRoutingModule,
     SharedModule,
-    AngularSvgIconModule,
-  ],
+    AngularSvgIconModule
+  ]
 })
 export class BookModule {}

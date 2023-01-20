@@ -49,6 +49,6 @@ export interface RegisterText {
 
 export interface Register {
   id: number;
-  midia?: DataArray<MediaModel>;
+  midia?: MediaModel[];
   texto?: RegisterText[];
 }

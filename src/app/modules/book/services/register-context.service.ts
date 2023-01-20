@@ -191,6 +191,7 @@ export class RegisterContextService {
       .uploadMedia(
         data,
         this.pageControllerService.snapshot.bookId,
+        this.pageControllerService.snapshot.currentPage,
         ETypesComponentStrapi.registersPUT
       )
       .pipe(

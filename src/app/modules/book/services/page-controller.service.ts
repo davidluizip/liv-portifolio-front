@@ -45,7 +45,9 @@ export class PageControllerService {
 
   private _dynamicPages = new BehaviorSubject<PagesConfig[]>([]);
 
-  public dynamicPages$ = this._dynamicPages.asObservable();
+  public dynamicPages$ = this._dynamicPages
+    .asObservable()
+    .pipe(tap(console.log));
 
   private _currentPage = new BehaviorSubject<number>(null);
   public currentPage$ = this._currentPage.asObservable();
