@@ -1,4 +1,4 @@
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, Location } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -56,8 +56,15 @@ export class BookComponent implements AfterViewInit, OnDestroy {
     private route: ActivatedRoute,
     private pageControllerService: PageControllerService,
     private loadingOverlayService: LoadingOverlayService,
-    private lessonTrackContextService: LessonTrackContextService
-  ) {}
+    private lessonTrackContextService: LessonTrackContextService,
+    private location: Location
+  ) {
+    const hasTokenParams = this.route.snapshot.queryParamMap.has('token');
+
+    if (hasTokenParams) {
+      this.location.replaceState(this.location.path().split('?')[0], '');
+    }
+  }
 
   get showPreviousButton() {
     return this.currentPage > 0;

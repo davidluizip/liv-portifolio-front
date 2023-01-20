@@ -1,4 +1,4 @@
-import { Data } from 'src/app/core/models/liv-response-protocol.model';
+import { Data } from 'src/app/core/models/liv-portfolio-response-protocol.model';
 import { MediaModel } from './media.model';
 
 export interface PortfolioBookModel {

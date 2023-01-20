@@ -1,12 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { filter, Observable, switchMap, take, tap } from 'rxjs';
-import { Model } from 'src/app/core/models/liv-response-protocol.model';
+import { filter, switchMap, take } from 'rxjs';
 import { EPages } from 'src/app/shared/enum/pages.enum';
 import { MediaModel } from '../../models/media.model';
-import {
-  RegisterText,
-  TeacherBookModel
-} from '../../models/teacher-book.model';
+import { RegisterText } from '../../models/teacher-book.model';
 import { RegisterService } from '../../services/api/register.service';
 import { PageControllerService } from '../../services/page-controller.service';
 

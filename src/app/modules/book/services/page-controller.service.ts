@@ -1,15 +1,6 @@
 import { Injectable } from '@angular/core';
-import {
-  AsyncSubject,
-  BehaviorSubject,
-  filter,
-  map,
-  of,
-  ReplaySubject,
-  switchMap,
-  tap
-} from 'rxjs';
-import { Model } from 'src/app/core/models/liv-response-protocol.model';
+import { BehaviorSubject, filter, map, of, switchMap, tap } from 'rxjs';
+import { Model } from 'src/app/core/models/liv-portfolio-response-protocol.model';
 import { EPages } from 'src/app/shared/enum/pages.enum';
 import { TeacherBookModel } from '../models/teacher-book.model';
 
