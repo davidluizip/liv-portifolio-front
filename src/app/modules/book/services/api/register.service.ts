@@ -1,7 +1,10 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, take, tap } from 'rxjs';
-import { Data, Model } from 'src/app/core/models/liv-response-protocol.model';
+import {
+  Data,
+  Model
+} from 'src/app/core/models/liv-portfolio-response-protocol.model';
 import { ApiGatewayService } from 'src/app/core/services/api/api-gateway.service';
 import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
 import { filterResponse } from 'src/app/shared/rxjs/custom-operators';
@@ -55,13 +58,11 @@ export class RegisterService {
   }
 
   deleteMidia(midiaId: number): Observable<void> {
-    return this.apiGatewayService.delete<void>(
-      `/livros/registro/midia/${midiaId}`
-    );
+    return this.apiGatewayService.delete(`/livros/registro/midia/${midiaId}`);
   }
 
   deleteText(bookId: number, midiaId: number): Observable<void> {
-    return this.apiGatewayService.delete<void>(
+    return this.apiGatewayService.delete(
       `/livros/registro/texto/${bookId}/${midiaId}`
     );
   }

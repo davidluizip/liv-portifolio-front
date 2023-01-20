@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { map, MonoTypeOperatorFunction, Observable } from 'rxjs';
-import { Model } from 'src/app/core/models/liv-response-protocol.model';
+import { Model } from 'src/app/core/models/liv-portfolio-response-protocol.model';
 import { ApiGatewayService } from 'src/app/core/services/api/api-gateway.service';
 import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
 import { populateStrapiFilters } from 'src/app/shared/helpers/populate-strapi-filters';

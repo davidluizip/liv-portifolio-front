@@ -13,6 +13,7 @@ import { httpInterceptorProviders } from './core/interceptors';
 import { registerLocaleData } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from './shared/shared.module';
+import { ApiLivGatewayService } from './core/services/api/api-liv-gateway.service';
 
 registerLocaleData(localeBr, 'pt-BR');
 
@@ -24,23 +25,24 @@ registerLocaleData(localeBr, 'pt-BR');
     AppRoutingModule,
     SharedModule,
     HotToastModule.forRoot({
-      reverseOrder: true,
+      reverseOrder: true
     }),
     AngularSvgIconModule.forRoot(),
-    NgbModule,
+    NgbModule
   ],
   providers: [
     httpInterceptorProviders,
     ApiGatewayService,
+    ApiLivGatewayService,
     {
       provide: ErrorHandler,
-      useClass: GlobalErrorHandler,
+      useClass: GlobalErrorHandler
     },
     {
       provide: LOCALE_ID,
-      useValue: 'pt-BR',
-    },
+      useValue: 'pt-BR'
+    }
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}
