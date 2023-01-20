@@ -27,8 +27,6 @@ export class ProfessorAnalisysComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-/*     this.getRegisters(); */
-    console.log(this.field)
   }
 
   getRegisters(): void {

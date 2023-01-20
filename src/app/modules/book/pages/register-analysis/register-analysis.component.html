@@ -1,7 +1,13 @@
-<ng-container class="register-container">
-  <liv-professor-analisys class="registrer-wrapper"></liv-professor-analisys>
-</ng-container>
-
+<div class="register-container">
+  <div class="register-wrapper">
+    <ng-container *ngIf="registerFields$ | async; let registerFields">
+      <liv-professor-analisys 
+      *ngFor="let field of registerFields"
+      [field]="field"
+      ></liv-professor-analisys>
+    </ng-container>
+  </div>
+</div>
 
 <ng-container>
   <div class="register-card">
