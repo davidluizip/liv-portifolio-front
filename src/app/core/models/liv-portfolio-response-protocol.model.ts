@@ -26,29 +26,34 @@ export interface Pagination {
   total: number;
 }
 
-export interface LivResponseProtocol<T = unknown> {
+export interface LivPortfolioResponseProtocol<T = unknown> {
   data: Model<T>;
   meta: Meta;
   error?: ErrorResponse;
 }
 
-export interface LivSuccessResponse<T = unknown> {
+export interface LivPortfolioSuccessResponse<T = unknown> {
   data: Model<T>;
   meta: Meta;
 }
 
-export interface LivErrorResponse {
+export interface LivSuccessResponse<T = unknown> {
+  data: T;
+  meta: Meta;
+}
+
+export interface LivPortfolioErrorResponse {
   status: number;
   error: ErrorResponse;
 }
 
-export interface LivErrorStackResponse {
+export interface LivPortfolioErrorStackResponse {
   url: string;
   [key: string]: string;
 }
 
 interface ErrorResponse {
-  details: LivErrorStackResponse;
+  details: LivPortfolioErrorStackResponse;
   name: string;
   message: string;
   status: number;

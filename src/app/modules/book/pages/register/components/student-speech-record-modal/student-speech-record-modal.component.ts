@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { PageControllerService } from 'src/app/modules/book/services/page-controller.service';
 import { RegisterContextService } from 'src/app/modules/book/services/register-context.service';
 
 @Component({
@@ -23,7 +24,8 @@ export class StudentSpeechRecordModalComponent
   constructor(
     private ngbActiveModal: NgbActiveModal,
     private ngbModal: NgbModal,
-    private registerContextService: RegisterContextService
+    private registerContextService: RegisterContextService,
+    private pageControllerService: PageControllerService
   ) {}
 
   ngOnInit(): void {

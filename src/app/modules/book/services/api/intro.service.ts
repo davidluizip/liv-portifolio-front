@@ -1,7 +1,7 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { Model } from 'src/app/core/models/liv-response-protocol.model';
+import { Model } from 'src/app/core/models/liv-portfolio-response-protocol.model';
 import { ApiGatewayService } from 'src/app/core/services/api/api-gateway.service';
 import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
 import { PortfolioBookModel } from '../../models/portfolio-book.model';
@@ -23,6 +23,6 @@ export class IntroService {
         `/portifolios/introduction/${externalIdStrapi}`,
         { params }
       )
-      .pipe(map(res => res.data));
+      .pipe(map((res) => res.data));
   }
 }

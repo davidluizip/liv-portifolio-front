@@ -1,16 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { BeforeLoadGuard } from './core/security/guards/before-load.guard';
 
 const routes: Routes = [
   {
     path: 'livro-do-professor',
+    canActivate: [BeforeLoadGuard],
     loadChildren: () =>
-      import('./modules/book/book.module').then(m => m.BookModule),
+      import('./modules/book/book.module').then((m) => m.BookModule)
   },
   {
     path: '**',
-    redirectTo: '/',
-  },
+    redirectTo: '/'
+  }
 ];
 
 @NgModule({
@@ -18,9 +20,9 @@ const routes: Routes = [
     RouterModule.forRoot(routes, {
       anchorScrolling: 'enabled',
       relativeLinkResolution: 'legacy',
-      scrollPositionRestoration: 'enabled',
-    }),
+      scrollPositionRestoration: 'enabled'
+    })
   ],
-  exports: [RouterModule],
+  exports: [RouterModule]
 })
 export class AppRoutingModule {}

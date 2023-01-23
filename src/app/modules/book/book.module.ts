@@ -38,7 +38,7 @@ import { ProfessorAnalysisModalComponent } from './pages/register-analysis/profe
     TitleBadgeComponent,
     AudioPlayerComponent,
     VideoPlayerComponent,
-    FooterComponent,
+    FooterComponent
     ProfessorAnalisysComponent,
     RegisterAnalysisComponent,
     ProfessorAnalysisModalComponent,
@@ -48,7 +48,7 @@ import { ProfessorAnalysisModalComponent } from './pages/register-analysis/profe
     CommonModule,
     BookRoutingModule,
     SharedModule,
-    AngularSvgIconModule,
-  ],
+    AngularSvgIconModule
+  ]
 })
 export class BookModule {}
