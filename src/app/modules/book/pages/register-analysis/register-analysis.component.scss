@@ -19,12 +19,7 @@
   max-width: rem(768px);
   height: 100%;
   margin: auto;
-  display: grid;
-  place-items: stretch;
-  place-content: stretch;
-  gap: rem(24px);
-  grid-template-columns: repeat(1, 1fr);
-  grid-template-rows: repeat(1, 1fr);
+
 }
 
 .register-card {

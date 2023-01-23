@@ -1,6 +1,7 @@
 <div class="register-container">
   <div class="register-wrapper">
-    <ng-container *ngIf="registerFields$ | async; let registerFields">
+    <ng-container 
+    *ngIf="registerFields$ | async; let registerFields">
       <liv-professor-analisys 
       *ngFor="let field of registerFields"
       [field]="field"
