@@ -10,27 +10,31 @@
 }
 
 .register-container{
-  width: rem(181px);
-  height: rem(208px);
+  width: 100%;
+  height: rem(275px);
+  margin-bottom: rem(32px);
 }
 
-
-.registrer-wrapper {
+.register-wrapper {
   max-width: rem(768px);
+  max-height: rem(275.38px);
   height: 100%;
   margin: auto;
-
+  place-items: stretch;
+  place-content: stretch;
+  gap: rem(24px);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
 }
 
-.register-card {
+.register-analysis-card {
   width: 100%;
-  height: rem(207px);
+  height: rem(215px);
+  max-height: rem(230px);
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  overflow: hidden;
-  transition: 0.2s ease;
   border: 2px solid color(neutral-low-pure-light);
 
   &__title{
@@ -74,13 +78,12 @@
   .placeholder-title {
     color: color(brand-sextenary-pure);
     text-align: center;
-    margin-bottom: rem(6px);
+    margin-bottom: rem(15px);
     cursor: pointer;
   }
 
   .placeholder-text {
-    width: rem(319px);
-    height: rem(62.7px);
+    width: rem(334.71px);
     font-size: rem(14px);
     font-family: 'Roboto';
     font-style: normal;

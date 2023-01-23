@@ -1,21 +1,22 @@
 <div class="register-container">
   <div class="register-wrapper">
     <ng-container 
-    *ngIf="registerFields$ | async; let registerFields">
-      <liv-professor-analisys 
+    *ngIf="registerFields$ | async; let registerFields"
+    >
+      <liv-register-card
       *ngFor="let field of registerFields"
       [field]="field"
-      ></liv-professor-analisys>
+      ></liv-register-card>
     </ng-container>
   </div>
 </div>
 
 <ng-container>
-  <div class="register-card" #emptyCard>
+  <div class="register-analysis-card" #emptyCard>
       <div>
-        <p class="register-card__title" >Registro do Professor</p>
+        <p class="register-analysis-card__title" >Registro do Professor</p>
       </div>
-      <div class="register-card__text">
+      <div class="register-analysis-card__text">
         <span class="placeholder-title"
         (click)="handleOpenModal()">Escrever registro</span>
         <p class="placeholder-text">
