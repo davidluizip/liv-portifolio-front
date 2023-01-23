@@ -37,7 +37,7 @@ export class RegisterService {
 
   get(
     bookTeacherId: number,
-    indexPage: number,
+    indexPage?: number,
     populate: ETypesComponentStrapi[] = [
       ETypesComponentStrapi.registers,
       ETypesComponentStrapi.registersText

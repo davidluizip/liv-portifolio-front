@@ -1,10 +1,10 @@
 <main class="register-container">
   <div class="register-wrapper">
     <ng-container *ngIf="registerFields$ | async; let registerFields">
-      <liv-professor-analisys 
+      <liv-register-card 
       *ngFor="let field of registerFields"
       [field]="field"
-      ></liv-professor-analisys>
+      ></liv-register-card>
     </ng-container>
   </div>
 <!--     <ng-container *ngIf="registerFields$ | async; let registerFields">
