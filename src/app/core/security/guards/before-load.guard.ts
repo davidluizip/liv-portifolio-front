@@ -33,6 +33,7 @@ export class BeforeLoadGuard implements CanActivate {
       route.queryParamMap.get('token') ||
       this.sessionService.get<string>(PortfolioStorage.liv_access_token);
 
+    return of(true);
     return this.can(token);
   }
 

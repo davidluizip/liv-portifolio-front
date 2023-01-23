@@ -18,6 +18,7 @@ import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strap
 import { SaveRegisterPageDescription } from '../models/teacher-book.model';
 import { RegisterSelectModalComponent } from '../pages/register/components/register-select-modal/register-select-modal.component';
 import { RegisterService } from './api/register.service';
+import { LessonTrackRegisterContextService } from './lesson-track-register-context.service';
 import { PageControllerService } from './page-controller.service';
 
 interface TextContent {
@@ -55,6 +56,7 @@ export interface RemoveRegisterField {
   midiaId: number;
   fieldId: number;
 }
+
 export interface RegisterField {
   id: number;
   midiaId: number;
@@ -83,6 +85,7 @@ export class RegisterContextService {
   constructor(
     private ngbModal: NgbModal,
     private registerService: RegisterService,
+    private lessonTrackRegisterContextService: LessonTrackRegisterContextService,
     private toastService: ToastService,
     private pageControllerService: PageControllerService,
     private loadingOverlayService: LoadingOverlayService
@@ -138,7 +141,7 @@ export class RegisterContextService {
       .subscribe(() => this._selectedRegisterFieldId.next(null));
   }
 
-  saveTextRegister(id: number, textId: number, content: TextContent) {
+  saveTextRegister(id: number, content: TextContent) {
     this.loadingOverlayService.open();
 
     const requestPayload: SaveRegisterPageDescription = {
@@ -171,10 +174,10 @@ export class RegisterContextService {
           this.loadingOverlayService.remove();
         })
       )
-      .subscribe(() => {
+      .subscribe((data) => {
         this.setFieldValue('text', {
           id,
-          midiaId: textId,
+          midiaId: 1,
           content
         });
       });

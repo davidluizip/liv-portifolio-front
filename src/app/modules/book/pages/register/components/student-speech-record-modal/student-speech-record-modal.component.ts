@@ -55,7 +55,7 @@ export class StudentSpeechRecordModalComponent
 
     const { about, name } = this.form.value;
 
-    this.registerContextService.saveTextRegister(id, 1, {
+    this.registerContextService.saveTextRegister(id, {
       about,
       name
     });
