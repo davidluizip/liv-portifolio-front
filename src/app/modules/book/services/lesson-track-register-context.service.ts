@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, filter, map, Observable, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, filter, map, switchMap, tap } from 'rxjs';
 import { EPages } from 'src/app/shared/enum/pages.enum';
 import { MediaModel } from '../models/media.model';
 import { Register } from '../models/teacher-book.model';
@@ -91,17 +91,7 @@ export class LessonTrackRegisterContextService {
         }),
         switchMap(() => this.registers$)
       )
-      .pipe(
-        filter((register) => {
-          console.log(this.indexPage);
-          if (!register[this.indexPage]) {
-            this.registerContextService.resetAllFields();
-            return false;
-          }
-
-          return true;
-        })
-      )
+      .pipe(filter((register) => !!register[this.indexPage]))
       .subscribe((register) => {
         this.registerContextService.resetAllFields();
 
