@@ -1,12 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { filter, Observable, switchMap, take, tap } from 'rxjs';
-import { Model } from 'src/app/core/models/liv-response-protocol.model';
+import { filter, switchMap, take } from 'rxjs';
 import { EPages } from 'src/app/shared/enum/pages.enum';
 import { MediaModel } from '../../models/media.model';
-import {
-  RegisterText,
-  TeacherBookModel
-} from '../../models/teacher-book.model';
+import { RegisterText } from '../../models/teacher-book.model';
 import { RegisterService } from '../../services/api/register.service';
 import { PageControllerService } from '../../services/page-controller.service';
 
@@ -36,10 +32,13 @@ export class RegisterComponent implements OnInit {
   getRegisters(): void {
     this.pageControllerService.dynamicCurrentPage$
       .pipe(
-        filter(current => current?.page === EPages.register),
+        filter((current) => current?.page === EPages.register),
         switchMap(() =>
           this.registerService
-            .get(this.pageControllerService.snapshot.bookId)
+            .get(
+              this.pageControllerService.snapshot.bookId,
+              this.pageControllerService.snapshot.currentPage
+            )
             .pipe(take(1))
         ),
         filter(({ attributes }) => !!attributes.registros)
@@ -48,16 +47,19 @@ export class RegisterComponent implements OnInit {
         if (attributes.registros.texto?.length > 0) {
           this.populateTexts(attributes.registros.texto);
         }
-        if (attributes.registros.midia?.data) {
-          this.populateMedias(attributes.registros.midia.data);
+        if (attributes.registros.midia) {
+          this.populateMedias(attributes.registros.midia);
         }
       });
     this.pageControllerService.dynamicPreviousPage$
       .pipe(
-        filter(previous => previous?.page === EPages.register),
+        filter((previous) => previous?.page === EPages.register),
         switchMap(() =>
           this.registerService
-            .get(this.pageControllerService.snapshot.bookId)
+            .get(
+              this.pageControllerService.snapshot.bookId,
+              this.pageControllerService.snapshot.currentPage
+            )
             .pipe(take(1))
         ),
         filter(({ attributes }) => !!attributes.registros)
@@ -66,8 +68,8 @@ export class RegisterComponent implements OnInit {
         if (attributes.registros.texto?.length > 0) {
           this.populateTexts(attributes.registros.texto);
         }
-        if (attributes.registros.midia?.data) {
-          this.populateMedias(attributes.registros.midia.data);
+        if (attributes.registros.midia) {
+          this.populateMedias(attributes.registros.midia);
         }
       });
   }
@@ -85,42 +87,41 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  populateMedias(midias: Model<MediaModel>[]) {
+  populateMedias(midias: MediaModel[]) {
     for (const midia of midias) {
-      const [type] = midia.attributes.mime.split('/');
+      const [type] = midia.mime.split('/');
       this.setMedia(type, midia);
     }
   }
 
-  setMedia(type: string, midia: Model<MediaModel>) {
-    const { id, attributes } = midia;
+  setMedia(type: string, midia: MediaModel) {
     switch (type) {
       case 'audio':
         this.registerContextService.setFieldValue('audio', {
-          id: +attributes.alternativeText,
-          midiaId: id,
+          id: +midia.alternativeText,
+          midiaId: midia.id,
           content: {
-            src: attributes.url
+            src: midia.url
           }
         });
         break;
       case 'video':
         this.registerContextService.setFieldValue('video', {
-          id: +attributes.alternativeText,
-          midiaId: id,
+          id: +midia.alternativeText,
+          midiaId: midia.id,
           content: {
-            src: attributes.url,
+            src: midia.url,
             type
           }
         });
         break;
       case 'image':
         this.registerContextService.setFieldValue('image', {
-          id: +attributes.alternativeText,
-          midiaId: id,
+          id: +midia.alternativeText,
+          midiaId: midia.id,
           content: {
-            src: attributes.url,
-            alt: attributes.caption
+            src: midia.url,
+            alt: midia.caption
           }
         });
         break;

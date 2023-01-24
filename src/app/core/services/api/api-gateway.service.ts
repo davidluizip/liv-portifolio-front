@@ -6,8 +6,7 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { LivSuccessResponse } from 'src/app/core/models/liv-response-protocol.model';
-import { filterResponse } from 'src/app/shared/rxjs/custom-operators';
+import { LivPortfolioSuccessResponse } from 'src/app/core/models/liv-portfolio-response-protocol.model';
 import { environment } from 'src/environments/environment';
 
 export interface IRequestOptions {
@@ -29,30 +28,34 @@ export class ApiGatewayService {
   get<T>(
     endpoint: string,
     options: IRequestOptions = {}
-  ): Observable<LivSuccessResponse<T>> {
+  ): Observable<LivPortfolioSuccessResponse<T>> {
     const url = encodeURI(this.service + endpoint);
-    return this.httpClient.get<LivSuccessResponse<T>>(url, options);
+    return this.httpClient.get<LivPortfolioSuccessResponse<T>>(url, options);
   }
 
   upload<T>(
     endpoint: string,
     data: FormData,
     params: HttpParams
-  ): Observable<HttpEvent<LivSuccessResponse<T>>> {
+  ): Observable<HttpEvent<LivPortfolioSuccessResponse<T>>> {
     const url = encodeURI(this.service + endpoint);
-    return this.httpClient.request<LivSuccessResponse<T>>('post', url, {
-      params,
-      observe: 'events',
-      body: data
-    });
+    return this.httpClient.request<LivPortfolioSuccessResponse<T>>(
+      'post',
+      url,
+      {
+        params,
+        observe: 'events',
+        body: data
+      }
+    );
   }
 
   download<T>(
     endpoint: string,
     options: IRequestOptions = {}
-  ): Observable<LivSuccessResponse<T>> {
+  ): Observable<LivPortfolioSuccessResponse<T>> {
     const url = encodeURI(this.service + endpoint);
-    return this.httpClient.get<LivSuccessResponse<T>>(url, {
+    return this.httpClient.get<LivPortfolioSuccessResponse<T>>(url, {
       ...options,
       responseType: 'blob' as 'json'
     });
@@ -62,30 +65,42 @@ export class ApiGatewayService {
     endpoint: string,
     body: unknown,
     options: IRequestOptions = {}
-  ): Observable<LivSuccessResponse<T>> {
+  ): Observable<LivPortfolioSuccessResponse<T>> {
     const url = encodeURI(this.service + endpoint);
-    return this.httpClient.post<LivSuccessResponse<T>>(url, body, options);
+    return this.httpClient.post<LivPortfolioSuccessResponse<T>>(
+      url,
+      body,
+      options
+    );
   }
 
   put<T>(
     endpoint: string,
     body: unknown,
     options: IRequestOptions = {}
-  ): Observable<LivSuccessResponse<T>> {
+  ): Observable<LivPortfolioSuccessResponse<T>> {
     const url = encodeURI(this.service + endpoint);
-    return this.httpClient.put<LivSuccessResponse<T>>(url, body, options);
+    return this.httpClient.put<LivPortfolioSuccessResponse<T>>(
+      url,
+      body,
+      options
+    );
   }
 
   patch<T>(
     endpoint: string,
     body: unknown,
     options: IRequestOptions = {}
-  ): Observable<LivSuccessResponse<T>> {
+  ): Observable<LivPortfolioSuccessResponse<T>> {
     const url = encodeURI(this.service + endpoint);
-    return this.httpClient.patch<LivSuccessResponse<T>>(url, body, options);
+    return this.httpClient.patch<LivPortfolioSuccessResponse<T>>(
+      url,
+      body,
+      options
+    );
   }
 
-  delete<T>(endpoint: string, options: IRequestOptions = {}): Observable<void> {
+  delete(endpoint: string, options: IRequestOptions = {}): Observable<void> {
     const url = encodeURI(this.service + endpoint);
     return this.httpClient.delete<void>(url, options);
   }
@@ -93,9 +108,9 @@ export class ApiGatewayService {
   graphql<T>(
     query: string,
     options: IRequestOptions = {}
-  ): Observable<LivSuccessResponse<T>> {
+  ): Observable<LivPortfolioSuccessResponse<T>> {
     const url = encodeURI(this.service + '/graphql');
-    return this.httpClient.post<LivSuccessResponse<T>>(
+    return this.httpClient.post<LivPortfolioSuccessResponse<T>>(
       url,
       JSON.stringify({ query }),
       options

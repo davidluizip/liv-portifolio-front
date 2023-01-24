@@ -4,17 +4,18 @@ import {
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
-  HttpResponse,
+  HttpResponse
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
 import { shouldRetry } from 'src/app/shared/rxjs/custom-operators';
 import {
-  LivErrorResponse,
-  LivResponseProtocol,
-  LivSuccessResponse,
-} from '../models/liv-response-protocol.model';
+  LivPortfolioErrorResponse,
+  LivPortfolioResponseProtocol,
+  LivPortfolioSuccessResponse,
+  Meta
+} from '../models/liv-portfolio-response-protocol.model';
 import { ToastService } from '../services/toast.service';
 
 @Injectable()
@@ -24,7 +25,9 @@ export class ResponseProtocolInterceptor implements HttpInterceptor {
   intercept(
     req: HttpRequest<unknown>,
     next: HttpHandler
-  ): Observable<HttpEvent<LivSuccessResponse | LivErrorResponse>> {
+  ): Observable<
+    HttpEvent<LivPortfolioSuccessResponse | LivPortfolioErrorResponse>
+  > {
     return next.handle(req).pipe(
       map((event: HttpEvent<unknown>) => {
         if (event instanceof HttpResponse) {
@@ -36,7 +39,7 @@ export class ResponseProtocolInterceptor implements HttpInterceptor {
         shouldRetry({
           maxRetryAttempts: 2,
           scalingDuration: 3000,
-          excludedStatusCodes: [404, 403, 401, 400],
+          excludedStatusCodes: [404, 403, 401, 400]
         })
       ),
       catchError((err: HttpErrorResponse) => this.handleError(err))
@@ -46,8 +49,8 @@ export class ResponseProtocolInterceptor implements HttpInterceptor {
   handleResponse(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     event: HttpResponse<any>
-  ): LivSuccessResponse | LivErrorResponse {
-    const response: LivResponseProtocol = event.body;
+  ): LivPortfolioSuccessResponse | LivPortfolioErrorResponse {
+    const response: LivPortfolioResponseProtocol = event.body;
 
     if (
       event.url?.includes('assets') ||
@@ -61,7 +64,7 @@ export class ResponseProtocolInterceptor implements HttpInterceptor {
     if (response.data) {
       return {
         data: response.data,
-        meta: response.meta,
+        meta: response.meta || ({} as Meta)
       };
     } else {
       if (response.error) {
@@ -69,14 +72,14 @@ export class ResponseProtocolInterceptor implements HttpInterceptor {
           throw new HttpErrorResponse({
             status: response.error.status,
             error: response.error,
-            url: event.url,
+            url: event.url
           });
         }
       }
       throw new HttpErrorResponse({
         status: event.status,
         error: event.body,
-        url: event.url,
+        url: event.url
       });
     }
   }
@@ -104,10 +107,10 @@ export class ResponseProtocolInterceptor implements HttpInterceptor {
           message: response.error.message,
           details: {
             ...response.error.details,
-            url: response.url,
-          },
-        },
-      } as LivErrorResponse;
+            url: response.url
+          }
+        }
+      } as LivPortfolioErrorResponse;
     });
   }
 }

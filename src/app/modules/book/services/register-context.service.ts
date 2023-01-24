@@ -104,7 +104,9 @@ export class RegisterContextService {
     }
   ) {
     const registerFields = this._registerFields.getValue();
-    const fieldIndex = registerFields.findIndex(field => field.id === data.id);
+    const fieldIndex = registerFields.findIndex(
+      (field) => field.id === data.id
+    );
 
     registerFields[fieldIndex].type = type;
     registerFields[fieldIndex].midiaId = data.midiaId;
@@ -115,7 +117,7 @@ export class RegisterContextService {
 
   resetRegisterField(id: number) {
     const registerFields = this._registerFields.getValue();
-    const fieldIndex = registerFields.findIndex(field => field.id === id);
+    const fieldIndex = registerFields.findIndex((field) => field.id === id);
 
     registerFields[fieldIndex].type = null;
     registerFields[fieldIndex].content = null;
@@ -145,7 +147,8 @@ export class RegisterContextService {
           texto: {
             alternativeText: id,
             descricao: content.about,
-            nome: content.name
+            nome: content.name,
+            index_page: this.pageControllerService.snapshot.currentPage
           }
         }
       }
@@ -188,6 +191,7 @@ export class RegisterContextService {
       .uploadMedia(
         data,
         this.pageControllerService.snapshot.bookId,
+        this.pageControllerService.snapshot.currentPage,
         ETypesComponentStrapi.registersPUT
       )
       .pipe(

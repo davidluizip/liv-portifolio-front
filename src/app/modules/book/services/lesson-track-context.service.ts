@@ -45,20 +45,7 @@ export class LessonTrackContextService {
     };
   }
 
-  private getPreviousLessonTrack(
-    lessonTrackPageId: number
-  ): Observable<PagesModel> {
-    return this.lessonTrackService
-      .getTrailActivities(
-        this.pageControllerService.snapshot.externalIdStrapi,
-        lessonTrackPageId
-      )
-      .pipe(map(({ attributes }) => attributes.paginas));
-  }
-
-  private getCurrentLessonTrack(
-    lessonTrackPageId: number
-  ): Observable<PagesModel> {
+  private getLessonTrack(lessonTrackPageId: number): Observable<PagesModel> {
     return this.lessonTrackService
       .getTrailActivities(
         this.pageControllerService.snapshot.externalIdStrapi,
@@ -76,7 +63,7 @@ export class LessonTrackContextService {
           return currentPage - 1 === indexPage && page === EPages.lesson_track;
         }),
         switchMap((page) => {
-          return this.getPreviousLessonTrack(page.pageId);
+          return this.getLessonTrack(page.pageId);
         })
       )
       .subscribe((data) => {
@@ -104,7 +91,7 @@ export class LessonTrackContextService {
           return currentPage === indexPage && page === EPages.lesson_track;
         }),
         switchMap((page) => {
-          return this.getCurrentLessonTrack(page.pageId);
+          return this.getLessonTrack(page.pageId);
         })
       )
       .subscribe((data) => {
@@ -135,7 +122,7 @@ export class LessonTrackContextService {
           );
         }),
         switchMap((page) => {
-          return this.getPreviousLessonTrack(page.pageId);
+          return this.getLessonTrack(page.pageId);
         })
       )
       .subscribe((data) => {
@@ -166,7 +153,7 @@ export class LessonTrackContextService {
           );
         }),
         switchMap((page) => {
-          return this.getCurrentLessonTrack(page.pageId);
+          return this.getLessonTrack(page.pageId);
         })
       )
       .subscribe((data) => {
