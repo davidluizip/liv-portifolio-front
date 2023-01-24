@@ -163,16 +163,18 @@ $book-width: #{rem(1108px)};
   background-position: right top;
 }
 
-.cover-front,
-.cover-back {
+.cover-front{
   display: flex;
   flex-direction: column;
   background: var(--color-brand) !important;
 }
 
 .cover-back{
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  background-color: color(neutral-hight-pure) !important;
 }
 
 .end-text{
