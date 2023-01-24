@@ -19,6 +19,7 @@ import {
 })
 export class RegisterCardComponent implements OnInit {
   @Input() field: RegisterField;
+  @Input() indexPage: number;
 
   constructor(
     private registerContextService: RegisterContextService,
@@ -137,7 +138,7 @@ export class RegisterCardComponent implements OnInit {
       return;
     }
 
-    this.registerContextService.openRegisterTypeModal(field.id);
+    this.registerContextService.openRegisterTypeModal(field.id, this.indexPage);
   }
 
   handleRemoveRegister(event: Event, field: RegisterField): void {

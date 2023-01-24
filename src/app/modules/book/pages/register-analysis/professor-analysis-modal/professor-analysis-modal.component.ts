@@ -52,10 +52,10 @@ export class ProfessorAnalysisModalComponent implements OnInit, AfterViewInit {
 
     const { about, name } = this.form.value;
 
-    this.registerContextService.saveTextRegister(id, 1, {
+/*     this.registerContextService.saveTextRegister(id, 1, {
       about,
       name
-    });
+    }); */
 
     this.ngbModal.dismissAll();
   }
