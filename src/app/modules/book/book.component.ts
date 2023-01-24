@@ -14,6 +14,7 @@ import { LoadingOverlayService } from 'src/app/shared/components/loading-overlay
 import { EPages } from 'src/app/shared/enum/pages.enum';
 import { ResumeRegisterModel } from './models/portfolio-book.model';
 import { LessonTrackContextService } from './services/lesson-track-context.service';
+import { LessonTrackRegisterContextService } from './services/lesson-track-register-context.service';
 import { PageControllerService } from './services/page-controller.service';
 
 interface HTMLDivElementPage extends HTMLDivElement {
@@ -57,6 +58,7 @@ export class BookComponent implements AfterViewInit, OnDestroy {
     private pageControllerService: PageControllerService,
     private loadingOverlayService: LoadingOverlayService,
     private lessonTrackContextService: LessonTrackContextService,
+    private lessonTrackRegisterContextService: LessonTrackRegisterContextService,
     private location: Location
   ) {
     const hasTokenParams = this.route.snapshot.queryParamMap.has('token');
@@ -112,6 +114,7 @@ export class BookComponent implements AfterViewInit, OnDestroy {
       .add(() => {
         this.lessonTrackContextService.listenLessonTrack();
         this.lessonTrackContextService.listenLessonTrackRegister();
+        this.lessonTrackRegisterContextService.listenRegisters();
         this.awaitTimeout(() => this.loadingOverlayService.remove());
       });
   }
@@ -162,7 +165,7 @@ export class BookComponent implements AfterViewInit, OnDestroy {
       }
     }
 
-    this.currentPage = lastFlippedPageNum - 3;
+    this.currentPage = lastFlippedPageNum - 2;
     this.pageControllerService.saveCurrentPage(this.currentPage);
 
     this.awaitTimeout(() => (this.switchingPage = false));
