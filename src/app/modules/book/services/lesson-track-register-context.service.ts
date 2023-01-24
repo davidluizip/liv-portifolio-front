@@ -18,15 +18,13 @@ export type RegisterData = Record<string, RegisterField>;
   providedIn: 'root'
 })
 export class LessonTrackRegisterContextService {
+  private indexPage: number;
   private _registers = new BehaviorSubject<RegisterData>({});
-  registers$ = this._registers
-    .asObservable()
-    .pipe(tap((registers) => console.log('registers$', registers)));
+  registers$ = this._registers.asObservable();
 
   constructor(
     private pageControllerService: PageControllerService,
-    private registerService: RegisterService,
-    private registerContextService: RegisterContextService
+    private registerService: RegisterService
   ) {}
 
   get snapshot() {
@@ -35,11 +33,11 @@ export class LessonTrackRegisterContextService {
     };
   }
 
-  private getLessonTrackRegisters(currentPage: number) {
+  private getLessonTrackRegisters() {
     const { bookId } = this.pageControllerService.snapshot;
 
     return this.registerService
-      .get(bookId, currentPage)
+      .get(bookId, this.indexPage)
       .pipe(map(({ attributes }) => attributes));
   }
 
@@ -52,7 +50,8 @@ export class LessonTrackRegisterContextService {
           return currentPage - 1 === indexPage && page === EPages.register;
         }),
         switchMap(({ indexPage }) => {
-          return this.getLessonTrackRegisters(indexPage);
+          this.indexPage = indexPage;
+          return this.getLessonTrackRegisters();
         })
       )
       .subscribe((data) => this.populateRegister(data.registros));
@@ -65,36 +64,32 @@ export class LessonTrackRegisterContextService {
           return currentPage === indexPage && page === EPages.register;
         }),
         switchMap(({ indexPage }) => {
-          return this.getLessonTrackRegisters(indexPage);
+          this.indexPage = indexPage;
+          return this.getLessonTrackRegisters();
         })
       )
       .subscribe((data) => this.populateRegister(data.registros));
   }
 
   private populateRegister(register: Register) {
-    const { currentPage } = this.pageControllerService.snapshot;
-
+    console.log('register', register);
     if (register.texto?.length > 0) {
       register.texto.forEach((text) => {
-        this.saveRegister(
-          'text',
-          {
-            id: +text.alternativeText,
-            midiaId: text.id,
-            content: {
-              about: text.descricao,
-              name: text.nome
-            }
-          },
-          currentPage
-        );
+        this.saveRegister('text', {
+          id: +text.alternativeText,
+          midiaId: text.id,
+          content: {
+            about: text.descricao,
+            name: text.nome
+          }
+        });
       });
     }
 
     if (register.midia) {
       register.midia.forEach((media) => {
         const [type] = media.mime.split('/');
-        this.setMedia(type, media, currentPage);
+        this.setMedia(type, media, this.indexPage);
       });
     }
   }
@@ -105,66 +100,52 @@ export class LessonTrackRegisterContextService {
       id: number;
       midiaId: number;
       content: FieldContent[Type];
-    },
-    currentPage: number
+    }
   ) {
     const cachedRegister = this._registers.getValue() || {};
 
     const register: RegisterData = {
       ...cachedRegister,
-      [currentPage]: {
+      [this.indexPage]: {
         type,
         id: data.id,
         midiaId: data.midiaId,
         content: data.content
       }
     };
-
     this._registers.next(register);
   }
 
   private setMedia(type: string, midia: MediaModel, currentPage: number) {
     switch (type) {
       case 'audio':
-        this.saveRegister(
-          'audio',
-          {
-            id: +midia.alternativeText,
-            midiaId: midia.id,
-            content: {
-              src: midia.url
-            }
-          },
-          currentPage
-        );
+        this.saveRegister('audio', {
+          id: +midia.alternativeText,
+          midiaId: midia.id,
+          content: {
+            src: midia.url
+          }
+        });
         break;
       case 'video':
-        this.saveRegister(
-          'video',
-          {
-            id: +midia.alternativeText,
-            midiaId: midia.id,
-            content: {
-              src: midia.url,
-              type
-            }
-          },
-          currentPage
-        );
+        this.saveRegister('video', {
+          id: +midia.alternativeText,
+          midiaId: midia.id,
+          content: {
+            src: midia.url,
+            type
+          }
+        });
         break;
       case 'image':
-        this.saveRegister(
-          'image',
-          {
-            id: +midia.alternativeText,
-            midiaId: midia.id,
-            content: {
-              src: midia.url,
-              alt: midia.caption
-            }
-          },
-          currentPage
-        );
+        this.saveRegister('image', {
+          id: +midia.alternativeText,
+          midiaId: midia.id,
+          content: {
+            src: midia.url,
+            alt: midia.caption
+          }
+        });
         break;
 
       default:

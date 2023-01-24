@@ -57,6 +57,10 @@ export interface RemoveRegisterField {
   fieldId: number;
 }
 
+export interface RegisterIndexField {
+  [key: number]: RegisterField[];
+}
+
 export interface RegisterField {
   id: number;
   midiaId: number;
@@ -68,6 +72,7 @@ export interface RegisterField {
   providedIn: 'root'
 })
 export class RegisterContextService {
+  private indexPage: number;
   private _registerFields = new BehaviorSubject<RegisterField[]>(
     Array.from({ length: 4 }, (_, index) => ({
       id: index + 1,
@@ -85,7 +90,7 @@ export class RegisterContextService {
   constructor(
     private ngbModal: NgbModal,
     private registerService: RegisterService,
-    private lessonTrackRegisterContextService: LessonTrackRegisterContextService,
+    //private lessonTrackRegisterContextService: LessonTrackRegisterContextService,
     private toastService: ToastService,
     private pageControllerService: PageControllerService,
     private loadingOverlayService: LoadingOverlayService
@@ -110,11 +115,12 @@ export class RegisterContextService {
     const fieldIndex = registerFields.findIndex(
       (field) => field.id === data.id
     );
-
     registerFields[fieldIndex].type = type;
     registerFields[fieldIndex].midiaId = data.midiaId;
     registerFields[fieldIndex].content = data.content;
 
+    console.log('setFieldValue', registerFields);
+    console.log('this.indexPage', this.indexPage);
     this._registerFields.next(registerFields);
   }
 
@@ -128,8 +134,10 @@ export class RegisterContextService {
     this._registerFields.next(registerFields);
   }
 
-  openRegisterTypeModal(fieldId: number) {
+  openRegisterTypeModal(fieldId: number, indexPage: number) {
     this._selectedRegisterFieldId.next(fieldId);
+    this.indexPage = indexPage;
+    console.log('openRegisterTypeModal', this.indexPage);
 
     const modalRef = this.ngbModal.open(RegisterSelectModalComponent, {
       centered: true,
@@ -151,7 +159,7 @@ export class RegisterContextService {
             alternativeText: id,
             descricao: content.about,
             nome: content.name,
-            index_page: this.pageControllerService.snapshot.currentPage
+            index_page: this.indexPage
           }
         }
       }
@@ -194,7 +202,7 @@ export class RegisterContextService {
       .uploadMedia(
         data,
         this.pageControllerService.snapshot.bookId,
-        this.pageControllerService.snapshot.currentPage,
+        this.indexPage,
         ETypesComponentStrapi.registersPUT
       )
       .pipe(
