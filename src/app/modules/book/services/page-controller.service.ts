@@ -36,12 +36,32 @@ export class PageControllerService {
 
   private _dynamicPages = new BehaviorSubject<PagesConfig[]>([]);
 
-  public dynamicPages$ = this._dynamicPages
-    .asObservable()
-    .pipe(tap(console.log));
+  public dynamicPages$ = this._dynamicPages.asObservable();
 
   private _currentPage = new BehaviorSubject<number>(null);
   public currentPage$ = this._currentPage.asObservable();
+
+  public pages$ = this.currentPage$.pipe(
+    filter((page) => page > 2),
+    switchMap((page) =>
+      of({
+        pages: this.pages,
+        index: page
+      })
+    ),
+    map(({ pages, index }) => {
+      const currentPageIndex = pages.findIndex((_pages) =>
+        _pages.find((_page) => _page.indexPage === index)
+      );
+
+      const [previous, current] = pages[currentPageIndex] || [];
+
+      return {
+        previous,
+        current
+      };
+    })
+  );
 
   private dynamicPage$ = this.currentPage$.pipe(
     switchMap(() => of(this.pages)),

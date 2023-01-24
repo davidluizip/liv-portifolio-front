@@ -9,6 +9,7 @@ import {
 } from '@angular/router';
 import { catchError, finalize, map, Observable, of } from 'rxjs';
 import { LoadingOverlayService } from 'src/app/shared/components/loading-overlay/loading-overlay.service';
+import { environment } from 'src/environments/environment';
 import { PortfolioStorage } from '../../enums/portfolio-storage.enum';
 import { LivUserModel } from '../../models/liv-user.model';
 import { ApiLivGatewayService } from '../../services/api/api-liv-gateway.service';
@@ -18,12 +19,16 @@ import { SessionService } from '../../services/session.service';
   providedIn: 'root'
 })
 export class BeforeLoadGuard implements CanActivate {
+  readonly isDevelopment: boolean;
+
   constructor(
     private router: Router,
     private apiLivGatewayService: ApiLivGatewayService,
     private sessionService: SessionService,
     private loadingOverlayService: LoadingOverlayService
-  ) {}
+  ) {
+    this.isDevelopment = environment.production;
+  }
 
   canActivate(
     route: ActivatedRouteSnapshot,
@@ -33,7 +38,7 @@ export class BeforeLoadGuard implements CanActivate {
       route.queryParamMap.get('token') ||
       this.sessionService.get<string>(PortfolioStorage.liv_access_token);
 
-    return this.can(token);
+    return this.isDevelopment ? of(true) : this.can(token);
   }
 
   private can(token: string): UrlTree | Observable<true | UrlTree> {

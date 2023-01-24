@@ -18,6 +18,7 @@ import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strap
 import { SaveRegisterPageDescription } from '../models/teacher-book.model';
 import { RegisterSelectModalComponent } from '../pages/register/components/register-select-modal/register-select-modal.component';
 import { RegisterService } from './api/register.service';
+import { LessonTrackRegisterContextService } from './lesson-track-register-context.service';
 import { PageControllerService } from './page-controller.service';
 
 interface TextContent {
@@ -55,6 +56,11 @@ export interface RemoveRegisterField {
   midiaId: number;
   fieldId: number;
 }
+
+export interface RegisterIndexField {
+  [key: number]: RegisterField[];
+}
+
 export interface RegisterField {
   id: number;
   midiaId: number;
@@ -66,6 +72,7 @@ export interface RegisterField {
   providedIn: 'root'
 })
 export class RegisterContextService {
+  private indexPage: number;
   private _registerFields = new BehaviorSubject<RegisterField[]>(
     Array.from({ length: 6 }, (_, index) => ({
       id: index + 1,
@@ -83,6 +90,7 @@ export class RegisterContextService {
   constructor(
     private ngbModal: NgbModal,
     private registerService: RegisterService,
+    //private lessonTrackRegisterContextService: LessonTrackRegisterContextService,
     private toastService: ToastService,
     private pageControllerService: PageControllerService,
     private loadingOverlayService: LoadingOverlayService
@@ -107,12 +115,23 @@ export class RegisterContextService {
     const fieldIndex = registerFields.findIndex(
       (field) => field.id === data.id
     );
-
     registerFields[fieldIndex].type = type;
     registerFields[fieldIndex].midiaId = data.midiaId;
     registerFields[fieldIndex].content = data.content;
 
     this._registerFields.next(registerFields);
+  }
+
+  resetAllFields() {
+    const { registerFields } = this.snapshot;
+    this._registerFields.next(
+      registerFields.map((field) => ({
+        id: field.id,
+        midiaId: null,
+        type: null,
+        content: null
+      }))
+    );
   }
 
   resetRegisterField(id: number) {
@@ -125,8 +144,9 @@ export class RegisterContextService {
     this._registerFields.next(registerFields);
   }
 
-  openRegisterTypeModal(fieldId: number) {
+  openRegisterTypeModal(fieldId: number, indexPage: number) {
     this._selectedRegisterFieldId.next(fieldId);
+    this.indexPage = indexPage;
 
     const modalRef = this.ngbModal.open(RegisterSelectModalComponent, {
       centered: true,
@@ -138,7 +158,7 @@ export class RegisterContextService {
       .subscribe(() => this._selectedRegisterFieldId.next(null));
   }
 
-  saveTextRegister(id: number, textId: number, content: TextContent) {
+  saveTextRegister(id: number, content: TextContent) {
     this.loadingOverlayService.open();
 
     const requestPayload: SaveRegisterPageDescription = {
@@ -148,7 +168,7 @@ export class RegisterContextService {
             alternativeText: id,
             descricao: content.about,
             nome: content.name,
-            index_page: this.pageControllerService.snapshot.currentPage
+            index_page: this.indexPage
           }
         }
       }
@@ -171,10 +191,10 @@ export class RegisterContextService {
           this.loadingOverlayService.remove();
         })
       )
-      .subscribe(() => {
+      .subscribe((data) => {
         this.setFieldValue('text', {
           id,
-          midiaId: textId,
+          midiaId: 1,
           content
         });
       });
@@ -191,7 +211,7 @@ export class RegisterContextService {
       .uploadMedia(
         data,
         this.pageControllerService.snapshot.bookId,
-        this.pageControllerService.snapshot.currentPage,
+        this.indexPage,
         ETypesComponentStrapi.registersPUT
       )
       .pipe(

@@ -1,4 +1,3 @@
-import { Data } from 'src/app/core/models/liv-portfolio-response-protocol.model';
 import { MediaModel } from './media.model';
 
 export interface PortfolioBookModel {
@@ -9,10 +8,12 @@ export interface PortfolioBookModel {
   updatedAt: string;
   publishedAt: string;
 }
+
 export interface PortfolioBookIntrodutionModel {
   id: string;
   descricao: string;
 }
+
 export interface PagesModel {
   id: number;
   count: number;
@@ -20,6 +21,7 @@ export interface PagesModel {
   footer: MediaModel;
   aulas: ClassModel[];
 }
+
 export class ClassModel {
   id: number;
   titulo: string;
