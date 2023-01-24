@@ -119,9 +119,19 @@ export class RegisterContextService {
     registerFields[fieldIndex].midiaId = data.midiaId;
     registerFields[fieldIndex].content = data.content;
 
-    console.log('setFieldValue', registerFields);
-    console.log('this.indexPage', this.indexPage);
     this._registerFields.next(registerFields);
+  }
+
+  resetAllFields() {
+    const { registerFields } = this.snapshot;
+    this._registerFields.next(
+      registerFields.map((field) => ({
+        id: field.id,
+        midiaId: null,
+        type: null,
+        content: null
+      }))
+    );
   }
 
   resetRegisterField(id: number) {
@@ -137,7 +147,6 @@ export class RegisterContextService {
   openRegisterTypeModal(fieldId: number, indexPage: number) {
     this._selectedRegisterFieldId.next(fieldId);
     this.indexPage = indexPage;
-    console.log('openRegisterTypeModal', this.indexPage);
 
     const modalRef = this.ngbModal.open(RegisterSelectModalComponent, {
       centered: true,

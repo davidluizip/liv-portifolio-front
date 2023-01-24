@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { filter, switchMap, take, tap } from 'rxjs';
+import { filter, map, switchMap, take, tap } from 'rxjs';
 import { EPages } from 'src/app/shared/enum/pages.enum';
 import { MediaModel } from '../../models/media.model';
 import { RegisterText } from '../../models/teacher-book.model';
@@ -19,23 +19,25 @@ import {
 })
 export class RegisterComponent implements OnInit {
   indexCurrent = false;
-  readonly registerFields$ =
-    this.lessonTrackRegisterContextService.registers$.pipe(
-      tap((data) => console.log(data[this.indexPage])),
-      filter((data) => !!data[this.indexPage]),
-      tap((data) => {
-        this.indexCurrent = true;
-        const { id, midiaId, type, content } = data[this.indexPage];
-        this.registerContextService.setFieldValue(type, {
-          content,
-          id,
-          midiaId
-        });
-      }),
-      switchMap(() => {
-        return this.registerContextService.registerFields$;
-      })
-    );
+  // readonly registerFields$ =
+  //   this.lessonTrackRegisterContextService.registers$.pipe(
+  //     tap((data) => console.log(data[this.indexPage])),
+  //     filter((data) => !!data[this.indexPage]),
+  //     tap((data) => {
+  //       this.indexCurrent = true;
+  //       const { id, midiaId, type, content } = data[this.indexPage];
+  //       this.registerContextService.setFieldValue(type, {
+  //         content,
+  //         id,
+  //         midiaId
+  //       });
+  //     }),
+  //     switchMap(() => {
+  //       return this.registerContextService.registerFields$;
+  //     })
+  //   );
+
+  readonly registerFields$ = this.registerContextService.registerFields$;
   @Input() indexPage: number;
 
   constructor(

@@ -165,7 +165,7 @@ export class BookComponent implements AfterViewInit, OnDestroy {
       }
     }
 
-    this.currentPage = lastFlippedPageNum - 3;
+    this.currentPage = lastFlippedPageNum - 2;
     this.pageControllerService.saveCurrentPage(this.currentPage);
 
     this.awaitTimeout(() => (this.switchingPage = false));

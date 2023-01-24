@@ -12,7 +12,7 @@ import {
   RegisterField
 } from './register-context.service';
 
-export type RegisterData = Record<string, RegisterField>;
+export type RegisterData = Record<string, RegisterField[]>;
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +24,8 @@ export class LessonTrackRegisterContextService {
 
   constructor(
     private pageControllerService: PageControllerService,
-    private registerService: RegisterService
+    private registerService: RegisterService,
+    private registerContextService: RegisterContextService
   ) {}
 
   get snapshot() {
@@ -69,10 +70,52 @@ export class LessonTrackRegisterContextService {
         })
       )
       .subscribe((data) => this.populateRegister(data.registros));
+
+    this.pageControllerService.pages$
+      .pipe(
+        filter(
+          ({ previous, current }) =>
+            !!(previous?.indexPage || current?.indexPage)
+        ),
+        tap(({ previous, current }) => {
+          const { currentPage } = this.pageControllerService.snapshot;
+
+          if (
+            currentPage - 1 === previous.indexPage &&
+            previous.page === EPages.register
+          ) {
+            this.indexPage = previous.indexPage;
+          } else {
+            this.indexPage = current.indexPage;
+          }
+        }),
+        switchMap(() => this.registers$)
+      )
+      .pipe(
+        filter((register) => {
+          console.log(this.indexPage);
+          if (!register[this.indexPage]) {
+            this.registerContextService.resetAllFields();
+            return false;
+          }
+
+          return true;
+        })
+      )
+      .subscribe((register) => {
+        this.registerContextService.resetAllFields();
+
+        register[this.indexPage].forEach(({ content, id, midiaId, type }) => {
+          this.registerContextService.setFieldValue(type, {
+            content,
+            id,
+            midiaId
+          });
+        });
+      });
   }
 
   private populateRegister(register: Register) {
-    console.log('register', register);
     if (register.texto?.length > 0) {
       register.texto.forEach((text) => {
         this.saveRegister('text', {
@@ -103,15 +146,25 @@ export class LessonTrackRegisterContextService {
     }
   ) {
     const cachedRegister = this._registers.getValue() || {};
+    const alreadyPopulated = cachedRegister[this.indexPage]?.some(
+      (register) => register.id === data.id
+    );
+
+    if (alreadyPopulated) {
+      return;
+    }
 
     const register: RegisterData = {
       ...cachedRegister,
-      [this.indexPage]: {
-        type,
-        id: data.id,
-        midiaId: data.midiaId,
-        content: data.content
-      }
+      [this.indexPage]: [
+        ...(cachedRegister[this.indexPage] ||= []),
+        {
+          type,
+          id: data.id,
+          midiaId: data.midiaId,
+          content: data.content
+        }
+      ]
     };
     this._registers.next(register);
   }
