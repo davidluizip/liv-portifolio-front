@@ -1,5 +1,6 @@
 export const environment = {
   production: false,
+  stage: 'development',
   cypher_secret: '3595670729e25c22710796962d3cc7c8',
   baseUserStrapi: 'http://127.0.0.1:4000/api/',
   apiLiv: 'https://testeapi.inteligenciadevida.com.br/api',
