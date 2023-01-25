@@ -1,0 +1,49 @@
+<div
+*ngIf="field"
+class="register-card"
+(click)="handleOpenRegisterTypeModal(field)"
+role="button"
+[ngClass]="{
+    'register-card--empty': !field.content
+}"
+>
+    <ng-container *ngIf="field.content && field.type; else emptyCard">
+        <div class="register-card__backdrop">
+        <button
+            class="icon-button-trash register-card__trashButton"
+            (click)="handleRemoveRegister($event, field)"
+        >
+            <svg-icon src="assets/icons/trash.svg" svgClass="icon"></svg-icon>
+        </button>
+        </div>
+
+        <ng-container [ngSwitch]="field.type">
+        <div class="register-card__image" *ngSwitchCase="'image'">
+            <img [src]="field.content['src']" [alt]="field.content['alt']" />
+        </div>
+
+        <div class="register-card__text" *ngSwitchCase="'text'">
+            <svg-icon src="assets/icons/quotation-marks.svg"></svg-icon>
+            <p>{{ field.content['about'] }}</p>
+            <strong>{{ field.content['name'] }}</strong>
+        </div>
+
+        <div class="register-card__audio" *ngSwitchCase="'audio'">
+            <liv-audio-player
+            [src]="field.content['src'] | safeTransform : 'RESOURCE'"
+            ></liv-audio-player>
+        </div>
+
+        <div class="register-card__video" *ngSwitchCase="'video'">
+            <liv-video-player
+            [src]="field.content['src'] | safeTransform : 'RESOURCE'"
+            ></liv-video-player>
+        </div>
+        </ng-container>
+    </ng-container>
+
+    <ng-template #emptyCard>
+        <span class="without-register-title">Adicionar registro</span>
+    </ng-template>
+</div>
+

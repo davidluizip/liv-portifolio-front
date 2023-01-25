@@ -1,0 +1,27 @@
+<div class="register-container">
+  <div class="register-wrapper">
+    <ng-container 
+    *ngIf="registerFields$ | async; let registerFields"
+    >
+      <liv-register-card
+      *ngFor="let field of registerFields"
+      [field]="field"
+      ></liv-register-card>
+    </ng-container>
+  </div>
+</div>
+
+<ng-container>
+  <div class="register-analysis-card" #emptyCard>
+      <div>
+        <p class="register-analysis-card__title" >Espaço para análise do professor</p>
+      </div>
+      <div class="register-analysis-card__text">
+        <span class="placeholder-title"
+        (click)="handleOpenModal()">Escrever sua análise da atividade</span>
+        <p class="placeholder-text">
+          Conte suas percepções sobre a interação da turma e sobre a aprendizagem socioemocional dos alunos.</p>
+      </div>
+  </div>
+</ng-container>
+

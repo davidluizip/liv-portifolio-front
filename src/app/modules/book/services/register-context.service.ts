@@ -74,7 +74,7 @@ export interface RegisterField {
 export class RegisterContextService {
   private indexPage: number;
   private _registerFields = new BehaviorSubject<RegisterField[]>(
-    Array.from({ length: 4 }, (_, index) => ({
+    Array.from({ length: 6 }, (_, index) => ({
       id: index + 1,
       midiaId: null,
       type: null,
