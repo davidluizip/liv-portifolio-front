@@ -16,7 +16,7 @@
     background: var(--color-brand);
     padding-inline: rem(8px);
     padding-block: rem(8px);
-    font-weight: 700;
+    font-weight: 500;
     border-top-left-radius: border-radius(lg);
     border-bottom-left-radius: border-radius(lg);
   }
@@ -47,7 +47,7 @@
 
   &__description {
     @include paragraph(400);
-    margin-block: rem(16px) rem(32px);
+    margin-block: rem(16px);
   }
 }
 

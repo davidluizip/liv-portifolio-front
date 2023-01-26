@@ -1,5 +1,10 @@
-import { Component, Input } from '@angular/core';
-import { distinctUntilChanged, map } from 'rxjs';
+import { Component, Input, OnInit } from '@angular/core';
+import { filter, switchMap, take } from 'rxjs';
+import { EPages } from 'src/app/shared/enum/pages.enum';
+import { MediaModel } from '../../models/media.model';
+import { RegisterText } from '../../models/teacher-book.model';
+import { RegisterService } from '../../services/api/register.service';
+import { PageControllerService } from '../../services/page-controller.service';
 
 import {
   RegisterContextService,
@@ -7,17 +12,13 @@ import {
 } from '../../services/register-context.service';
 
 @Component({
-  selector: 'liv-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  selector: 'liv-register-card',
+  templateUrl: './register-card.component.html',
+  styleUrls: ['./register-card.component.scss']
 })
-export class RegisterComponent {
+export class RegisterCardComponent {
+  @Input() field: RegisterField;
   @Input() indexPage: number;
-
-  readonly registerFields$ = this.registerContextService.registerFields$.pipe(
-    distinctUntilChanged(),
-    map((registers) => registers.slice(0, 4))
-  );
 
   constructor(private registerContextService: RegisterContextService) {}
 
@@ -31,7 +32,6 @@ export class RegisterComponent {
 
   handleRemoveRegister(event: Event, field: RegisterField): void {
     event.stopPropagation();
-
     this.registerContextService.removeRegisterField({
       type: field.type,
       midiaId: field.midiaId,

@@ -10,6 +10,11 @@ import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strap
 import { filterResponse } from 'src/app/shared/rxjs/custom-operators';
 import { MediaModel } from '../../models/media.model';
 import {
+  RegisterAnalysisModel,
+  RegisterModel
+} from '../../models/register.model';
+import {
+  SaveRegisterAnalysis,
   SaveRegisterPageDescription,
   TeacherBookModel
 } from '../../models/teacher-book.model';
@@ -35,14 +40,14 @@ export class RegisterService {
       .pipe(filterResponse());
   }
 
-  get(
+  getRegisters(
     bookTeacherId: number,
-    indexPage: number,
+    indexPage?: number,
     populate: ETypesComponentStrapi[] = [
       ETypesComponentStrapi.registers,
       ETypesComponentStrapi.registersText
     ]
-  ): Observable<Model<TeacherBookModel>> {
+  ): Observable<RegisterModel> {
     let params = new HttpParams();
     if (populate.length > 0) {
       const filters = populate.join(',');
@@ -54,7 +59,28 @@ export class RegisterService {
         `/livros/registro/page/${bookTeacherId}/${indexPage}`,
         { params }
       )
-      .pipe(map((res) => res.data));
+      .pipe(
+        map((res) => res.data),
+        map((data) => ({
+          registros: data.attributes.registros
+        }))
+      );
+  }
+
+  getTeacherAnalysis(
+    bookTeacherId: number,
+    indexPage: number
+  ): Observable<RegisterAnalysisModel> {
+    return this.apiGatewayService
+      .get<TeacherBookModel>(
+        `/livros/registro/page/${bookTeacherId}/${indexPage}`
+      )
+      .pipe(
+        map((res) => res.data),
+        map((data) => ({
+          analise_registro: data.attributes.registros?.analise_registro
+        }))
+      );
   }
 
   deleteMidia(midiaId: number): Observable<void> {
@@ -74,6 +100,17 @@ export class RegisterService {
     return this.apiGatewayService.put<void>(
       `/livros/registro/texto/${bookTeacherId}`,
       data
+    );
+  }
+
+  saveRegisterAnalysis({ bookId, indexPage, text }: SaveRegisterAnalysis) {
+    return this.apiGatewayService.post(
+      `/livros/registro/analise/${bookId}/${indexPage}`,
+      {
+        data: {
+          analise_registro: text
+        }
+      }
     );
   }
 }

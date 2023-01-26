@@ -19,7 +19,7 @@ import { SessionService } from '../../services/session.service';
   providedIn: 'root'
 })
 export class BeforeLoadGuard implements CanActivate {
-  readonly isDevelopment: boolean;
+  readonly enableTokenVerification: boolean;
 
   constructor(
     private router: Router,
@@ -27,7 +27,8 @@ export class BeforeLoadGuard implements CanActivate {
     private sessionService: SessionService,
     private loadingOverlayService: LoadingOverlayService
   ) {
-    this.isDevelopment = environment.production;
+    this.enableTokenVerification =
+      environment.production || environment.stage === 'homologation';
   }
 
   canActivate(
@@ -38,7 +39,7 @@ export class BeforeLoadGuard implements CanActivate {
       route.queryParamMap.get('token') ||
       this.sessionService.get<string>(PortfolioStorage.liv_access_token);
 
-    return this.isDevelopment ? of(true) : this.can(token);
+    return this.enableTokenVerification ? this.can(token) : of(true);
   }
 
   private can(token: string): UrlTree | Observable<true | UrlTree> {

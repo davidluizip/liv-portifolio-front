@@ -114,7 +114,7 @@ export class BookComponent implements AfterViewInit, OnDestroy {
       .add(() => {
         this.lessonTrackContextService.listenLessonTrack();
         this.lessonTrackContextService.listenLessonTrackRegister();
-        this.lessonTrackRegisterContextService.listenRegisters();
+        this.lessonTrackRegisterContextService.listenRegistersAndAnalysis();
         this.awaitTimeout(() => this.loadingOverlayService.remove());
       });
   }

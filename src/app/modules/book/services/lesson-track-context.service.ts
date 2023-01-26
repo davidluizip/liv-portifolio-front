@@ -27,12 +27,12 @@ export type LessonTrackData = Record<string, LessonTrack>;
 })
 export class LessonTrackContextService {
   private _lessonTrack = new BehaviorSubject<LessonTrackData | null>({});
-  lessonTrack$ = this._lessonTrack.asObservable();
+  public lessonTrack$ = this._lessonTrack.asObservable();
 
   private _lessonTrackRegister = new BehaviorSubject<LessonTrackData | null>(
     {}
   );
-  lessonTrackRegister$ = this._lessonTrackRegister.asObservable();
+  public lessonTrackRegister$ = this._lessonTrackRegister.asObservable();
 
   constructor(
     private pageControllerService: PageControllerService,
@@ -121,8 +121,8 @@ export class LessonTrackContextService {
             page === EPages.lesson_track_register
           );
         }),
-        switchMap((page) => {
-          return this.getLessonTrack(page.pageId);
+        switchMap(({ pageId }) => {
+          return this.getLessonTrack(pageId);
         })
       )
       .subscribe((data) => {
@@ -145,15 +145,15 @@ export class LessonTrackContextService {
 
     this.pageControllerService.dynamicCurrentPage$
       .pipe(
-        filter(({ indexPage, pageId, page }) => {
+        filter(({ indexPage, page }) => {
           const { currentPage } = this.pageControllerService.snapshot;
 
           return (
             currentPage === indexPage && page === EPages.lesson_track_register
           );
         }),
-        switchMap((page) => {
-          return this.getLessonTrack(page.pageId);
+        switchMap(({ pageId }) => {
+          return this.getLessonTrack(pageId);
         })
       )
       .subscribe((data) => {

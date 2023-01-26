@@ -50,7 +50,7 @@ export class CoverFrontBacksideComponent implements OnInit, AfterViewInit {
 
   get textareaPlaceholder() {
     return this.isEnabledEdit
-      ? `Profressor, escreva aqui um uma descrição da turma.\n\nSugestão: Quantidade de alunos, características da tumas (são animados, curiosos, divertidos...).`
+      ? `Conte-nos um pouco sobre essa sua turma, sobre alguma particularidade ou curiosidade que ela possui e traga alguma experiência marcante que vocês vivenciaram juntos na aula LIV.`
       : '';
   }
 

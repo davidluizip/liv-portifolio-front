@@ -15,7 +15,11 @@ import {
 import { ToastService } from 'src/app/core/services/toast.service';
 import { LoadingOverlayService } from 'src/app/shared/components/loading-overlay/loading-overlay.service';
 import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
-import { SaveRegisterPageDescription } from '../models/teacher-book.model';
+import {
+  SaveRegisterAnalysis,
+  SaveRegisterPageDescription
+} from '../models/teacher-book.model';
+import { ProfessorAnalysisModalComponent } from '../pages/register-analysis/professor-analysis-modal/professor-analysis-modal.component';
 import { RegisterSelectModalComponent } from '../pages/register/components/register-select-modal/register-select-modal.component';
 import { RegisterService } from './api/register.service';
 import { LessonTrackRegisterContextService } from './lesson-track-register-context.service';
@@ -74,7 +78,7 @@ export interface RegisterField {
 export class RegisterContextService {
   private indexPage: number;
   private _registerFields = new BehaviorSubject<RegisterField[]>(
-    Array.from({ length: 4 }, (_, index) => ({
+    Array.from({ length: 6 }, (_, index) => ({
       id: index + 1,
       midiaId: null,
       type: null,
@@ -84,6 +88,9 @@ export class RegisterContextService {
 
   registerFields$: Observable<RegisterField[]> =
     this._registerFields.asObservable();
+
+  private _registerAnalysis = new BehaviorSubject<string | null>(null);
+  registerAnalysis$: Observable<string> = this._registerAnalysis.asObservable();
 
   private _selectedRegisterFieldId = new BehaviorSubject<number | null>(null);
 
@@ -101,6 +108,14 @@ export class RegisterContextService {
       registerFields: this._registerFields.getValue(),
       selectedRegisterFieldId: this._selectedRegisterFieldId.getValue()
     };
+  }
+
+  setAnalysis(analysis: string) {
+    this._registerAnalysis.next(analysis);
+  }
+
+  resetAnalysisField() {
+    this._registerAnalysis.next(null);
   }
 
   setFieldValue<Type extends KeyFieldContent>(
@@ -158,6 +173,15 @@ export class RegisterContextService {
       .subscribe(() => this._selectedRegisterFieldId.next(null));
   }
 
+  openRegisterAnalysisModal(indexPage: number) {
+    this.indexPage = indexPage;
+
+    this.ngbModal.open(ProfessorAnalysisModalComponent, {
+      centered: true,
+      modalDialogClass: 'register-select-modal'
+    });
+  }
+
   saveTextRegister(id: number, content: TextContent) {
     this.loadingOverlayService.open();
 
@@ -198,6 +222,32 @@ export class RegisterContextService {
           content
         });
       });
+  }
+
+  saveRegisterAnalysis(text: string) {
+    this.loadingOverlayService.open();
+
+    const requestPayload: SaveRegisterAnalysis = {
+      bookId: this.pageControllerService.snapshot.bookId,
+      indexPage: this.indexPage,
+      text
+    };
+
+    return this.registerService
+      .saveRegisterAnalysis(requestPayload)
+      .pipe(
+        take(1),
+        catchError(() => {
+          this.toastService.error(
+            'Houve um erro ao fazer o salvar a analise de registro'
+          );
+          return EMPTY;
+        }),
+        finalize(() => {
+          this.loadingOverlayService.remove();
+        })
+      )
+      .subscribe(() => this.setAnalysis(text));
   }
 
   saveMediaRegister(
