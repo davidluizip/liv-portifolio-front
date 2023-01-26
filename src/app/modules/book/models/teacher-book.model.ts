@@ -22,6 +22,12 @@ export type SaveClassPageDescription = DataPut<{
   pagina_turma: Pick<ClassPage, 'descricao'>;
 }>;
 
+export type SaveRegisterAnalysis = {
+  bookId: number;
+  indexPage: number;
+  text: string;
+};
+
 export type SaveRegisterPageDescription = DataPut<{
   registros: {
     texto: {

@@ -15,9 +15,9 @@ import { RegisterContextService } from 'src/app/modules/book/services/register-c
   styleUrls: ['./professor-analysis-modal.component.scss']
 })
 export class ProfessorAnalysisModalComponent implements OnInit, AfterViewInit {
-
   @ViewChild('aboutStudent') textarea: ElementRef<HTMLTextAreaElement>;
-  form: FormGroup;
+  public form: FormGroup;
+  public savingAnalysis = false;
 
   constructor(
     private ngbActiveModal: NgbActiveModal,
@@ -27,13 +27,13 @@ export class ProfessorAnalysisModalComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.form = new FormGroup({
-      about: new FormControl(
+      analysis: new FormControl(
         '',
-        Validators.compose([Validators.required, Validators.maxLength(120)])
-      ),
-      name: new FormControl(
-        '',
-        Validators.compose([Validators.minLength(3), Validators.maxLength(24)])
+        Validators.compose([
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(120)
+        ])
       )
     });
   }
@@ -46,18 +46,14 @@ export class ProfessorAnalysisModalComponent implements OnInit, AfterViewInit {
     this.ngbActiveModal.close();
   }
 
-  handleFinishStudentSpeechRecordRegister() {
-    const { selectedRegisterFieldId: id } =
-      this.registerContextService.snapshot;
+  handleSaveProfessorAnalysis() {
+    const { analysis } = this.form.value;
 
-    const { about, name } = this.form.value;
+    this.savingAnalysis = true;
 
-/*     this.registerContextService.saveTextRegister(id, 1, {
-      about,
-      name
-    }); */
-
-    this.ngbModal.dismissAll();
+    this.registerContextService.saveRegisterAnalysis(analysis).add(() => {
+      this.ngbActiveModal.close();
+      this.savingAnalysis = false;
+    });
   }
-
 }

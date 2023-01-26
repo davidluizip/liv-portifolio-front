@@ -51,6 +51,10 @@
                     *ngIf="pageConfig.page === pageType.register"
                     [indexPage]="pageConfig.indexPage"
                   ></liv-register>
+                  <liv-register-analysis
+                    *ngIf="pageConfig.page === pageType.register_analysis"
+                    [indexPage]="pageConfig.indexPage"
+                  ></liv-register-analysis>
                 </article>
 
                 <liv-footer
@@ -65,7 +69,10 @@
 
         <div id="cover-back-page" class="page cover-back">
           <div class="end-text">
-            <p>Olá, você acabou de visualizar um pouco do <strong> portfólio digital do aluno</strong>.</p>
+            <p>
+              Olá, você acabou de visualizar um pouco do
+              <strong> portfólio digital do aluno</strong>.
+            </p>
             <p><strong> Em breve</strong> traremos mais novidades.</p>
             <p><strong>Fique atento às comunicações.</strong></p>
           </div>

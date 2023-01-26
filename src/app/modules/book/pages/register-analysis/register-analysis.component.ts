@@ -1,30 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Input, OnInit } from '@angular/core';
 import { map } from 'rxjs';
 import { RegisterContextService } from '../../services/register-context.service';
-import { ProfessorAnalysisModalComponent } from './professor-analysis-modal/professor-analysis-modal.component';
 
 @Component({
   selector: 'liv-register-analysis',
   templateUrl: './register-analysis.component.html',
   styleUrls: ['./register-analysis.component.scss']
 })
-export class RegisterAnalysisComponent implements OnInit {
+export class RegisterAnalysisComponent {
+  @Input() indexPage: number;
+
   readonly registerFields$ = this.registerContextService.registerFields$.pipe(
-    map(registers => registers.slice(0,2)));
+    map((registers) => registers.slice(4, 6))
+  );
+  readonly registerAnalysis$ = this.registerContextService.registerAnalysis$;
 
-  constructor(
-    private registerContextService: RegisterContextService,
-    private ngbModal: NgbModal
-    ) { }
+  constructor(private registerContextService: RegisterContextService) {}
 
-  ngOnInit(): void {
+  handleOpenModal() {
+    this.registerContextService.openRegisterAnalysisModal(this.indexPage);
   }
-
-  handleOpenModal(){
-    this.ngbModal.open(ProfessorAnalysisModalComponent, {
-      centered: true
-    });
-  }
-
 }

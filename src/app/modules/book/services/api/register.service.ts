@@ -10,6 +10,7 @@ import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strap
 import { filterResponse } from 'src/app/shared/rxjs/custom-operators';
 import { MediaModel } from '../../models/media.model';
 import {
+  SaveRegisterAnalysis,
   SaveRegisterPageDescription,
   TeacherBookModel
 } from '../../models/teacher-book.model';
@@ -74,6 +75,17 @@ export class RegisterService {
     return this.apiGatewayService.put<void>(
       `/livros/registro/texto/${bookTeacherId}`,
       data
+    );
+  }
+
+  saveRegisterAnalysis({ bookId, indexPage, text }: SaveRegisterAnalysis) {
+    return this.apiGatewayService.post(
+      `/livros/registro/analise/${bookId}/${indexPage}`,
+      {
+        data: {
+          analise_registro: text
+        }
+      }
     );
   }
 }
