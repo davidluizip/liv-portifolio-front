@@ -54,6 +54,7 @@ export interface RegisterText {
 
 export interface Register {
   id: number;
+  analise_registro?: string;
   midia?: MediaModel[];
   texto?: RegisterText[];
 }

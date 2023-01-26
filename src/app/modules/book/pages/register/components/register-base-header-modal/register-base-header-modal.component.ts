@@ -9,6 +9,8 @@ export class RegisterBaseHeaderModalComponent {
   @Input() title = 'Modal';
   @Output() close = new EventEmitter();
 
+  public showHelpButton = false;
+
   onClose() {
     this.close.emit();
   }

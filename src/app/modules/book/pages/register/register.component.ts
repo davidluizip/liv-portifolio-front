@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { map } from 'rxjs';
+import { Component, Input } from '@angular/core';
+import { distinctUntilChanged, map } from 'rxjs';
 
 import {
   RegisterContextService,
@@ -11,16 +11,15 @@ import {
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent {
   @Input() indexPage: number;
 
   readonly registerFields$ = this.registerContextService.registerFields$.pipe(
+    distinctUntilChanged(),
     map((registers) => registers.slice(0, 4))
   );
 
   constructor(private registerContextService: RegisterContextService) {}
-
-  ngOnInit(): void {}
 
   handleOpenRegisterTypeModal(field: RegisterField): void {
     if (field.content) {
