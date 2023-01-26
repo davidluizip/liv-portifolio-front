@@ -12,15 +12,25 @@ import {
   RegisterField
 } from './register-context.service';
 
+interface RegisterAnalysis {
+  content: string;
+}
+
 export type RegisterData = Record<string, RegisterField[]>;
+export type RegisterAnalysisData = Record<string, RegisterAnalysis>;
 
 @Injectable({
   providedIn: 'root'
 })
 export class LessonTrackRegisterContextService {
-  private indexPage: number;
+  private indexRegisterPage: number;
+  private indexRegisterAnalysisPage: number;
+
   private _registers = new BehaviorSubject<RegisterData>({});
-  registers$ = this._registers.asObservable();
+  public registers$ = this._registers.asObservable();
+
+  private _registerAnalysis = new BehaviorSubject<RegisterAnalysisData>({});
+  public registerAnalysis$ = this._registerAnalysis.asObservable();
 
   constructor(
     private pageControllerService: PageControllerService,
@@ -37,40 +47,107 @@ export class LessonTrackRegisterContextService {
   private getLessonTrackRegisters() {
     const { bookId } = this.pageControllerService.snapshot;
 
-    return this.registerService
-      .get(bookId, this.indexPage)
-      .pipe(map(({ attributes }) => attributes));
+    return this.registerService.getRegisters(bookId, this.indexRegisterPage);
   }
 
-  listenRegisters(): void {
+  private getAnalysisRegister() {
+    const { bookId } = this.pageControllerService.snapshot;
+
+    return this.registerService.getTeacherAnalysis(
+      bookId,
+      this.indexRegisterAnalysisPage
+    );
+  }
+
+  listenRegistersAndAnalysis(): void {
     this.pageControllerService.dynamicPreviousPage$
       .pipe(
         filter(({ indexPage, page }) => {
           const { currentPage } = this.pageControllerService.snapshot;
 
-          return currentPage - 1 === indexPage && page === EPages.register;
+          const currentIndexPage = currentPage - 1 === indexPage;
+
+          return (
+            (currentIndexPage && page === EPages.register) ||
+            (currentIndexPage && page === EPages.register_analysis)
+          );
         }),
-        switchMap(({ indexPage }) => {
-          this.indexPage = indexPage;
-          return this.getLessonTrackRegisters();
+        switchMap(({ indexPage, page }) => {
+          if (page === EPages.register_analysis) {
+            this.indexRegisterAnalysisPage = indexPage;
+
+            return this.getAnalysisRegister().pipe(
+              tap(({ analise_registro }) => {
+                const cachedRegisterAnalysis =
+                  this._registerAnalysis.getValue();
+
+                const registerAnalysis = {
+                  ...cachedRegisterAnalysis,
+                  [indexPage]: {
+                    content: analise_registro
+                  }
+                };
+
+                this._registerAnalysis.next(registerAnalysis);
+              })
+            );
+          }
+
+          this.indexRegisterPage = indexPage;
+
+          return this.getLessonTrackRegisters().pipe(
+            tap(({ registros }) => this.populateRegister(registros))
+          );
         })
       )
-      .subscribe((data) => this.populateRegister(data.registros));
+      .subscribe();
 
     this.pageControllerService.dynamicCurrentPage$
       .pipe(
         filter(({ indexPage, page }) => {
           const { currentPage } = this.pageControllerService.snapshot;
 
-          return currentPage === indexPage && page === EPages.register;
+          const currentIndexPage = currentPage === indexPage;
+
+          return (
+            (currentIndexPage && page === EPages.register) ||
+            (currentIndexPage && page === EPages.register_analysis)
+          );
         }),
-        switchMap(({ indexPage }) => {
-          this.indexPage = indexPage;
-          return this.getLessonTrackRegisters();
+        switchMap(({ indexPage, page }) => {
+          if (page === EPages.register_analysis) {
+            this.indexRegisterAnalysisPage = indexPage;
+
+            return this.getAnalysisRegister().pipe(
+              tap(({ analise_registro }) => {
+                const cachedRegisterAnalysis =
+                  this._registerAnalysis.getValue();
+
+                const registerAnalysis = {
+                  ...cachedRegisterAnalysis,
+                  [indexPage]: {
+                    content: analise_registro
+                  }
+                };
+
+                this._registerAnalysis.next(registerAnalysis);
+              })
+            );
+          }
+
+          this.indexRegisterPage = indexPage;
+
+          return this.getLessonTrackRegisters().pipe(
+            tap(({ registros }) => this.populateRegister(registros))
+          );
         })
       )
-      .subscribe((data) => this.populateRegister(data.registros));
+      .subscribe();
 
+    this.listenPagesToSetValue();
+  }
+
+  private listenRegisterPagesAndSetValue() {
     this.pageControllerService.pages$
       .pipe(
         filter(
@@ -84,25 +161,70 @@ export class LessonTrackRegisterContextService {
             currentPage - 1 === previous.indexPage &&
             previous.page === EPages.register
           ) {
-            this.indexPage = previous.indexPage;
+            this.indexRegisterPage = previous.indexPage;
           } else {
-            this.indexPage = current.indexPage;
+            this.indexRegisterPage = current.indexPage;
           }
         }),
         switchMap(() => this.registers$)
       )
-      .pipe(filter((register) => !!register[this.indexPage]))
+      .pipe(filter((register) => !!register[this.indexRegisterPage]))
       .subscribe((register) => {
         this.registerContextService.resetAllFields();
 
-        register[this.indexPage].forEach(({ content, id, midiaId, type }) => {
-          this.registerContextService.setFieldValue(type, {
-            content,
-            id,
-            midiaId
-          });
-        });
+        register[this.indexRegisterPage].forEach(
+          ({ content, id, midiaId, type }) => {
+            this.registerContextService.setFieldValue(type, {
+              content,
+              id,
+              midiaId
+            });
+          }
+        );
       });
+  }
+
+  private listenRegisterAnalysisPagesAndSetValue() {
+    this.pageControllerService.pages$
+      .pipe(
+        filter(
+          ({ previous, current }) =>
+            !!(previous?.indexPage || current?.indexPage)
+        ),
+        tap(({ previous, current }) => {
+          const { currentPage } = this.pageControllerService.snapshot;
+
+          if (
+            currentPage - 1 === previous.indexPage &&
+            previous.page === EPages.register_analysis
+          ) {
+            this.indexRegisterAnalysisPage = previous.indexPage;
+          } else {
+            this.indexRegisterAnalysisPage = current.indexPage;
+          }
+        }),
+        switchMap(() => this.registerAnalysis$)
+      )
+      .pipe(
+        filter(
+          (registerAnalysis) =>
+            !!registerAnalysis[this.indexRegisterAnalysisPage]
+        )
+      )
+      .subscribe((registerAnalysis) => {
+        this.registerContextService.resetAnalysisField();
+
+        if (registerAnalysis[this.indexRegisterAnalysisPage]) {
+          const { content } = registerAnalysis[this.indexRegisterAnalysisPage];
+
+          this.registerContextService.setAnalysis(content);
+        }
+      });
+  }
+
+  private listenPagesToSetValue() {
+    this.listenRegisterPagesAndSetValue();
+    this.listenRegisterAnalysisPagesAndSetValue();
   }
 
   private populateRegister(register: Register) {
@@ -122,7 +244,7 @@ export class LessonTrackRegisterContextService {
     if (register.midia) {
       register.midia.forEach((media) => {
         const [type] = media.mime.split('/');
-        this.setMedia(type, media, this.indexPage);
+        this.setMedia(type, media);
       });
     }
   }
@@ -136,7 +258,7 @@ export class LessonTrackRegisterContextService {
     }
   ) {
     const cachedRegister = this._registers.getValue() || {};
-    const alreadyPopulated = cachedRegister[this.indexPage]?.some(
+    const alreadyPopulated = cachedRegister[this.indexRegisterPage]?.some(
       (register) => register.id === data.id
     );
 
@@ -146,8 +268,8 @@ export class LessonTrackRegisterContextService {
 
     const register: RegisterData = {
       ...cachedRegister,
-      [this.indexPage]: [
-        ...(cachedRegister[this.indexPage] ||= []),
+      [this.indexRegisterPage]: [
+        ...(cachedRegister[this.indexRegisterPage] ||= []),
         {
           type,
           id: data.id,
@@ -159,7 +281,7 @@ export class LessonTrackRegisterContextService {
     this._registers.next(register);
   }
 
-  private setMedia(type: string, midia: MediaModel, currentPage: number) {
+  private setMedia(type: string, midia: MediaModel) {
     switch (type) {
       case 'audio':
         this.saveRegister('audio', {

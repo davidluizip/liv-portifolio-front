@@ -22,6 +22,12 @@ export type SaveClassPageDescription = DataPut<{
   pagina_turma: Pick<ClassPage, 'descricao'>;
 }>;
 
+export type SaveRegisterAnalysis = {
+  bookId: number;
+  indexPage: number;
+  text: string;
+};
+
 export type SaveRegisterPageDescription = DataPut<{
   registros: {
     texto: {
@@ -48,6 +54,7 @@ export interface RegisterText {
 
 export interface Register {
   id: number;
+  analise_registro?: string;
   midia?: MediaModel[];
   texto?: RegisterText[];
 }

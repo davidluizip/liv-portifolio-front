@@ -6,95 +6,83 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
 }
 
-.register-container{
+.register-analysis-container {
   width: 100%;
-  height: rem(275px);
-  margin-bottom: rem(32px);
+  height: 100%;
+  display: grid;
+  grid-template-rows: repeat(2, 1fr);
+  gap: rem(24px);
 }
 
-.register-wrapper {
-  max-width: rem(768px);
-  max-height: rem(275.38px);
-  height: 100%;
-  margin: auto;
-  place-items: stretch;
-  place-content: stretch;
+.register-analysis-wrapper {
+  display: flex;
+  align-items: center;
   gap: rem(24px);
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  width: 100%;
+  height: 100%;
 }
 
 .register-analysis-card {
   width: 100%;
-  height: rem(215px);
-  max-height: rem(230px);
+  height: 100%;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
   border: 2px solid color(neutral-low-pure-light);
+  transition: 0.2s ease;
 
-  &__title{
-    position: absolute;
-    padding: rem(11.65px) rem(122.52px);
+  &__header {
     width: 100%;
-    height: rem(38.81px);
-
-    font-family: 'Roboto';
-    font-style: normal;
-    font-weight: 400;
-    font-size: rem(16px);
-    line-height: rem(19px);
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+    padding: rem(12px) rem(16px);
 
-    color: #06040C;
     background-color: color(brand-quintenary-lighter);
-    border: 2px solid color(neutral-low-pure-light);
+    border-bottom: 2px solid color(neutral-low-pure-light);
   }
 
-  &__text {
+  &__title {
+    @include paragraph();
+    text-align: center;
+    color: #06040c;
+  }
+
+  &__content {
     flex: 1;
     flex-direction: column;
     display: flex;
     align-items: center;
-    padding-top: rem(79.6px);
-    width: 100%;
-    height: 100%;
+    justify-content: center;
 
     background-color: color(brand-quintenary-lightest);
+
+    &__placeholderTitle {
+      @include paragraph();
+      color: color(brand-sextenary-pure);
+      text-align: center;
+      margin-bottom: rem(15px);
+      transition: color 0.2s;
+
+      &:hover {
+        color: color(brand-sextenary-light);
+      }
+    }
+
+    &__text {
+      max-width: rem(400px);
+      @include paragraph();
+      text-align: center;
+      color: #2d2a34;
+    }
   }
 
   &:hover {
     border-color: color(neutral-hight-pure-medium);
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.15);
-  }
-
-  .placeholder-title {
-    color: color(brand-sextenary-pure);
-    text-align: center;
-    margin-bottom: rem(15px);
-    cursor: pointer;
-  }
-
-  .placeholder-text {
-    width: rem(400px);
-    font-size: rem(14px);
-    font-family: 'Roboto';
-    font-style: normal;
-    font-weight: 400;
-    font-size: rem(16px);
-    line-height: rem(19px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    color: #2D2A34;
-    margin: 0;
   }
 }

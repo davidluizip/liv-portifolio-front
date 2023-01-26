@@ -2,7 +2,7 @@
   <h2 class="register-base-modal-header__title">{{ title }}</h2>
 
   <div class="register-base-modal-header__buttonsGroup">
-    <button class="help-button">
+    <button class="help-button" *ngIf="showHelpButton">
       <svg-icon src="assets/icons/circle-help.svg"></svg-icon>
     </button>
     <button class="close-button">
