@@ -85,19 +85,20 @@ export class ResponseProtocolInterceptor implements HttpInterceptor {
   }
 
   handleError(response: HttpErrorResponse): Observable<never> {
-    let message = 'Ocorreu um erro inesperado! Tente novamente mais tarde!';
-
     if (
       response.status === 401 &&
       !response.url?.toLocaleLowerCase().includes('login')
     ) {
-      message = 'Sessão inválida! É necessario autenticar novamente!';
-      this.toastService.error(message);
+      this.toastService.error(
+        'Sessão inválida! É necessario autenticar novamente!'
+      );
       // TO-DO
     }
 
     if (response.status === 500) {
-      this.toastService.error(message);
+      this.toastService.error(
+        'Ocorreu um erro inesperado! Tente novamente mais tarde!'
+      );
     }
 
     return throwError(() => {
