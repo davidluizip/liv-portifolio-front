@@ -7,7 +7,7 @@ import {
   RouterStateSnapshot,
   UrlTree
 } from '@angular/router';
-import { catchError, finalize, map, Observable, of } from 'rxjs';
+import { catchError, finalize, map, Observable, of, tap, iif } from 'rxjs';
 import { LoadingOverlayService } from 'src/app/shared/components/loading-overlay/loading-overlay.service';
 import { environment } from 'src/environments/environment';
 import { PortfolioStorage } from '../../enums/portfolio-storage.enum';
@@ -38,8 +38,8 @@ export class BeforeLoadGuard implements CanActivate {
     _: RouterStateSnapshot
   ): UrlTree | Observable<true | UrlTree> {
     const token =
-      route.queryParamMap.get('token') ||
-      this.sessionService.get<string>(PortfolioStorage.liv_access_token);
+      this.sessionService.get<string>(PortfolioStorage.liv_access_token) ||
+      route.queryParamMap.get('token');
 
     return this.enableTokenVerification ? this.can(token) : of(true);
   }
@@ -54,37 +54,62 @@ export class BeforeLoadGuard implements CanActivate {
 
     this.loadingOverlayService.open();
 
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
+    return this.validateToken(token);
+  }
 
+  private validateSessionToken(headers: HttpHeaders) {
+    return this.apiLivGatewayService.get<Omit<LivUserModel, 'token'>>(
+      '/usuario',
+      {
+        headers
+      }
+    );
+  }
+
+  private validateUniqToken(headers: HttpHeaders) {
     return this.apiLivGatewayService
       .get<LivUserModel>('/usuario/getUserToken', {
         headers
       })
       .pipe(
-        catchError(() => of(null)),
-        finalize(() => this.loadingOverlayService.remove()),
-        map((data) => {
+        tap((data) => {
           if (data) {
             this.sessionService.save<string>(
               PortfolioStorage.liv_access_token,
               data.token
             );
-
-            return true;
           }
-
-          const existsAccessToken = this.sessionService.exists(
-            PortfolioStorage.liv_access_token
-          );
-
-          if (existsAccessToken) {
-            this.sessionService.delete(PortfolioStorage.liv_access_token);
-          }
-
-          return this.router.createUrlTree(['forbidden']);
         })
       );
+  }
+
+  private validateToken(token: string): Observable<true | UrlTree> {
+    const existsAccessToken = this.sessionService.exists(
+      PortfolioStorage.liv_access_token
+    );
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    return iif(
+      () => existsAccessToken,
+      this.validateSessionToken(headers),
+      this.validateUniqToken(headers)
+    ).pipe(
+      catchError(() => of(null)),
+      finalize(() => this.loadingOverlayService.remove()),
+      map((data) => {
+        if (!!data) {
+          return true;
+        }
+
+        if (existsAccessToken) {
+          this.sessionService.delete(PortfolioStorage.liv_access_token);
+        }
+
+        return this.router.createUrlTree(['forbidden']);
+      })
+    );
   }
 }
