@@ -14,6 +14,7 @@ import { PortfolioStorage } from '../../enums/portfolio-storage.enum';
 import { LivUserModel } from '../../models/liv-user.model';
 import { ApiLivGatewayService } from '../../services/api/api-liv-gateway.service';
 import { SessionService } from '../../services/session.service';
+import { ToastService } from '../../services/toast.service';
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +26,8 @@ export class BeforeLoadGuard implements CanActivate {
     private router: Router,
     private apiLivGatewayService: ApiLivGatewayService,
     private sessionService: SessionService,
-    private loadingOverlayService: LoadingOverlayService
+    private loadingOverlayService: LoadingOverlayService,
+    private toastService: ToastService
   ) {
     this.enableTokenVerification =
       environment.production || environment.stage === 'homologation';
@@ -44,6 +46,7 @@ export class BeforeLoadGuard implements CanActivate {
 
   private can(token: string): UrlTree | Observable<true | UrlTree> {
     if (!token) {
+      this.toastService.error('Token não encontrado!');
       return this.router.createUrlTree(['forbidden']);
     }
 
