@@ -31,7 +31,7 @@ export class CoverFrontService {
   }
 
   removePhoto(fileId: number) {
-    return this.apiGatewayService.delete(`/livros/upload/${fileId}`);
+    return this.apiGatewayService.delete(`/livros/registro/midia/${fileId}`);
   }
 
   getClassData(
