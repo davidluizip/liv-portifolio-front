@@ -90,7 +90,7 @@ export class ResponseProtocolInterceptor implements HttpInterceptor {
       !response.url?.toLocaleLowerCase().includes('login')
     ) {
       this.toastService.error(
-        'Sessão inválida! É necessario autenticar novamente!'
+        'Sessão inválida! É necessário autenticar novamente!'
       );
       // TO-DO
     }

@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   stage: 'production',
-  cypher_secret: '3595670729e25c22710796962d3cc7c8',
+  cypher_secret: '702c803d4654c95fad85035aa82b4648',
   baseUserStrapi: 'https://strapi-ci-e4be4tejsa-uc.a.run.app/api/',
   apiPortfolio: 'https://strapi-ci-e4be4tejsa-uc.a.run.app/api/',
   tokenStrapi: '',
