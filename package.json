@@ -10,7 +10,7 @@
     "start:prod": "ng serve -c=production",
     "build": "ng build --configuration production",
     "config": "ts-node set-env.ts",
-    "build:gcp": "npm run config && ng build --configuration production",
+    "build:gcp": "npm run config && ng build --configuration homologation",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
