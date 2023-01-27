@@ -46,7 +46,9 @@ export class BeforeLoadGuard implements CanActivate {
 
   private can(token: string): UrlTree | Observable<true | UrlTree> {
     if (!token) {
-      this.toastService.error('Token não encontrado!');
+      this.toastService.error(
+        'Sessão inválida! É necessario autenticar novamente!'
+      );
       return this.router.createUrlTree(['forbidden']);
     }
 
