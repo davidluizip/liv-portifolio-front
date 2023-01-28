@@ -10,10 +10,15 @@ import {
 } from 'rxjs';
 import { EPages } from 'src/app/shared/enum/pages.enum';
 import { FilterPagesConfig } from '../components/interfaces/filter-pages-config';
+import {
+  CurrentRegisterPageType,
+  RegisterType
+} from '../enums/register-type.enum';
 import { MediaModel } from '../models/media.model';
 import { RegisterModel } from '../models/register.model';
 import { Register } from '../models/teacher-book.model';
 import { RegisterService } from './api/register.service';
+import { RegisterData } from './lesson-track-register-context.service';
 import { PageControllerService } from './page-controller.service';
 import {
   FieldContent,
@@ -22,16 +27,26 @@ import {
   RegisterField
 } from './register-context.service';
 
-export type RegisterData = Record<string, RegisterField[]>;
+interface RegisterAnalysisData {
+  registers: RegisterField[];
+  analyse: string;
+}
+
+type RegisterAnalysis = Record<string, RegisterAnalysisData>;
 
 @Injectable({
   providedIn: 'root'
 })
-export class LessonTrackRegisterContextService {
-  private indexPage: number;
+export class ProfessorAnalysisContextService {
+  public indexPage: number;
 
-  private _registers = new BehaviorSubject<RegisterData>({});
-  public registers$ = this._registers.asObservable();
+  private registers: RegisterData = {};
+
+  public registerPageType: RegisterType;
+  public currentRegisterPageType: CurrentRegisterPageType;
+
+  private _registerAnalysis = new BehaviorSubject<RegisterAnalysis>({});
+  public registerAnalysis$ = this._registerAnalysis.asObservable();
 
   constructor(
     private pageControllerService: PageControllerService,
@@ -39,78 +54,100 @@ export class LessonTrackRegisterContextService {
     private registerContextService: RegisterContextService
   ) {}
 
-  get snapshot() {
-    return {
-      registers: this._registers.getValue()
-    };
-  }
-
-  private getRegisters(indexPage: number) {
+  private getAnalysisRegisters(indexPage: number) {
     const { bookId } = this.pageControllerService.snapshot;
 
     return this.registerService.getRegisters(bookId, indexPage);
   }
 
-  private listenRegisters(): void {
-    this.pageControllerService.dynamicCurrentPage$
-      .pipe(
-        this.filterPagesConfig({
-          variant: 'current'
-        })
-      )
-      .subscribe(({ registros }) => {
-        this.populateRegister(registros);
-      });
-
+  private listenAnalysis(): void {
     this.pageControllerService.dynamicPreviousPage$
       .pipe(
         this.filterPagesConfig({
           variant: 'previous'
         })
       )
-      .subscribe(({ registros }) => {
-        this.populateRegister(registros);
-      });
+      .subscribe(({ registros }) =>
+        this.saveProfessorAnalysisFields(registros)
+      );
+
+    this.pageControllerService.dynamicCurrentPage$
+      .pipe(
+        this.filterPagesConfig({
+          variant: 'current'
+        })
+      )
+      .subscribe(({ registros }) =>
+        this.saveProfessorAnalysisFields(registros)
+      );
   }
 
-  private listenRegisterPagesAndSetValue() {
+  public listenEvents() {
+    this.listenAnalysis();
+    this.listenPagesAndSetValue();
+  }
+
+  private listenPagesAndSetValue() {
     this.pageControllerService.pages$
       .pipe(
         filter(
           ({ previous, current }) =>
             !!(previous?.indexPage || current?.indexPage) &&
-            (previous.page === EPages.register ||
-              current.page === EPages.register)
+            (previous.page === EPages.register_analysis ||
+              current.page === EPages.register_analysis)
         ),
         tap(({ previous, current }) => {
           const { currentPage } = this.pageControllerService.snapshot;
 
-          this.indexPage =
+          if (
             currentPage === current.indexPage &&
-            current.page === EPages.register
-              ? current.indexPage
-              : previous.indexPage;
+            current.page === EPages.register_analysis
+          ) {
+            this.indexPage = current.indexPage;
+            this.registerPageType = RegisterType.register;
+            this.currentRegisterPageType = CurrentRegisterPageType.current;
+          } else {
+            this.indexPage = previous.indexPage;
+            this.currentRegisterPageType = CurrentRegisterPageType.previous;
+          }
         }),
-        switchMap(() => this.registers$)
+        switchMap(() => this.registerAnalysis$)
       )
       .pipe(
-        tap(() => this.registerContextService.resetRegisterFields()),
-        filter((register) => !!register[this.indexPage])
+        tap(() => {
+          this.registerContextService.resetProfessorAnalysisFields(
+            this.currentRegisterPageType,
+            this.indexPage
+          );
+        }),
+        filter((registerAnalysis) => !!registerAnalysis[this.indexPage])
       )
-      .subscribe((register) => {
-        register[this.indexPage].forEach(({ content, id, midiaId, type }) => {
-          this.registerContextService.setFieldRegisterValue(type, {
-            content,
-            id,
-            midiaId
-          });
-        });
-      });
-  }
+      .subscribe((registerAnalysis) => {
+        const analyse = registerAnalysis[this.indexPage].analyse;
 
-  listenEvents() {
-    this.listenRegisters();
-    this.listenRegisterPagesAndSetValue();
+        this.registerContextService.setProfessorAnalyse({
+          analyse,
+          currentRegisterPageType: this.currentRegisterPageType,
+          indexPage: this.indexPage
+        });
+
+        registerAnalysis[this.indexPage].registers?.forEach(
+          ({ content, id, midiaId, type }) => {
+            this.registerContextService.setProfessorRegisterAnalysisValue({
+              currentRegisterPageType: this.currentRegisterPageType,
+              indexPage: this.indexPage,
+              field: {
+                type,
+                data: {
+                  content,
+                  id,
+                  midiaId
+                }
+              }
+            });
+          }
+        );
+      });
   }
 
   private populateRegister(register: Register) {
@@ -143,7 +180,7 @@ export class LessonTrackRegisterContextService {
       content: FieldContent[Type];
     }
   ) {
-    const cachedRegister = this._registers.getValue() || {};
+    const cachedRegister = this.registers || {};
     const alreadyPopulated = cachedRegister[this.indexPage]?.some(
       (register) => register.id === data.id
     );
@@ -164,7 +201,7 @@ export class LessonTrackRegisterContextService {
         }
       ]
     };
-    this._registers.next(register);
+    this.registers = register;
   }
 
   private setMedia(type: string, midia: MediaModel) {
@@ -204,6 +241,22 @@ export class LessonTrackRegisterContextService {
     }
   }
 
+  private saveProfessorAnalysisFields(register: Register) {
+    this.populateRegister(register);
+
+    const cachedRegisterAnalysis = this._registerAnalysis.getValue();
+
+    const registerAnalysis: RegisterAnalysis = {
+      ...cachedRegisterAnalysis,
+      [this.indexPage]: {
+        registers: this.registers[this.indexPage],
+        analyse: register.analise_registro
+      }
+    };
+
+    this._registerAnalysis.next(registerAnalysis);
+  }
+
   private filterPagesConfig({ variant }: FilterPagesConfig): UnaryFunction<
     Observable<{
       indexPage: number;
@@ -223,12 +276,12 @@ export class LessonTrackRegisterContextService {
           isCurrentPage = currentPage === indexPage;
         }
 
-        return isCurrentPage && page === EPages.register;
+        return isCurrentPage && page === EPages.register_analysis;
       }),
       switchMap(({ indexPage }) => {
         this.indexPage = indexPage;
 
-        return this.getRegisters(indexPage);
+        return this.getAnalysisRegisters(indexPage);
       }),
       filter(({ registros }) => !!registros)
     );
