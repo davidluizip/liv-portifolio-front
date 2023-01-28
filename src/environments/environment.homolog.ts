@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  stage: 'homologation',
+  stage: 'development',
   cypher_secret: '702c803d4654c95fad85035aa82b4648',
   baseUserStrapi: 'https://strapi-ci-e4be4tejsa-uc.a.run.app/api/',
   apiLiv: 'https://testeapi.inteligenciadevida.com.br/api',

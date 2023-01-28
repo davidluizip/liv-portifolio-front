@@ -10,11 +10,16 @@ import {
   Observable,
   of,
   pipe,
-  take
+  take,
+  tap
 } from 'rxjs';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { LoadingOverlayService } from 'src/app/shared/components/loading-overlay/loading-overlay.service';
 import { ETypesComponentStrapi } from 'src/app/shared/enum/types-component-strapi.enum';
+import {
+  CurrentRegisterPageType,
+  RegisterType
+} from '../enums/register-type.enum';
 import {
   SaveRegisterAnalysis,
   SaveRegisterPageDescription
@@ -24,6 +29,7 @@ import { RegisterSelectModalComponent } from '../pages/register/components/regis
 import { RegisterService } from './api/register.service';
 import { LessonTrackRegisterContextService } from './lesson-track-register-context.service';
 import { PageControllerService } from './page-controller.service';
+import { ProfessorAnalysisContextService } from './professor-analysis-context.service';
 
 interface TextContent {
   about: string;
@@ -72,32 +78,101 @@ export interface RegisterField {
   content: KeyValueFieldContent;
 }
 
+interface RegisterAnalysisData<T> {
+  indexPage: number;
+  data: T;
+}
+
+type RegisterAnalysisField = Record<
+  'previous' | 'current',
+  RegisterAnalysisData<RegisterField[]>
+>;
+
+type ProfessorAnalyseField = Record<
+  'previous' | 'current',
+  RegisterAnalysisData<string>
+>;
+
+interface RegisterTypeModal {
+  fieldId: number;
+  indexPage: number;
+  registerPageType: RegisterType;
+  currentRegisterPageType?: CurrentRegisterPageType;
+}
+
+interface ProfessorAnalysisValue {
+  analyse: string;
+  currentRegisterPageType: CurrentRegisterPageType;
+  indexPage: number;
+}
+
+interface FieldRegisterAnalysisValue<Type extends KeyFieldContent> {
+  field: {
+    type: Type;
+    data: {
+      id: number;
+      midiaId: number;
+      content: FieldContent[Type];
+    };
+  };
+  currentRegisterPageType: CurrentRegisterPageType;
+  indexPage: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
 export class RegisterContextService {
+  private fields = Array.from({ length: 6 }, (_, index) => ({
+    id: index + 1,
+    midiaId: null,
+    type: null,
+    content: null
+  }));
+
   private indexPage: number;
+  private registerPageType: RegisterType;
+  private currentRegisterPageType: CurrentRegisterPageType;
+
   private _registerFields = new BehaviorSubject<RegisterField[]>(
-    Array.from({ length: 6 }, (_, index) => ({
-      id: index + 1,
-      midiaId: null,
-      type: null,
-      content: null
-    }))
+    this.fields.slice(0, 4)
   );
 
   registerFields$: Observable<RegisterField[]> =
     this._registerFields.asObservable();
 
-  private _registerAnalysis = new BehaviorSubject<string | null>(null);
-  registerAnalysis$: Observable<string> = this._registerAnalysis.asObservable();
+  private _registerAnalysisFields = new BehaviorSubject<RegisterAnalysisField>({
+    current: {
+      indexPage: null,
+      data: this.fields.slice(4, 6)
+    },
+    previous: {
+      indexPage: null,
+      data: this.fields.slice(4, 6)
+    }
+  });
+
+  registerAnalysisFields$: Observable<RegisterAnalysisField> =
+    this._registerAnalysisFields.asObservable();
+
+  private _registerAnalysis = new BehaviorSubject<ProfessorAnalyseField>({
+    previous: {
+      indexPage: null,
+      data: null
+    },
+    current: {
+      indexPage: null,
+      data: null
+    }
+  });
+  registerAnalysis$: Observable<ProfessorAnalyseField> =
+    this._registerAnalysis.asObservable();
 
   private _selectedRegisterFieldId = new BehaviorSubject<number | null>(null);
 
   constructor(
     private ngbModal: NgbModal,
     private registerService: RegisterService,
-    //private lessonTrackRegisterContextService: LessonTrackRegisterContextService,
     private toastService: ToastService,
     private pageControllerService: PageControllerService,
     private loadingOverlayService: LoadingOverlayService
@@ -106,19 +181,34 @@ export class RegisterContextService {
   get snapshot() {
     return {
       registerFields: this._registerFields.getValue(),
+      registerAnalysisFields: this._registerAnalysisFields.getValue(),
+      registerAnalysis: this._registerAnalysis.getValue(),
       selectedRegisterFieldId: this._selectedRegisterFieldId.getValue()
     };
   }
 
-  setAnalysis(analysis: string) {
-    this._registerAnalysis.next(analysis);
+  setProfessorAnalyse({
+    analyse,
+    currentRegisterPageType,
+    indexPage
+  }: ProfessorAnalysisValue) {
+    const key =
+      currentRegisterPageType === CurrentRegisterPageType.previous
+        ? 'previous'
+        : 'current';
+
+    const registerAnalysis = this._registerAnalysis.getValue();
+
+    registerAnalysis[key].data = analyse;
+    registerAnalysis[key].indexPage = indexPage;
+
+    this._registerAnalysis.next({
+      ...registerAnalysis,
+      [key]: registerAnalysis[key]
+    });
   }
 
-  resetAnalysisField() {
-    this._registerAnalysis.next(null);
-  }
-
-  setFieldValue<Type extends KeyFieldContent>(
+  setFieldRegisterValue<Type extends KeyFieldContent>(
     type: Type,
     data: {
       id: number;
@@ -130,6 +220,7 @@ export class RegisterContextService {
     const fieldIndex = registerFields.findIndex(
       (field) => field.id === data.id
     );
+
     registerFields[fieldIndex].type = type;
     registerFields[fieldIndex].midiaId = data.midiaId;
     registerFields[fieldIndex].content = data.content;
@@ -137,7 +228,89 @@ export class RegisterContextService {
     this._registerFields.next(registerFields);
   }
 
-  resetAllFields() {
+  setProfessorRegisterAnalysisValue<Type extends KeyFieldContent>({
+    field,
+    indexPage,
+    currentRegisterPageType
+  }: FieldRegisterAnalysisValue<Type>) {
+    const key =
+      currentRegisterPageType === CurrentRegisterPageType.previous
+        ? 'previous'
+        : 'current';
+
+    const { data, type } = field;
+
+    const registerAnalysisFields = this._registerAnalysisFields.getValue();
+    const fieldIndex = registerAnalysisFields[key].data.findIndex(
+      (data) => data.id === field.data.id
+    );
+
+    registerAnalysisFields[key].indexPage = indexPage;
+    registerAnalysisFields[key].data[fieldIndex].type = type;
+    registerAnalysisFields[key].data[fieldIndex].midiaId = data.midiaId;
+    registerAnalysisFields[key].data[fieldIndex].content = data.content;
+
+    this._registerAnalysisFields.next({
+      ...registerAnalysisFields,
+      [key]: registerAnalysisFields[key]
+    });
+  }
+
+  private setFieldValue<Type extends KeyFieldContent>(
+    type: Type,
+    data: {
+      id: number;
+      midiaId: number;
+      content: FieldContent[Type];
+    }
+  ) {
+    if (this.registerPageType === RegisterType.register_analysis) {
+      this.setProfessorRegisterAnalysisValue({
+        currentRegisterPageType: this.currentRegisterPageType,
+        indexPage: this.indexPage,
+        field: {
+          type,
+          data
+        }
+      });
+    } else {
+      this.setFieldRegisterValue(type, data);
+    }
+  }
+
+  resetProfessorAnalysisFields(
+    currentRegisterPageType: CurrentRegisterPageType,
+    indexPage: number
+  ) {
+    const key =
+      currentRegisterPageType === CurrentRegisterPageType.current
+        ? 'current'
+        : 'previous';
+
+    const { registerAnalysisFields, registerAnalysis } = this.snapshot;
+
+    this._registerAnalysis.next({
+      ...registerAnalysis,
+      [key]: {
+        indexPage,
+        data: null
+      }
+    });
+    this._registerAnalysisFields.next({
+      ...registerAnalysisFields,
+      [key]: {
+        indexPage,
+        data: registerAnalysisFields[key].data.map((field) => ({
+          id: field.id,
+          midiaId: null,
+          type: null,
+          content: null
+        }))
+      }
+    });
+  }
+
+  resetRegisterFields() {
     const { registerFields } = this.snapshot;
     this._registerFields.next(
       registerFields.map((field) => ({
@@ -159,9 +332,16 @@ export class RegisterContextService {
     this._registerFields.next(registerFields);
   }
 
-  openRegisterTypeModal(fieldId: number, indexPage: number) {
+  openRegisterTypeModal({
+    fieldId,
+    indexPage,
+    registerPageType,
+    currentRegisterPageType
+  }: RegisterTypeModal) {
     this._selectedRegisterFieldId.next(fieldId);
     this.indexPage = indexPage;
+    this.registerPageType = registerPageType;
+    this.currentRegisterPageType = currentRegisterPageType;
 
     const modalRef = this.ngbModal.open(RegisterSelectModalComponent, {
       centered: true,
@@ -215,7 +395,7 @@ export class RegisterContextService {
           this.loadingOverlayService.remove();
         })
       )
-      .subscribe((data) => {
+      .subscribe(() => {
         this.setFieldValue('text', {
           id,
           midiaId: 1,
@@ -224,13 +404,13 @@ export class RegisterContextService {
       });
   }
 
-  saveRegisterAnalysis(text: string) {
+  saveRegisterAnalysis(analyse: string) {
     this.loadingOverlayService.open();
 
     const requestPayload: SaveRegisterAnalysis = {
       bookId: this.pageControllerService.snapshot.bookId,
       indexPage: this.indexPage,
-      text
+      text: analyse
     };
 
     return this.registerService
@@ -247,7 +427,13 @@ export class RegisterContextService {
           this.loadingOverlayService.remove();
         })
       )
-      .subscribe(() => this.setAnalysis(text));
+      .subscribe(() =>
+        this.setProfessorAnalyse({
+          analyse,
+          currentRegisterPageType: this.currentRegisterPageType,
+          indexPage: this.indexPage
+        })
+      );
   }
 
   saveMediaRegister(

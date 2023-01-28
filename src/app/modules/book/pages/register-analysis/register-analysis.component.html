@@ -1,11 +1,22 @@
 <div class="register-analysis-container">
   <div class="register-analysis-wrapper">
     <ng-container *ngIf="registerFields$ | async; let registerFields">
-      <liv-register-card
-        *ngFor="let field of registerFields"
-        [field]="field"
-        [indexPage]="indexPage"
-      ></liv-register-card>
+      <ng-container *ngIf="registerFields.previous?.indexPage === indexPage">
+        <liv-register-card
+          *ngFor="let field of registerFields.previous.data"
+          [field]="field"
+          [indexPage]="indexPage"
+          [registerPageType]="registerPageType"
+        ></liv-register-card>
+      </ng-container>
+      <ng-container *ngIf="registerFields.current?.indexPage === indexPage">
+        <liv-register-card
+          *ngFor="let field of registerFields.current.data"
+          [field]="field"
+          [indexPage]="indexPage"
+          [registerPageType]="registerPageType"
+        ></liv-register-card>
+      </ng-container>
     </ng-container>
   </div>
 
@@ -16,29 +27,48 @@
       </h4>
     </header>
     <div class="register-analysis-card__content">
-      <ng-container
-        *ngIf="
-          registerAnalysis$ | async;
-          let registerAnalysis;
-          else: emptyAnalysis
-        "
-      >
-        <p class="register-analysis-card__content__text">
-          {{ registerAnalysis }}
-        </p>
+      <ng-container *ngIf="registerAnalyse$ | async; let registerAnalyse">
+        <ng-container *ngIf="registerAnalyse.previous?.indexPage === indexPage">
+          <ng-template
+            [ngTemplateOutlet]="analyseContentTemplate"
+            [ngTemplateOutletContext]="{
+              $implicit: registerAnalyse.previous.data
+            }"
+          >
+          </ng-template>
+        </ng-container>
+
+        <ng-container *ngIf="registerAnalyse.current?.indexPage === indexPage">
+          <ng-template
+            [ngTemplateOutlet]="analyseContentTemplate"
+            [ngTemplateOutletContext]="{
+              $implicit: registerAnalyse.current.data
+            }"
+          >
+          </ng-template>
+        </ng-container>
       </ng-container>
-      <ng-template #emptyAnalysis>
-        <span
-          class="register-analysis-card__content__placeholderTitle"
-          (click)="handleOpenModal()"
-          role="button"
-          >Escrever sua análise da atividade</span
-        >
-        <p class="register-analysis-card__content__text">
-          Conte suas percepções sobre a interação da turma e sobre a
-          aprendizagem socioemocional dos alunos.
-        </p>
-      </ng-template>
     </div>
   </div>
 </div>
+
+<ng-template #analyseContentTemplate let-data>
+  <p
+    *ngIf="data; else emptyAnalyse"
+    class="register-analysis-card__content__text"
+  >
+    {{ data }}
+  </p>
+  <ng-template #emptyAnalyse>
+    <span
+      class="register-analysis-card__content__placeholderTitle"
+      (click)="handleOpenModal()"
+      role="button"
+      >Escrever sua análise da atividade</span
+    >
+    <p class="register-analysis-card__content__text">
+      Conte suas percepções sobre a interação da turma e sobre a aprendizagem
+      socioemocional dos alunos.
+    </p>
+  </ng-template>
+</ng-template>

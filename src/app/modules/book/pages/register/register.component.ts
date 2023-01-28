@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { distinctUntilChanged, map } from 'rxjs';
+import { RegisterType } from '../../enums/register-type.enum';
 
 import {
   RegisterContextService,
@@ -14,20 +15,11 @@ import {
 export class RegisterComponent {
   @Input() indexPage: number;
 
-  readonly registerFields$ = this.registerContextService.registerFields$.pipe(
-    distinctUntilChanged(),
-    map((registers) => registers.slice(0, 4))
-  );
+  public readonly registerFields$ =
+    this.registerContextService.registerFields$.pipe(distinctUntilChanged());
+  public readonly registerPageType = RegisterType.register;
 
   constructor(private registerContextService: RegisterContextService) {}
-
-  handleOpenRegisterTypeModal(field: RegisterField): void {
-    if (field.content) {
-      return;
-    }
-
-    this.registerContextService.openRegisterTypeModal(field.id, this.indexPage);
-  }
 
   handleRemoveRegister(event: Event, field: RegisterField): void {
     event.stopPropagation();
