@@ -16,6 +16,7 @@ import { ResumeRegisterModel } from './models/portfolio-book.model';
 import { LessonTrackContextService } from './services/lesson-track-context.service';
 import { LessonTrackRegisterContextService } from './services/lesson-track-register-context.service';
 import { PageControllerService } from './services/page-controller.service';
+import { ProfessorAnalysisContextService } from './services/professor-analysis-context.service';
 
 interface HTMLDivElementPage extends HTMLDivElement {
   ['page-number']: number;
@@ -59,6 +60,7 @@ export class BookComponent implements AfterViewInit, OnDestroy {
     private loadingOverlayService: LoadingOverlayService,
     private lessonTrackContextService: LessonTrackContextService,
     private lessonTrackRegisterContextService: LessonTrackRegisterContextService,
+    private professorAnalysisContextService: ProfessorAnalysisContextService,
     private location: Location
   ) {
     const hasTokenParams = this.route.snapshot.queryParamMap.has('token');
@@ -114,7 +116,8 @@ export class BookComponent implements AfterViewInit, OnDestroy {
       .add(() => {
         this.lessonTrackContextService.listenLessonTrack();
         this.lessonTrackContextService.listenLessonTrackRegister();
-        this.lessonTrackRegisterContextService.listenRegistersAndAnalysis();
+        this.lessonTrackRegisterContextService.listenEvents();
+        this.professorAnalysisContextService.listenEvents();
         this.awaitTimeout(() => this.loadingOverlayService.remove());
       });
   }

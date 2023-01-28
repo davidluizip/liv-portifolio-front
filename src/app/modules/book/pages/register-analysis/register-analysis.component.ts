@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { distinctUntilChanged, first, map, tap } from 'rxjs';
+import { RegisterType } from '../../enums/register-type.enum';
 import { RegisterContextService } from '../../services/register-context.service';
 
 @Component({
@@ -10,13 +11,14 @@ import { RegisterContextService } from '../../services/register-context.service'
 export class RegisterAnalysisComponent {
   @Input() indexPage: number;
 
-  readonly registerFields$ = this.registerContextService.registerFields$.pipe(
-    distinctUntilChanged(),
-    map((registers) => registers.slice(4, 6))
-  );
-
-  readonly registerAnalysis$ =
+  public readonly registerFields$ =
+    this.registerContextService.registerAnalysisFields$.pipe(
+      distinctUntilChanged()
+    );
+  public readonly registerAnalyse$ =
     this.registerContextService.registerAnalysis$.pipe(distinctUntilChanged());
+  public readonly registerPageType = RegisterType.register_analysis;
+
   constructor(private registerContextService: RegisterContextService) {}
 
   handleOpenModal() {

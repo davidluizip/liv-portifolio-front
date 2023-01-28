@@ -59,9 +59,10 @@
               <strong class="purpose-card__article__title">{{
                 lesson.subtitulo_registro
               }}</strong>
-              <p class="purpose-card__article__description">
-                {{ lesson.objetivo_registro }}
-              </p>
+              <div
+                class="purpose-card__article__description"
+                [innerHTML]="lesson.objetivo_registro | markdown"
+              ></div>
             </article>
           </div>
         </ng-container>

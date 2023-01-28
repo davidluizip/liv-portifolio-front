@@ -1,10 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { filter, switchMap, take } from 'rxjs';
-import { EPages } from 'src/app/shared/enum/pages.enum';
-import { MediaModel } from '../../models/media.model';
-import { RegisterText } from '../../models/teacher-book.model';
-import { RegisterService } from '../../services/api/register.service';
-import { PageControllerService } from '../../services/page-controller.service';
+import { Component, Input } from '@angular/core';
+import { RegisterType } from '../../enums/register-type.enum';
+import { ProfessorAnalysisContextService } from '../../services/professor-analysis-context.service';
 
 import {
   RegisterContextService,
@@ -19,15 +15,26 @@ import {
 export class RegisterCardComponent {
   @Input() field: RegisterField;
   @Input() indexPage: number;
+  @Input() registerPageType: RegisterType;
 
-  constructor(private registerContextService: RegisterContextService) {}
+  constructor(
+    private registerContextService: RegisterContextService,
+    private professorAnalysisContextService: ProfessorAnalysisContextService
+  ) {}
 
   handleOpenRegisterTypeModal(field: RegisterField): void {
     if (field.content) {
       return;
     }
 
-    this.registerContextService.openRegisterTypeModal(field.id, this.indexPage);
+    const { currentRegisterPageType } = this.professorAnalysisContextService;
+
+    this.registerContextService.openRegisterTypeModal({
+      fieldId: field.id,
+      currentRegisterPageType,
+      indexPage: this.indexPage,
+      registerPageType: this.registerPageType
+    });
   }
 
   handleRemoveRegister(event: Event, field: RegisterField): void {
