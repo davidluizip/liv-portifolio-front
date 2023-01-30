@@ -1,5 +1,5 @@
 import { HttpParams } from '@angular/common/http';
-import { ETypesComponentStrapi } from '../enum/types-component-strapi.enum';
+import { ETypesComponentStrapi } from '../enums/types-component-strapi.enum';
 
 export function populateStrapiFilters(
   populate: ETypesComponentStrapi[] = []
