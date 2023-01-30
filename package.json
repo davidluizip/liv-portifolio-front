@@ -1,6 +1,6 @@
 {
   "name": "liv-portfolio",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "scripts": {
     "ng": "ng",
     "start": "node server.js",
@@ -12,7 +12,10 @@
     "config": "ts-node set-env.ts",
     "build:gcp": "npm run config && ng build --configuration production",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "lint": "ng lint",
+    "prepare": "husky install",
+    "commit": "git-cz"
   },
   "private": true,
   "engines": {
@@ -46,19 +49,43 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~13.3.9",
+    "@angular-eslint/builder": "13.5.0",
+    "@angular-eslint/eslint-plugin": "13.5.0",
+    "@angular-eslint/eslint-plugin-template": "13.5.0",
+    "@angular-eslint/schematics": "13.5.0",
+    "@angular-eslint/template-parser": "13.5.0",
     "@angular/cli": "~13.3.9",
     "@angular/compiler-cli": "~13.3.0",
+    "@commitlint/cli": "^17.4.2",
+    "@commitlint/config-conventional": "^17.4.2",
     "@types/jasmine": "~3.10.0",
     "@types/marked": "^4.0.8",
     "@types/node": "^12.11.1",
+    "@typescript-eslint/eslint-plugin": "^5.27.1",
+    "@typescript-eslint/parser": "^5.27.1",
+    "commitizen": "^4.3.0",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint": "^8.17.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-unused-imports": "^2.0.0",
     "express": "^4.18.2",
+    "husky": "^8.0.3",
     "jasmine-core": "~4.0.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "~2.1.0",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
+    "lint-staged": "^13.1.0",
+    "prettier": "^2.8.3",
+    "prettier-eslint": "^15.0.1",
     "ts-node": "^10.9.1",
     "typescript": "~4.6.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }

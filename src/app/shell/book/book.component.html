@@ -1,0 +1,98 @@
+<div class="book-container">
+  <main class="book-hero" *ngIf="bookColors$ | async; let colors">
+    <button
+      class="switch-pages-action-button switch-pages-action-button__previous"
+      [ngClass]="{
+        'switch-pages-action-button__previous--active': showPreviousButton
+      }"
+      (click)="handlePreviousPage()"
+    >
+      <svg-icon src="assets/icons/arrow-left.svg"></svg-icon>
+    </button>
+
+    <div
+      class="book"
+      [style.--color-brand]="colors.brand"
+      [style.--color-brand_light]="colors.brand_light"
+    >
+      <div id="main-front-cover" class="main-cover"></div>
+      <div id="pages" class="pages">
+        <div class="page cover-front">
+          <liv-cover-front (seePortfolio)="handleNextPage()"></liv-cover-front>
+        </div>
+
+        <ng-container *ngIf="pages$ | async; let pages">
+          <ng-container *ngFor="let pageConfig of pages; let i = index">
+            <div
+              class="page"
+              [ngClass]="{
+                'cover-front cover-front--backside':
+                  pageConfig.page === pageType.class
+              }"
+            >
+              <liv-class-page
+                *ngIf="pageConfig.page === pageType.class"
+              ></liv-class-page>
+
+              <ng-container *ngIf="pageConfig.page !== pageType.class">
+                <article class="page__content">
+                  <liv-introduction
+                    *ngIf="pageConfig.page === pageType.intro"
+                  ></liv-introduction>
+                  <liv-lesson-track
+                    *ngIf="pageConfig.page === pageType.lesson_track"
+                    [lessonTrackPageId]="pageConfig.pageId"
+                  ></liv-lesson-track>
+                  <liv-lesson-track-register
+                    *ngIf="pageConfig.page === pageType.lesson_track_register"
+                    [lessonTrackPageId]="pageConfig.pageId"
+                  ></liv-lesson-track-register>
+                  <liv-register
+                    *ngIf="pageConfig.page === pageType.register"
+                    [indexPage]="pageConfig.indexPage"
+                  ></liv-register>
+                  <liv-register-analysis
+                    *ngIf="pageConfig.page === pageType.register_analysis"
+                    [indexPage]="pageConfig.indexPage"
+                  ></liv-register-analysis>
+                </article>
+
+                <liv-footer
+                  [currentPage]="i"
+                  [totalPages]="totalPages - 2"
+                  [placement]="i % 2 === 0 ? 'left' : 'right'"
+                ></liv-footer>
+              </ng-container>
+            </div>
+          </ng-container>
+        </ng-container>
+
+        <div id="cover-back-page" class="page cover-back"></div>
+        <div id="main-back-cover" class="main-cover"></div>
+      </div>
+    </div>
+
+    <aside class="book-action-right-buttons">
+      <button
+        class="book-action-right-buttons__closeBookButton"
+        [ngClass]="{
+          'book-action-right-buttons__closeBookButton--active': showCloseButton
+        }"
+        (click)="handleCloseBook()"
+      >
+        <svg-icon src="assets/icons/close.svg"></svg-icon>
+      </button>
+
+      <button
+        class="switch-pages-action-button"
+        [ngClass]="{
+          'switch-pages-action-button__next--active': showNextButton
+        }"
+        (click)="handleNextPage()"
+        *ngIf="showNextButton"
+      >
+        <svg-icon src="assets/icons/arrow-right.svg"></svg-icon>
+      </button>
+    </aside>
+  </main>
+</div>

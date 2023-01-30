@@ -1,3 +1,4 @@
 {
-  "prettier.configPath": ".prettierrc.js",
+  "files.eol": "\n",
+  "prettier.configPath": ".prettierrc.js"
 }
