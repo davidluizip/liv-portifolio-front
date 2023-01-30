@@ -17,16 +17,14 @@ import {
   RegisterContextService,
   RegisterField
 } from './register-context.service';
-import { RegisterData } from '../../lesson-track/services/lesson-track-register-context.service';
-import {
-  CurrentRegisterPageType,
-  RegisterType
-} from '../enums/register-type.enum';
+import { RegisterData } from './lesson-track-register-context.service';
+
 import { PageControllerService } from 'src/app/shell/services/page-controller.service';
 import { RegisterService } from './api/register.service';
 import { Register } from '../../../shell/models/teacher-book.model';
 import { MediaModel } from '../../../shell/models/media.model';
 import { RegisterModel } from '../../../shell/models/register.model';
+import { CurrentRegisterPageType } from '../enums/register-type.enum';
 
 interface RegisterAnalysisData {
   registers: RegisterField[];
@@ -43,7 +41,7 @@ export class ProfessorAnalysisContextService {
 
   private registers: RegisterData = {};
 
-  public currentRegisterPageType: CurrentRegisterPageType;
+  private currentRegisterPageType: CurrentRegisterPageType;
 
   private _registerAnalysis = new BehaviorSubject<RegisterAnalysis>({});
   public registerAnalysis$ = this._registerAnalysis.asObservable();
@@ -58,6 +56,12 @@ export class ProfessorAnalysisContextService {
     const { bookId } = this.pageControllerService.snapshot;
 
     return this.registerService.getRegisters(bookId, indexPage);
+  }
+
+  get snapshot() {
+    return {
+      currentRegisterPageType: this.currentRegisterPageType
+    };
   }
 
   private listenAnalysis(): void {
@@ -99,6 +103,7 @@ export class ProfessorAnalysisContextService {
         ),
         tap(({ previous, current }) => {
           const { currentPage } = this.pageControllerService.snapshot;
+
           if (
             currentPage === current.indexPage &&
             current.page === EPages.register_analysis

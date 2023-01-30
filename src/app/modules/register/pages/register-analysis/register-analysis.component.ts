@@ -26,7 +26,8 @@ export class RegisterAnalysisComponent {
   ) {}
 
   handleOpenModal(): void {
-    const { currentRegisterPageType } = this.professorAnalysisContextService;
+    const { currentRegisterPageType } =
+      this.professorAnalysisContextService.snapshot;
 
     this.registerContextService.openRegisterAnalysisModal({
       indexPage: this.indexPage,
