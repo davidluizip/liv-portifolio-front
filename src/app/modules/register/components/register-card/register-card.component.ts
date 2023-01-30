@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { RegisterType } from '../../enums/register-type.enum';
-import { ProfessorAnalysisContextService } from '../../services/professor-analysis-context.service';
 
 import {
   RegisterContextService,
@@ -17,21 +16,15 @@ export class RegisterCardComponent {
   @Input() indexPage: number;
   @Input() registerPageType: RegisterType;
 
-  constructor(
-    private registerContextService: RegisterContextService,
-    private professorAnalysisContextService: ProfessorAnalysisContextService
-  ) {}
+  constructor(private registerContextService: RegisterContextService) {}
 
   handleOpenRegisterTypeModal(field: RegisterField): void {
     if (field.content) {
       return;
     }
 
-    const { currentRegisterPageType } = this.professorAnalysisContextService;
-
     this.registerContextService.openRegisterTypeModal({
       fieldId: field.id,
-      currentRegisterPageType,
       indexPage: this.indexPage,
       registerPageType: this.registerPageType
     });

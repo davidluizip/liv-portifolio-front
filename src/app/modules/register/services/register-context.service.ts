@@ -7,6 +7,7 @@ import {
   finalize,
   iif,
   Observable,
+  Subscription,
   take
 } from 'rxjs';
 import { ToastService } from 'src/app/core/services/toast.service';
@@ -92,7 +93,11 @@ interface RegisterTypeModal {
   fieldId: number;
   indexPage: number;
   registerPageType: RegisterType;
-  currentRegisterPageType?: CurrentRegisterPageType;
+}
+
+interface ProfessorAnalyseTypeModal {
+  indexPage: number;
+  currentRegisterPageType: CurrentRegisterPageType;
 }
 
 interface ProfessorAnalysisValue {
@@ -330,13 +335,11 @@ export class RegisterContextService {
   openRegisterTypeModal({
     fieldId,
     indexPage,
-    registerPageType,
-    currentRegisterPageType
+    registerPageType
   }: RegisterTypeModal) {
     this._selectedRegisterFieldId.next(fieldId);
     this.indexPage = indexPage;
     this.registerPageType = registerPageType;
-    this.currentRegisterPageType = currentRegisterPageType;
 
     const modalRef = this.ngbModal.open(RegisterSelectModalComponent, {
       centered: true,
@@ -348,8 +351,12 @@ export class RegisterContextService {
       .subscribe(() => this._selectedRegisterFieldId.next(null));
   }
 
-  openRegisterAnalysisModal(indexPage: number) {
+  openRegisterAnalysisModal({
+    indexPage,
+    currentRegisterPageType
+  }: ProfessorAnalyseTypeModal): void {
     this.indexPage = indexPage;
+    this.currentRegisterPageType = currentRegisterPageType;
 
     this.ngbModal.open(ProfessorAnalysisModalComponent, {
       centered: true,
@@ -431,11 +438,12 @@ export class RegisterContextService {
       );
   }
 
+  // eslint-disable-next-line max-lines-per-function
   saveMediaRegister(
     id: number,
     data: FormData,
     type: Exclude<KeyFieldContent, 'text'>
-  ) {
+  ): Subscription {
     this.loadingOverlayService.open();
 
     return this.registerService
