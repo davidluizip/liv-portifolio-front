@@ -8,7 +8,8 @@ import {
   iif,
   Observable,
   Subscription,
-  take
+  take,
+  tap
 } from 'rxjs';
 import { ToastService } from 'src/app/core/services/toast.service';
 import { LoadingOverlayService } from 'src/app/shared/components/loading-overlay/loading-overlay.service';
@@ -93,6 +94,7 @@ interface RegisterTypeModal {
   fieldId: number;
   indexPage: number;
   registerPageType: RegisterType;
+  currentRegisterPageType: CurrentRegisterPageType;
 }
 
 interface ProfessorAnalyseTypeModal {
@@ -335,11 +337,13 @@ export class RegisterContextService {
   openRegisterTypeModal({
     fieldId,
     indexPage,
-    registerPageType
+    registerPageType,
+    currentRegisterPageType
   }: RegisterTypeModal) {
     this._selectedRegisterFieldId.next(fieldId);
     this.indexPage = indexPage;
     this.registerPageType = registerPageType;
+    this.currentRegisterPageType = currentRegisterPageType;
 
     const modalRef = this.ngbModal.open(RegisterSelectModalComponent, {
       centered: true,

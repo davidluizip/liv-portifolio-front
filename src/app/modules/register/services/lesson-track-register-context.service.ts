@@ -14,13 +14,14 @@ import { PageControllerService } from 'src/app/shell/services/page-controller.se
 import { MediaModel } from '../../../shell/models/media.model';
 import { RegisterModel } from '../../../shell/models/register.model';
 import { Register } from '../../../shell/models/teacher-book.model';
-import { RegisterService } from '../../register/services/api/register.service';
+import { CurrentRegisterPageType } from '../enums/register-type.enum';
+import { RegisterService } from './api/register.service';
 import {
   FieldContent,
   KeyFieldContent,
   RegisterContextService,
   RegisterField
-} from '../../register/services/register-context.service';
+} from './register-context.service';
 
 export type RegisterData = Record<string, RegisterField[]>;
 
@@ -33,6 +34,8 @@ export class LessonTrackRegisterContextService {
   private _registers = new BehaviorSubject<RegisterData>({});
   public registers$ = this._registers.asObservable();
 
+  private currentRegisterPageType: CurrentRegisterPageType;
+
   constructor(
     private pageControllerService: PageControllerService,
     private registerService: RegisterService,
@@ -41,7 +44,8 @@ export class LessonTrackRegisterContextService {
 
   get snapshot() {
     return {
-      registers: this._registers.getValue()
+      registers: this._registers.getValue(),
+      currentRegisterPageType: this.currentRegisterPageType
     };
   }
 
@@ -85,11 +89,17 @@ export class LessonTrackRegisterContextService {
         tap(({ previous, current }) => {
           const { currentPage } = this.pageControllerService.snapshot;
 
-          this.indexPage =
+          if (
             currentPage === current.indexPage &&
             current.page === EPages.register
-              ? current.indexPage
-              : previous.indexPage;
+          ) {
+            this.indexPage = current.indexPage;
+
+            this.currentRegisterPageType = CurrentRegisterPageType.current;
+          } else {
+            this.indexPage = previous.indexPage;
+            this.currentRegisterPageType = CurrentRegisterPageType.previous;
+          }
         }),
         switchMap(() => this.registers$)
       )

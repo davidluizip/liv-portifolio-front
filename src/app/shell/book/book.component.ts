@@ -10,7 +10,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { filter, from, mergeMap, of, Subject, tap } from 'rxjs';
 import { LessonTrackContextService } from 'src/app/modules/lesson-track/services/lesson-track-context.service';
-import { LessonTrackRegisterContextService } from 'src/app/modules/lesson-track/services/lesson-track-register-context.service';
+import { LessonTrackRegisterContextService } from 'src/app/modules/register/services/lesson-track-register-context.service';
 import { ProfessorAnalysisContextService } from 'src/app/modules/register/services/professor-analysis-context.service';
 import { LoadingOverlayService } from 'src/app/shared/components/loading-overlay/loading-overlay.service';
 import { EPages } from 'src/app/shared/enums/pages.enum';
