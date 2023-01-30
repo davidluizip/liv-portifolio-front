@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { distinctUntilChanged, first, map, tap } from 'rxjs';
+import { Component, Input } from '@angular/core';
+import { distinctUntilChanged } from 'rxjs';
 import { RegisterType } from '../../enums/register-type.enum';
+import { ProfessorAnalysisContextService } from '../../services/professor-analysis-context.service';
 import { RegisterContextService } from '../../services/register-context.service';
 
 @Component({
@@ -19,9 +20,17 @@ export class RegisterAnalysisComponent {
     this.registerContextService.registerAnalysis$.pipe(distinctUntilChanged());
   public readonly registerPageType = RegisterType.register_analysis;
 
-  constructor(private registerContextService: RegisterContextService) {}
+  constructor(
+    private registerContextService: RegisterContextService,
+    private professorAnalysisContextService: ProfessorAnalysisContextService
+  ) {}
 
-  handleOpenModal() {
-    this.registerContextService.openRegisterAnalysisModal(this.indexPage);
+  handleOpenModal(): void {
+    const { currentRegisterPageType } = this.professorAnalysisContextService;
+
+    this.registerContextService.openRegisterAnalysisModal({
+      indexPage: this.indexPage,
+      currentRegisterPageType
+    });
   }
 }

@@ -43,7 +43,6 @@ export class ProfessorAnalysisContextService {
 
   private registers: RegisterData = {};
 
-  public registerPageType: RegisterType;
   public currentRegisterPageType: CurrentRegisterPageType;
 
   private _registerAnalysis = new BehaviorSubject<RegisterAnalysis>({});
@@ -88,6 +87,7 @@ export class ProfessorAnalysisContextService {
     this.listenPagesAndSetValue();
   }
 
+  // eslint-disable-next-line max-lines-per-function
   private listenPagesAndSetValue() {
     this.pageControllerService.pages$
       .pipe(
@@ -99,13 +99,12 @@ export class ProfessorAnalysisContextService {
         ),
         tap(({ previous, current }) => {
           const { currentPage } = this.pageControllerService.snapshot;
-
           if (
             currentPage === current.indexPage &&
             current.page === EPages.register_analysis
           ) {
             this.indexPage = current.indexPage;
-            this.registerPageType = RegisterType.register;
+
             this.currentRegisterPageType = CurrentRegisterPageType.current;
           } else {
             this.indexPage = previous.indexPage;
