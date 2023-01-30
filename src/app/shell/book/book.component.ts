@@ -68,15 +68,15 @@ export class BookComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  get showPreviousButton() {
+  get showPreviousButton(): boolean {
     return this.currentPage > 0;
   }
 
-  get showNextButton() {
+  get showNextButton(): boolean {
     return !this.currentIsCoverBackPage;
   }
 
-  get showCloseButton() {
+  get showCloseButton(): boolean {
     return this.currentPage > 0;
   }
 
@@ -87,13 +87,13 @@ export class BookComponent implements AfterViewInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
     this.route.data
       .pipe(filter((data) => !!data['book']))
       .subscribe(() => this.startConfigPages());
   }
 
-  startConfigPages() {
+  startConfigPages(): void {
     const pages = Array.from(
       this.document.getElementsByClassName('page')
     ) as HTMLDivElementPage[];
@@ -120,8 +120,10 @@ export class BookComponent implements AfterViewInit, OnDestroy {
       });
   }
 
-  handleCloseBook() {
-    if (this.currentPage === 0) return;
+  handleCloseBook(): void {
+    if (this.currentPage === 0) {
+      return;
+    }
 
     const flippedPages = this.document.getElementsByClassName('flipped');
     Array.from(flippedPages).forEach((page) =>
@@ -135,8 +137,10 @@ export class BookComponent implements AfterViewInit, OnDestroy {
     this.currentIsCoverBackPage = false;
   }
 
-  handlePreviousPage() {
-    if (this.switchingPage || this.currentPage === 0) return;
+  handlePreviousPage(): void {
+    if (this.switchingPage || this.currentPage === 0) {
+      return;
+    }
 
     if (this.currentIsCoverBackPage) {
       this.currentIsCoverBackPage = false;
@@ -172,13 +176,14 @@ export class BookComponent implements AfterViewInit, OnDestroy {
     this.awaitTimeout(() => (this.switchingPage = false));
   }
 
-  handleNextPage() {
+  handleNextPage(): void {
     if (
       this.switchingPage ||
       (this.currentIsCoverBackPage &&
         this.coverBackPage['page-number'] % 2 !== 0)
-    )
+    ) {
       return;
+    }
 
     this.switchingPage = true;
 

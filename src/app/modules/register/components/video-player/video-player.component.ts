@@ -1,19 +1,20 @@
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   Input,
   OnDestroy,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { SafeResourceUrl } from '@angular/platform-browser';
 import { BehaviorSubject, filter, shareReplay, Subject, takeUntil } from 'rxjs';
 
 const ICONS = {
   play: 'play.svg',
-  pause: 'pause.svg',
+  pause: 'pause.svg'
 } as const;
 
-type PlayerIcon = typeof ICONS[keyof typeof ICONS];
+type PlayerIcon = (typeof ICONS)[keyof typeof ICONS];
 
 type StreamState = {
   src: SafeResourceUrl | null;
@@ -23,15 +24,15 @@ type StreamState = {
 enum PlayingState {
   stop = 'stop',
   play = 'play',
-  pause = 'pause',
+  pause = 'pause'
 }
 
 @Component({
   selector: 'liv-video-player',
   templateUrl: './video-player.component.html',
-  styleUrls: ['./video-player.component.scss'],
+  styleUrls: ['./video-player.component.scss']
 })
-export class VideoPlayerComponent implements OnDestroy {
+export class VideoPlayerComponent implements OnDestroy, AfterViewInit {
   @ViewChild('videoRef') video: ElementRef<HTMLVideoElement | undefined> | null;
 
   @Input() set src(value: SafeResourceUrl) {
@@ -46,7 +47,7 @@ export class VideoPlayerComponent implements OnDestroy {
 
   public state = new BehaviorSubject<StreamState>({
     src: null,
-    playing: PlayingState.stop,
+    playing: PlayingState.stop
   });
   public state$ = this.state.asObservable();
 
