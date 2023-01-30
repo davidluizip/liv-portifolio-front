@@ -7,7 +7,7 @@ const routes: Routes = [
     path: 'livro-do-professor',
     canActivate: [BeforeLoadGuard],
     loadChildren: () =>
-      import('./modules/book/book.module').then((m) => m.BookModule)
+      import('./shell/shell.module').then((m) => m.ShellModule)
   },
   {
     path: '**',

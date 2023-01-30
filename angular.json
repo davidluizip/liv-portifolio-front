@@ -1,7 +1,8 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
-    "analytics": "38a8425a-3e5d-4143-b4b4-62569dc7ef35"
+    "analytics": "38a8425a-3e5d-4143-b4b4-62569dc7ef35",
+    "defaultCollection": "@angular-eslint/schematics"
   },
   "version": 1,
   "newProjectRoot": "projects",
@@ -34,6 +35,7 @@
             "stylePreprocessorOptions": {
               "includePaths": ["src/styles/core"]
             },
+            "allowedCommonJsDependencies": ["crypto-js"],
             "scripts": []
           },
           "configurations": {
@@ -183,6 +185,12 @@
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.scss"],
             "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         }
       }

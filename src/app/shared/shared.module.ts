@@ -10,6 +10,7 @@ import { DragDropFileUploadDirective } from './directives/drag-drop-file-upload.
 import { MarkdownPipe } from './pipes/markdown.pipe';
 import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
 import { SubstringPipe } from './pipes/substring.pipe';
+import { TitleBadgeComponent } from './components/title-badge/title-badge.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { SubstringPipe } from './pipes/substring.pipe';
     DragDropFileUploadDirective,
     UploadMediaInputComponent,
     LoadingOverlayComponent,
+    TitleBadgeComponent,
     SubstringPipe
   ],
   imports: [CommonModule, AngularSvgIconModule],
@@ -33,7 +35,9 @@ import { SubstringPipe } from './pipes/substring.pipe';
     IfLoadedDirective,
     DragDropFileUploadDirective,
     UploadMediaInputComponent,
-    LoadingOverlayComponent
+    TitleBadgeComponent,
+    LoadingOverlayComponent,
+    AngularSvgIconModule
   ],
   providers: []
 })

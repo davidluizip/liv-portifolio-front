@@ -1,0 +1,20 @@
+@import 'variables';
+@import 'typography';
+
+:host {
+  height: 100%;
+}
+
+.cover-back-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__endText {
+    max-width: rem(288px);
+
+    p {
+      text-align: center;
+    }
+  }
+}
