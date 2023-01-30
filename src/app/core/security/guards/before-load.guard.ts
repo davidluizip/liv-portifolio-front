@@ -29,8 +29,8 @@ export class BeforeLoadGuard implements CanActivate {
     private loadingOverlayService: LoadingOverlayService,
     private toastService: ToastService
   ) {
-    // this.enableTokenVerification =
-    //   environment.production || environment.stage === 'homologation';
+    this.enableTokenVerification =
+      environment.production || environment.stage === 'homologation';
   }
 
   canActivate(
