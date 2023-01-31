@@ -124,7 +124,7 @@
 
       strong {
         @include headline-h3(600);
-        color: color('neutral-low-pure-dark');
+        color: color('neutral-hight-pure-light');
       }
 
       h3 {
@@ -138,7 +138,8 @@
 
       span {
         @include paragraph();
-        color: color('neutral-low-pure-dark');
+        font-weight: 500;
+        color: color('neutral-hight-pure-light');
       }
     }
 
