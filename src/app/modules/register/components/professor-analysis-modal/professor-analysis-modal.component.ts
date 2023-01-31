@@ -6,7 +6,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { RegisterContextService } from '../../services/register-context.service';
 
 @Component({
@@ -21,7 +21,6 @@ export class ProfessorAnalysisModalComponent implements OnInit, AfterViewInit {
 
   constructor(
     private ngbActiveModal: NgbActiveModal,
-    private ngbModal: NgbModal,
     private registerContextService: RegisterContextService
   ) {}
 
@@ -32,7 +31,7 @@ export class ProfessorAnalysisModalComponent implements OnInit, AfterViewInit {
         Validators.compose([
           Validators.required,
           Validators.minLength(3),
-          Validators.maxLength(120)
+          Validators.maxLength(350)
         ])
       )
     });
@@ -42,12 +41,12 @@ export class ProfessorAnalysisModalComponent implements OnInit, AfterViewInit {
     this.textarea.nativeElement.focus();
   }
 
-  handleCloseModal() {
+  handleCloseModal(): void {
     this.ngbActiveModal.close();
   }
 
-  handleSaveProfessorAnalysis() {
-    const { analysis } = this.form.value;
+  handleSaveProfessorAnalysis(): void {
+    const { analysis } = this.form.value as { analysis: string };
 
     this.savingAnalysis = true;
 
