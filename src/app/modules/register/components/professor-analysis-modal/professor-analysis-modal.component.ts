@@ -32,7 +32,7 @@ export class ProfessorAnalysisModalComponent implements OnInit, AfterViewInit {
         Validators.compose([
           Validators.required,
           Validators.minLength(3),
-          Validators.maxLength(120)
+          Validators.maxLength(350)
         ])
       )
     });
