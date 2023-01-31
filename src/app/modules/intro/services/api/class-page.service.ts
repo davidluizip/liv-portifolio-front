@@ -31,7 +31,7 @@ export class ClassPageService {
   }
 
   removePhoto(fileId: number) {
-    return this.apiGatewayService.delete(`/livros/upload/${fileId}`);
+    return this.apiGatewayService.delete(`/livros/registro/midia/${fileId}`);
   }
 
   getClassData(
@@ -56,7 +56,7 @@ export class ClassPageService {
 
   saveClassDescription(bookTeacherId: number, data: SaveClassPageDescription) {
     return this.apiGatewayService
-      .put<void>(`/livros/${bookTeacherId}`, data)
+      .put<void>(`/livros/pagina_turma/texto/${bookTeacherId}`, data)
       .pipe(take(1));
   }
 }
